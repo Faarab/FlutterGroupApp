@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:triptaptoe_app/models/CityDTO.dart';
 
 class MyBody extends StatefulWidget {
-  const MyBody({Key? key}) : super(key: key);
+  const MyBody({super.key, required this.activity});
+
+  final Widget activity;
 
   @override
   _MyBodyState createState() => _MyBodyState();
 }
 
 class _MyBodyState extends State<MyBody> {
-  //per controllare il testo inserito dall'utente
   TextEditingController _cityController = TextEditingController();
-
-  List<String> _addedCities = [];
+  List<CityDTO> _addedCities = [];
   bool _isAddingCity = false;
 
   @override
@@ -25,10 +26,11 @@ class _MyBodyState extends State<MyBody> {
     return Padding(
       padding: const EdgeInsets.only(left: 29, right: 29),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, 
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 30),
           const Text(
-            "Edit Itinerary", 
+            "Edit Itinerary",
             style: TextStyle(
               color: Color.fromRGBO(45, 45, 45, 1),
               fontSize: 40,
@@ -38,10 +40,7 @@ class _MyBodyState extends State<MyBody> {
           const SizedBox(height: 30),
           _buildDayNavigation(),
           const SizedBox(height: 30),
-          
-         
-          if (_isAddingCity || _addedCities.isNotEmpty)
-            _buildAddedCities(),
+          if (_isAddingCity || _addedCities.isNotEmpty) _buildAddedCities(),
           const SizedBox(height: 10),
           _buildCityCard(),
         ],
@@ -68,16 +67,44 @@ class _MyBodyState extends State<MyBody> {
 
   Widget _buildAddedCities() {
     return ListView.builder(
-      //shrinkWrap -> la lista occupa solo lo spazio necessario a seconda deglki elementi
       shrinkWrap: true,
       itemCount: _addedCities.length,
       itemBuilder: (BuildContext context, int index) {
         return Row(
           children: [
-            Icon(Icons.radio_button_unchecked,),
-            const SizedBox(width:30),
-            Text(_addedCities[index], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
-
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.radio_button_unchecked),
+                    const SizedBox(width: 30),
+                    Text(
+                      _addedCities[index].name,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40),
+                      child: TextButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => widget.activity));
+                        },
+                        icon: Icon(Icons.add),
+                        label: Text("Add an activity"),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ],
         );
       },
@@ -90,21 +117,14 @@ class _MyBodyState extends State<MyBody> {
       child: Column(
         children: [
           if (!_isAddingCity)
-            ElevatedButton(
+            TextButton.icon(
               onPressed: () {
                 setState(() {
                   _isAddingCity = true;
                 });
               },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(Icons.add),
-                  const SizedBox(width: 8),
-                  const Text("Add a city",
-                      style: TextStyle(color: Colors.black)),
-                ],
-              ),
+              icon: Icon(Icons.add),
+              label: Text("Add a city"),
             ),
           if (_isAddingCity)
             Row(
@@ -112,12 +132,12 @@ class _MyBodyState extends State<MyBody> {
                 Expanded(
                   child: TextField(
                     controller: _cityController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Enter a city',
                     ),
                     onSubmitted: (value) {
                       setState(() {
-                        _addedCities.add(value);
+                        _addedCities.add(CityDTO(name: value));
                         _cityController.clear();
                         _isAddingCity = false;
                       });

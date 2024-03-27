@@ -6,6 +6,7 @@ class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
     super.key,
     required this.goBack
   });
+  
   final Widget goBack;
 
   @override
