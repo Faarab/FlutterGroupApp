@@ -53,6 +53,7 @@ class _BodyIteneraryState extends State<BodyItenerary> {
           day: widget.widget.trip.days![_currentDayIndex],
           canGoBackward: _canGoBackward,
           canGoForward: _canGoForward,
+          dayIndex: _currentDayIndex,
           onBackward: () {
             setState(() {
               if (_currentDayIndex > 0) {
@@ -79,7 +80,7 @@ class _BodyIteneraryState extends State<BodyItenerary> {
         SizedBox(
           height: 0,
         ),
-        CardItinerary(widget: widget, day: widget.widget.trip.days![_currentDayIndex],),
+        CardItinerary(widget: widget, day: widget.widget.trip.days![_currentDayIndex], ),
       ],
     );
   }

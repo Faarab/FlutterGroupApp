@@ -91,8 +91,8 @@ class _CardItineraryState extends State<CardItinerary> {
                                   style: TextStyle(fontSize: 14),
                                 ),
                                 Container(
-                                  width: 120,
-                                  height: 60,
+                                  width: 160,
+                                  height: 80,
                                   color: Colors.deepOrange,
                                 )
                               ],
