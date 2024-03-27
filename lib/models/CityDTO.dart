@@ -1,26 +1,25 @@
-class CityDTO {
-  final String city;
-  final String country;
 
+import 'package:triptaptoe_app/models/ActivityDTO.dart';
+
+class CityDTO {
   CityDTO({
-    required this.city,
-    required this.country,
+    required this.name,
+    this.activities
   });
 
-  Map<String, dynamic> toJson() => {
-        'city': city,
-        'country': country,
-      };
-
-  @override
-  String toString() {
-    return '{city: $city, country: $country}';
-  }
+  final String name;
+  final List<ActivityDTO>? activities;
 
   factory CityDTO.fromJson(Map<String, dynamic> json) {
+
+    late List<ActivityDTO> activities;
+    if (json['activities'] != null) {
+      activities = List<ActivityDTO>.from(json['activities'].map((day) => ActivityDTO.fromJson(day)));
+    }
+
     return CityDTO(
-      city: json['city'],
-      country: json['country'],
+      name: json['name'],
+      activities: activities,
     );
   }
 }
