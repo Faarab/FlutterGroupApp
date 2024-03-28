@@ -81,7 +81,8 @@ const tripjson = """{
 final tripDiEsempio = TripDTO.fromJson(jsonDecode(tripjson));
 
 void main() async {
-  
+
+  WidgetsFlutterBinding.ensureInitialized();
   runApp( 
     MaterialApp(
       home: SafeArea(
