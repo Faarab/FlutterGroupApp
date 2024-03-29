@@ -72,10 +72,12 @@ class TripDetailsScreen extends StatefulWidget {
 }
 
 class _TripDetailsScreenState extends State<TripDetailsScreen> {
+  List<DateTime?>? _tripDates = [];
   var _name;
   var _cityOfDeparture;
   var _cityOfArrival;
-  List<DateTime?>? _tripDates = [];
+  var _startDate;
+  var _endDate;
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +146,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         Text(
                           "${_tripDates![0]!.day.toString().padLeft(2, '0')}/${_tripDates![0]!.month.toString().padLeft(2, '0')}/${_tripDates![0]!.year}",
                           style: const TextStyle(fontSize: 16),
-                        )
+                        ),
                       ],
                     ),
                     Column(
@@ -222,10 +224,23 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         value: [],
                         borderRadius: BorderRadius.circular(16),
                       );
+                      //If results (dates selected) is not empty, you set startDate and endDate according to the length of the trip
+                      //If the trip is 1 day long, startDate = endDate, otherwise they're set to the corresponding values
                       if (results != null) {
                         setState(() {
                           _tripDates = results;
                         });
+                        if (results.length == 2) {
+                          setState(() {
+                            _startDate = results[0];
+                            _endDate = results[1];
+                          });
+                        } else if (results.length == 1) {
+                          setState(() {
+                            _startDate = results[0];
+                            _endDate = results[0];
+                          });
+                        }
                       }
                     },
                     icon: const Icon(
@@ -242,6 +257,32 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                       foregroundColor: const Color.fromRGBO(53, 16, 79, 1),
                     )),
               ),
+              TripDetailsForm(
+                getUserInput: (userInput) {
+                  var fieldId = userInput['fieldId'];
+                  var newValue = userInput['newValue'];
+                  switch (fieldId) {
+                    case 1:
+                      setState(() {
+                        _name = newValue;
+                        print("Name " + _name);
+                      });
+                      break;
+                    case 2:
+                      setState(() {
+                        _cityOfDeparture = newValue;
+                        print("Departure " + _cityOfDeparture);
+                      });
+                      break;
+                    case 3:
+                      setState(() {
+                        _cityOfArrival = newValue;
+                        print("Arrival " + _cityOfArrival);
+                      });
+                      break;
+                  }
+                },
+              )
             ],
           ),
         ),
@@ -255,11 +296,15 @@ class CustomInputField extends StatelessWidget {
       {super.key,
       required this.fieldLabel,
       required this.fieldHintText,
-      required this.onChanged});
+      required this.onChanged,
+      this.fieldId,
+      this.getUserInput});
 
+  final int? fieldId;
   final String fieldLabel;
   final String fieldHintText;
   final void Function(String) onChanged;
+  final void Function(Map<String, dynamic>)? getUserInput;
 
   @override
   Widget build(BuildContext context) {
@@ -276,14 +321,86 @@ class CustomInputField extends StatelessWidget {
           height: 8,
         ),
         TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Field cannot be empty';
+              }
+              if (value.startsWith(" ")) {
+                return 'Value cannot contain blank spaces';
+              }
+              return null;
+            },
             onChanged: (value) {
               onChanged(value);
+              getUserInput?.call({"fieldId": fieldId, "newValue": value});
             },
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
               hintText: fieldHintText,
             ))
       ],
+    );
+  }
+}
+
+class TripDetailsForm extends StatefulWidget {
+  const TripDetailsForm({super.key, this.getUserInput});
+
+  final void Function(Map<String, dynamic>)? getUserInput;
+
+  @override
+  State<TripDetailsForm> createState() => _TripDetailsFormState();
+}
+
+class _TripDetailsFormState extends State<TripDetailsForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          CustomInputField(
+            fieldId: 1,
+            fieldLabel: "Title",
+            fieldHintText: "e.g. My Trip",
+            onChanged: (value) {
+              (value);
+            },
+            getUserInput: widget.getUserInput,
+          ),
+          CustomInputField(
+            fieldId: 2,
+            fieldLabel: "Where from?",
+            fieldHintText: "e.g. Bologna",
+            onChanged: (value) {
+              (value);
+            },
+            getUserInput: widget.getUserInput,
+          ),
+          CustomInputField(
+            fieldId: 3,
+            fieldLabel: "Where to?",
+            fieldHintText: "e.g. Madrid",
+            onChanged: (value) {
+              (value);
+            },
+            getUserInput: widget.getUserInput,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Validate returns true if the form is valid, or false otherwise.
+              if (_formKey.currentState!.validate()) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Processing Data')),
+                );
+              }
+            },
+            child: const Text('Next'),
+          ),
+        ],
+      ),
     );
   }
 }
