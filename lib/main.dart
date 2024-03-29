@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
@@ -75,7 +76,6 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
   var _cityOfDeparture;
   var _cityOfArrival;
   List<DateTime?>? _tripDates = [];
-  var results;
 
   @override
   Widget build(BuildContext context) {
@@ -127,52 +127,121 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                       _cityOfArrival = value;
                     });
                   }),
-              ElevatedButton.icon(
-                  onPressed: () async {
-                    var results = await showCalendarDatePicker2Dialog(
-                      context: context,
-                      config: CalendarDatePicker2WithActionButtonsConfig(
-                        calendarType: CalendarDatePicker2Type.range,
-                        firstDate: DateTime.now(),
-                      ),
-                      dialogSize: const Size(325, 400),
-                      value: [],
-                      borderRadius: BorderRadius.circular(16),
-                    );
-                    setState(() {
-                      _tripDates = results;
-                      print(_tripDates);
-                    });
-                  },
-                  icon: Icon(
-                    Icons.calendar_month_outlined,
-                    color: Color.fromRGBO(53, 16, 79, 1),
-                  ),
-                  label: Text("Select dates"))
-
-              // CalendarDatePicker2(
-              //     config: CalendarDatePicker2Config(
-              //         calendarType: CalendarDatePicker2Type.range,
-              //         firstDate: DateTime.now()),
-              //     value: [],
-              //     onValueChanged: (dates) {
-              //       _tripDates = dates;
-              //       print(_tripDates);
-              //     })
-              // Text(
-              //   "Departure date",
-              //   style: TextStyle(
-              //       fontSize: 16,
-              //       color: Color.fromRGBO(45, 45, 45, 1),
-              //       fontWeight: FontWeight.bold),
-              // ),
-              // SizedBox(height: 8),
-              // InputDatePickerFormField(
-              //     fieldLabelText: "Enter Date",
-              //     fieldHintText: "MM/DD/YYYY",
-              //     acceptEmptyDate: false,
-              //     firstDate: DateTime.now(),
-              //     lastDate: DateTime.now())
+              const SizedBox(height: 16),
+              if (_tripDates!.length == 2)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Departure",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Color.fromRGBO(45, 45, 45, 1),
+                                fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        Text(
+                          "${_tripDates![0]!.day.toString().padLeft(2, '0')}/${_tripDates![0]!.month.toString().padLeft(2, '0')}/${_tripDates![0]!.year}",
+                          style: const TextStyle(fontSize: 16),
+                        )
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Return",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Color.fromRGBO(45, 45, 45, 1),
+                                fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        Text(
+                          "${_tripDates![1]!.day.toString().padLeft(2, '0')}/${_tripDates![1]!.month.toString().padLeft(2, '0')}/${_tripDates![1]!.year}",
+                          style: const TextStyle(fontSize: 16),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              if (_tripDates!.length == 1)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Departure",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Color.fromRGBO(45, 45, 45, 1),
+                                fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        Text(
+                          "${_tripDates![0]!.day.toString().padLeft(2, '0')}/${_tripDates![0]!.month.toString().padLeft(2, '0')}/${_tripDates![0]!.year}",
+                          style: const TextStyle(fontSize: 16),
+                        )
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Return",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Color.fromRGBO(45, 45, 45, 1),
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "${_tripDates![0]!.day.toString().padLeft(2, '0')}/${_tripDates![0]!.month.toString().padLeft(2, '0')}/${_tripDates![0]!.year}",
+                          style: const TextStyle(fontSize: 16),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                    onPressed: () async {
+                      var results = await showCalendarDatePicker2Dialog(
+                        context: context,
+                        config: CalendarDatePicker2WithActionButtonsConfig(
+                          calendarType: CalendarDatePicker2Type.range,
+                          firstDate: DateTime.now(),
+                          controlsTextStyle: const TextStyle(
+                              fontFamily: 'Poppins',
+                              color: Color.fromRGBO(53, 16, 79, 1)),
+                        ),
+                        dialogSize: const Size(325, 400),
+                        value: [],
+                        borderRadius: BorderRadius.circular(16),
+                      );
+                      if (results != null) {
+                        setState(() {
+                          _tripDates = results;
+                        });
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.calendar_month_outlined,
+                      color: Color.fromRGBO(53, 16, 79, 1),
+                    ),
+                    label: Text(_tripDates!.isEmpty
+                        ? "Select trip dates"
+                        : "Change trip dates"),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.all(16),
+                      side: const BorderSide(
+                          color: Color.fromRGBO(53, 16, 79, 1), width: 2),
+                      foregroundColor: const Color.fromRGBO(53, 16, 79, 1),
+                    )),
+              ),
             ],
           ),
         ),
