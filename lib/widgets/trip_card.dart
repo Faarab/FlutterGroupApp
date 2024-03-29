@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
 
 class TripCard extends StatelessWidget {
-  const TripCard({super.key, required this.trip});
+  const TripCard({super.key, required this.trip, required this.index});
 
   final TripDTO trip;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        //If the index is 0, the "Your trips" title is added to the home screen
+        if (index == 0)
+          const Text("Your trips",
+              style: TextStyle(
+                  color: Color.fromRGBO(45, 45, 45, 1),
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold)),
         Card(
           color: const Color.fromRGBO(255, 255, 255, 1),
           elevation: 4,
@@ -69,7 +78,9 @@ class TripCard extends StatelessWidget {
                           color: Color.fromRGBO(53, 16, 79, 1),
                           shape: CircleBorder()),
                       child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            print("Edit button pressed");
+                          },
                           icon: const Icon(
                             Icons.edit,
                             size: 24,

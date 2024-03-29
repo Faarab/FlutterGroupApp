@@ -8,6 +8,8 @@ import 'screens/home_screen.dart';
 import 'widgets/home_screen_bottom_navigation_bar.dart';
 import 'widgets/trip_card.dart';
 
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+
 final tripJSON = """{
     "id": "123456",
     "name": "Sample Trip",
@@ -61,8 +63,19 @@ void main() {
       home: SafeArea(child: TripDetailsScreen())));
 }
 
-class TripDetailsScreen extends StatelessWidget {
+class TripDetailsScreen extends StatefulWidget {
   const TripDetailsScreen({super.key});
+
+  @override
+  State<TripDetailsScreen> createState() => _TripDetailsScreenState();
+}
+
+class _TripDetailsScreenState extends State<TripDetailsScreen> {
+  var _name;
+  var _cityOfDeparture;
+  var _cityOfArrival;
+  List<DateTime?>? _tripDates = [];
+  var results;
 
   @override
   Widget build(BuildContext context) {
@@ -78,28 +91,130 @@ class TripDetailsScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 29, right: 29),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 16),
-            Text(
-              "Create a new trip",
-              style: TextStyle(
-                  color: Color.fromRGBO(45, 45, 45, 1),
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            Text(
-              "Trip title",
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Color.fromRGBO(45, 45, 45, 1),
-                  fontWeight: FontWeight.bold),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              const Text(
+                "Create a new trip",
+                style: TextStyle(
+                    color: Color.fromRGBO(45, 45, 45, 1),
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold),
+              ),
+              CustomInputField(
+                  fieldLabel: "Title",
+                  fieldHintText: "e.g. My Trip",
+                  onChanged: (value) {
+                    setState(() {
+                      _name = value;
+                    });
+                  }),
+              CustomInputField(
+                  fieldLabel: "Where from?",
+                  fieldHintText: "e.g. Bologna",
+                  onChanged: (value) {
+                    setState(() {
+                      _cityOfDeparture = value;
+                    });
+                  }),
+              CustomInputField(
+                  fieldLabel: "Where to?",
+                  fieldHintText: "e.g. Madrid",
+                  onChanged: (value) {
+                    setState(() {
+                      _cityOfArrival = value;
+                    });
+                  }),
+              ElevatedButton.icon(
+                  onPressed: () async {
+                    var results = await showCalendarDatePicker2Dialog(
+                      context: context,
+                      config: CalendarDatePicker2WithActionButtonsConfig(
+                        calendarType: CalendarDatePicker2Type.range,
+                        firstDate: DateTime.now(),
+                      ),
+                      dialogSize: const Size(325, 400),
+                      value: [],
+                      borderRadius: BorderRadius.circular(16),
+                    );
+                    setState(() {
+                      _tripDates = results;
+                      print(_tripDates);
+                    });
+                  },
+                  icon: Icon(
+                    Icons.calendar_month_outlined,
+                    color: Color.fromRGBO(53, 16, 79, 1),
+                  ),
+                  label: Text("Select dates"))
+
+              // CalendarDatePicker2(
+              //     config: CalendarDatePicker2Config(
+              //         calendarType: CalendarDatePicker2Type.range,
+              //         firstDate: DateTime.now()),
+              //     value: [],
+              //     onValueChanged: (dates) {
+              //       _tripDates = dates;
+              //       print(_tripDates);
+              //     })
+              // Text(
+              //   "Departure date",
+              //   style: TextStyle(
+              //       fontSize: 16,
+              //       color: Color.fromRGBO(45, 45, 45, 1),
+              //       fontWeight: FontWeight.bold),
+              // ),
+              // SizedBox(height: 8),
+              // InputDatePickerFormField(
+              //     fieldLabelText: "Enter Date",
+              //     fieldHintText: "MM/DD/YYYY",
+              //     acceptEmptyDate: false,
+              //     firstDate: DateTime.now(),
+              //     lastDate: DateTime.now())
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class CustomInputField extends StatelessWidget {
+  const CustomInputField(
+      {super.key,
+      required this.fieldLabel,
+      required this.fieldHintText,
+      required this.onChanged});
+
+  final String fieldLabel;
+  final String fieldHintText;
+  final void Function(String) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Text(fieldLabel,
+            style: const TextStyle(
+                fontSize: 16,
+                color: Color.fromRGBO(45, 45, 45, 1),
+                fontWeight: FontWeight.bold)),
+        const SizedBox(
+          height: 8,
+        ),
+        TextFormField(
+            onChanged: (value) {
+              onChanged(value);
+            },
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              hintText: fieldHintText,
+            ))
+      ],
     );
   }
 }

@@ -52,18 +52,20 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 16),
-            const Text("Your trips",
-                style: TextStyle(
-                    color: Color.fromRGBO(45, 45, 45, 1),
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold)),
+            // const Text("Your trips",
+            //     style: TextStyle(
+            //         color: Color.fromRGBO(45, 45, 45, 1),
+            //         fontSize: 40,
+            //         fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
                 itemCount: tripArray.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return TripCard(trip: tripArray[index]);
+                  return TripCard(
+                    trip: tripArray[index],
+                    index: index,
+                  );
                 },
               ),
             ),
