@@ -4,17 +4,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/screens/Exchange_screen.dart';
 
+List<DropdownMenuItem<String>> _buildDropdownMenuItems(List<String> items) {
+  return items.map((String value) {
+    return DropdownMenuItem<String>(
+      value: value,
+      child: Text(value),
+    );
+  }).toList();
+}
+
 class DropdownButtonCustom extends StatefulWidget {
   const DropdownButtonCustom({
     super.key,
     required this.listOfChoices,
     required this.onChange,
-    this.selectedIndex = -1,
+    required this.startValue,
   });
 
-  final int selectedIndex;
+  final String startValue;
   final List<String> listOfChoices;
-  final Function(int) onChange;
+  final Function(String) onChange;
 
   
 
@@ -24,21 +33,31 @@ class DropdownButtonCustom extends StatefulWidget {
 
 class _DropdownButtonCustomState extends State<DropdownButtonCustom> {
 
-  late Int _selectedIndex ;
   String _dropdownValue = "";
   List<String> _list = [];
+
+  @override
+  void didUpdateWidget(DropdownButtonCustom oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.startValue != oldWidget.startValue) {
+      setState(() {
+        String value = widget.listOfChoices.firstWhere((element) => element.substring(0,3) == widget.startValue);
+        _dropdownValue = value;
+      });
+    }
+    if(widget.listOfChoices != oldWidget.listOfChoices){
+      setState(() {
+        _list = List.from(widget.listOfChoices);
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _list = widget.listOfChoices;
-    /*
-    if(widget.selectedIndex != -1){ 
-      widget.listOfChoices.remove(widget.listOfChoices[widget.selectedIndex]);
-      _list = widget.listOfChoices;
-    } else {
-      _list = widget.listOfChoices;
-    }*/
-    _dropdownValue = widget.listOfChoices.first;
+    _list = List.from(widget.listOfChoices);
+    String value = widget.listOfChoices.firstWhere((element) => element.substring(0,3) == widget.startValue);
+    _dropdownValue = value;
   }
 
   @override
@@ -53,18 +72,14 @@ class _DropdownButtonCustomState extends State<DropdownButtonCustom> {
         color: Colors.deepPurpleAccent,
       ),
       onChanged: (String? value) {
-        final index = _list.indexOf(value!); // Trova l'indice del valore selezionato
+        // Trova l'indice del valore selezionato
         setState(() {
-          _dropdownValue = value;
+          _dropdownValue = value!;
+         
         });
-        widget.onChange(index);
+        widget.onChange(value!);
       },
-      items: _list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+      items: _buildDropdownMenuItems(_list),
     );
   }
 }

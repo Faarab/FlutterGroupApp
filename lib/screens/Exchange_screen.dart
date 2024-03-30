@@ -19,25 +19,38 @@ class Exchange_screen extends StatefulWidget {
 
 class _Exchange_screenState extends State<Exchange_screen> {
 
-  final List<String> _listOfCurrencies = ["USD - US Dollar", "EUR - Euro", "GBP - British Pound"];
+  List<String> _listOfCurrencies = ["USD - US Dollar", "EUR - Euro", "GBP - British Pound"];
   String _conversedValue = "0.00";
-  int _indexCurrencyChosen = 0;
-  int _indexCurrencyToConvert = 1;
+  late String _currencyChosen ;
+  late String _currencyToConvert;
   late String _currencyRate = "";
+  late List<String> _listOfCurrenciesFiltred;
 
   @override
   void initState() {
     super.initState();
     _fetchCurrencyRate();
+    _currencyChosen = _listOfCurrencies[0].substring(0, 3);
+    _currencyToConvert = _listOfCurrencies[1].substring(0, 3);
+    final tempList = _listOfCurrencies;
+    _listOfCurrenciesFiltred = List.from(tempList);
+    _listOfCurrenciesFiltred.removeWhere((currency) => currency.startsWith(_currencyChosen));
   }
 
   Future<void> _fetchCurrencyRate() async {
-  final String newCurrencyRate = await getCurrencyRateAsync(_listOfCurrencies[_indexCurrencyChosen].substring(0, 3), _listOfCurrencies[_indexCurrencyToConvert].substring(0, 3));
-  setState(() {
-    _currencyRate = newCurrencyRate;
-  });
-  print(_currencyRate);
-}
+    if(_currencyChosen == _currencyToConvert){
+      setState(() {
+        _currencyRate = "1";
+      });
+    } else {
+      String newCurrencyRate = await getCurrencyRateAsync(_currencyChosen, _currencyToConvert);
+      setState(() {
+        _currencyRate = newCurrencyRate;
+      });
+      print(_currencyRate);
+    }
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +73,31 @@ class _Exchange_screenState extends State<Exchange_screen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     DisplayCurrencies(
+                      startValue: _currencyChosen,
                       listOfCurrencies: _listOfCurrencies,
                       text: "From",
-                      onChange: (index) {
+                      onChange: (value) {
                         setState(() {
-                          _indexCurrencyChosen = index;
+                          if(value.substring(0,3) == _currencyToConvert){
+                            _currencyToConvert = _currencyChosen;
+                            _currencyChosen = value.substring(0,3);
+                            List<String> tempList = List.from(_listOfCurrencies);
+                            print(tempList);
+                            tempList.removeWhere((currency) => currency.startsWith(_currencyChosen));
+                            print(tempList);
+                            _listOfCurrenciesFiltred = List.from(tempList);
+                            print(_listOfCurrenciesFiltred);
+                            _fetchCurrencyRate();
+                          } else {
+                            _currencyChosen = _listOfCurrencies.firstWhere((element) => element == value).substring(0,3);
+                            List<String> tempList = List.from(_listOfCurrencies);
+                            print(tempList);
+                            tempList.removeWhere((currency) => currency.startsWith(_currencyChosen));
+                            print(tempList);
+                            _listOfCurrenciesFiltred = List.from(tempList);
+                            print(_listOfCurrenciesFiltred);
+                            _fetchCurrencyRate();
+                          }
                         });
                       },
                       ),
@@ -104,8 +137,15 @@ class _Exchange_screenState extends State<Exchange_screen> {
                             child: IconButton(
                               icon: Icon(Icons.compare_arrows, color: Colors.white, size: 32,),
                               onPressed: () {
-                                print(_indexCurrencyToConvert);
-                                print(_indexCurrencyChosen);
+                                setState(() {
+                                  String temp = _currencyToConvert;
+                                  _currencyToConvert = _currencyChosen;
+                                  _currencyChosen = temp;
+                                  _fetchCurrencyRate();
+                                  List<String> tempList = List.from(_listOfCurrencies);
+                                  tempList.removeWhere((currency) => currency.startsWith(_currencyChosen));
+                                  _listOfCurrenciesFiltred = List.from(tempList);
+                                });
                               },
                             )
                           ),
@@ -113,15 +153,16 @@ class _Exchange_screenState extends State<Exchange_screen> {
                       ],
                     ),
                     DisplayCurrencies(
-                      selectedIndex: _indexCurrencyChosen,
-                      listOfCurrencies: _listOfCurrencies,
+                      listOfCurrencies: _listOfCurrenciesFiltred,
                       text: "To",
-                      onChange: (index) {
+                      startValue: _currencyToConvert,
+                      onChange: (value) {
                         setState(() {
-                          _indexCurrencyToConvert = index;
+                          _currencyToConvert = _listOfCurrencies.firstWhere((element) => element == value).substring(0,3);
+                          _fetchCurrencyRate();
                         });
                       },
-                      ),
+                    ),
                     SizedBox(height: 8,),
                     Text("esempio di conversione", style: TextStyle(fontWeight: FontWeight.w200),),
                     SizedBox(height: 8,),

@@ -2,19 +2,52 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/widgets/dropdown_button_custom.dart';
 
-class DisplayCurrencies extends StatelessWidget {
+class DisplayCurrencies extends StatefulWidget {
   const DisplayCurrencies({
     super.key,
     required this.listOfCurrencies,
     required this.onChange,
     required this.text,
-    this.selectedIndex = -1,
+    required this.startValue,
+    
   });
   
-  final int selectedIndex;
+  final String startValue;
   final String text;
-  final Function(int) onChange;
+  final Function(String) onChange;
   final List<String> listOfCurrencies;
+
+  @override
+  State<DisplayCurrencies> createState() => _DisplayCurrenciesState();
+}
+
+class _DisplayCurrenciesState extends State<DisplayCurrencies> {
+  
+  late List<String> _list = widget.listOfCurrencies; 
+  late String _startValue ;
+
+  @override
+  void initState() {
+    super.initState();
+    _startValue = widget.startValue;
+  }
+
+  @override
+  void didUpdateWidget(DisplayCurrencies oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print("aggiorno ");
+    if (widget.startValue != oldWidget.startValue) {
+      setState(() {
+        _startValue = widget.startValue;
+      });
+    }
+
+    if (widget.listOfCurrencies != oldWidget.listOfCurrencies) {
+      setState(() {
+        _list = widget.listOfCurrencies;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +67,14 @@ class DisplayCurrencies extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           textDirection: TextDirection.ltr,
           children: [
-            Text(text!, style: TextStyle(fontSize: 16,)),
-            DropdownButtonCustom(listOfChoices: listOfCurrencies, onChange: onChange, selectedIndex: selectedIndex)
+            Text(widget.text!, style: TextStyle(fontSize: 16,)),
+            DropdownButtonCustom(
+              startValue: _startValue,
+              listOfChoices: _list, 
+              onChange: (value) {
+                widget.onChange(value);
+              },
+            )
           ],
         ),
       ],
