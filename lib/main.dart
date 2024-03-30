@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'screens/home_screen.dart';
+import 'widgets/custom_input_field.dart';
 import 'widgets/home_screen_bottom_navigation_bar.dart';
 import 'widgets/trip_card.dart';
 
@@ -113,55 +116,6 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class CustomInputField extends StatelessWidget {
-  const CustomInputField(
-      {super.key,
-      required this.fieldLabel,
-      required this.fieldHintText,
-      required this.fieldId,
-      required this.onChanged});
-
-  final int fieldId;
-  final String fieldLabel;
-  final String fieldHintText;
-  final void Function(String) onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 16),
-        Text(fieldLabel,
-            style: const TextStyle(
-                fontSize: 16,
-                color: Color.fromRGBO(45, 45, 45, 1),
-                fontWeight: FontWeight.bold)),
-        const SizedBox(
-          height: 8,
-        ),
-        TextFormField(
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Field cannot be empty';
-              }
-              if (value.startsWith(" ")) {
-                return 'Value cannot contain blank spaces';
-              }
-              return null;
-            },
-            onChanged: (value) {
-              onChanged(value);
-            },
-            decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              hintText: fieldHintText,
-            ))
-      ],
     );
   }
 }
@@ -349,22 +303,44 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                   foregroundColor: const Color.fromRGBO(53, 16, 79, 1),
                 )),
           ),
-          ElevatedButton(
-            onPressed: () {
-              // Validate returns true if the form is valid, or false otherwise.
-              if (_formKey.currentState!.validate()) {
-                if (_tripDates!.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Trip dates must be selected')),
-                  );
-                } else {
-                  print(
-                      "Name: $_name + Depart: $_cityOfDeparture + Arrival: $_cityOfArrival + Start: $_startDate + End: $_endDate");
-                }
-              }
-            },
-            child: const Text('Next'),
+          if (_tripDates!.isEmpty)
+            const SizedBox(
+              height: 100,
+            ),
+          if (_tripDates!.isNotEmpty)
+            const SizedBox(
+              height: 46,
+            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                style: const ButtonStyle(
+                    textStyle: MaterialStatePropertyAll(
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                    padding: MaterialStatePropertyAll(EdgeInsets.only(
+                        top: 16, bottom: 16, left: 32, right: 32)),
+                    backgroundColor:
+                        MaterialStatePropertyAll(Color.fromRGBO(53, 16, 79, 1)),
+                    foregroundColor: MaterialStatePropertyAll(
+                        Color.fromRGBO(255, 255, 255, 1))),
+                onPressed: () {
+                  // Validate returns true if the form is valid, or false otherwise.
+                  if (_formKey.currentState!.validate()) {
+                    if (_tripDates!.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Trip dates must be selected')),
+                      );
+                    } else {
+                      print(
+                          "Name: $_name + Depart: $_cityOfDeparture + Arrival: $_cityOfArrival + Start: $_startDate + End: $_endDate");
+                    }
+                  }
+                },
+                child: const Text('Next'),
+              ),
+            ],
           ),
         ],
       ),
