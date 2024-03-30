@@ -105,184 +105,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     fontSize: 36,
                     fontWeight: FontWeight.bold),
               ),
-              CustomInputField(
-                  fieldLabel: "Title",
-                  fieldHintText: "e.g. My Trip",
-                  onChanged: (value) {
-                    setState(() {
-                      _name = value;
-                    });
-                  }),
-              CustomInputField(
-                  fieldLabel: "Where from?",
-                  fieldHintText: "e.g. Bologna",
-                  onChanged: (value) {
-                    setState(() {
-                      _cityOfDeparture = value;
-                    });
-                  }),
-              CustomInputField(
-                  fieldLabel: "Where to?",
-                  fieldHintText: "e.g. Madrid",
-                  onChanged: (value) {
-                    setState(() {
-                      _cityOfArrival = value;
-                    });
-                  }),
-              const SizedBox(height: 16),
-              if (_tripDates!.length == 2)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Departure",
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Color.fromRGBO(45, 45, 45, 1),
-                                fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 8),
-                        Text(
-                          "${_tripDates![0]!.day.toString().padLeft(2, '0')}/${_tripDates![0]!.month.toString().padLeft(2, '0')}/${_tripDates![0]!.year}",
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Return",
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Color.fromRGBO(45, 45, 45, 1),
-                                fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 8),
-                        Text(
-                          "${_tripDates![1]!.day.toString().padLeft(2, '0')}/${_tripDates![1]!.month.toString().padLeft(2, '0')}/${_tripDates![1]!.year}",
-                          style: const TextStyle(fontSize: 16),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              if (_tripDates!.length == 1)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Departure",
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Color.fromRGBO(45, 45, 45, 1),
-                                fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 8),
-                        Text(
-                          "${_tripDates![0]!.day.toString().padLeft(2, '0')}/${_tripDates![0]!.month.toString().padLeft(2, '0')}/${_tripDates![0]!.year}",
-                          style: const TextStyle(fontSize: 16),
-                        )
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Return",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromRGBO(45, 45, 45, 1),
-                              fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "${_tripDates![0]!.day.toString().padLeft(2, '0')}/${_tripDates![0]!.month.toString().padLeft(2, '0')}/${_tripDates![0]!.year}",
-                          style: const TextStyle(fontSize: 16),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+              TripDetailsForm(),
               const SizedBox(
                 height: 16,
               ),
-              Container(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                    onPressed: () async {
-                      var results = await showCalendarDatePicker2Dialog(
-                        context: context,
-                        config: CalendarDatePicker2WithActionButtonsConfig(
-                          calendarType: CalendarDatePicker2Type.range,
-                          firstDate: DateTime.now(),
-                          controlsTextStyle: const TextStyle(
-                              fontFamily: 'Poppins',
-                              color: Color.fromRGBO(53, 16, 79, 1)),
-                        ),
-                        dialogSize: const Size(325, 400),
-                        value: [],
-                        borderRadius: BorderRadius.circular(16),
-                      );
-                      //If results (dates selected) is not empty, you set startDate and endDate according to the length of the trip
-                      //If the trip is 1 day long, startDate = endDate, otherwise they're set to the corresponding values
-                      if (results != null) {
-                        setState(() {
-                          _tripDates = results;
-                        });
-                        if (results.length == 2) {
-                          setState(() {
-                            _startDate = results[0];
-                            _endDate = results[1];
-                          });
-                        } else if (results.length == 1) {
-                          setState(() {
-                            _startDate = results[0];
-                            _endDate = results[0];
-                          });
-                        }
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.calendar_month_outlined,
-                      color: Color.fromRGBO(53, 16, 79, 1),
-                    ),
-                    label: Text(_tripDates!.isEmpty
-                        ? "Select trip dates"
-                        : "Change trip dates"),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.all(16),
-                      side: const BorderSide(
-                          color: Color.fromRGBO(53, 16, 79, 1), width: 2),
-                      foregroundColor: const Color.fromRGBO(53, 16, 79, 1),
-                    )),
-              ),
-              TripDetailsForm(
-                getUserInput: (userInput) {
-                  var fieldId = userInput['fieldId'];
-                  var newValue = userInput['newValue'];
-                  switch (fieldId) {
-                    case 1:
-                      setState(() {
-                        _name = newValue;
-                        print("Name " + _name);
-                      });
-                      break;
-                    case 2:
-                      setState(() {
-                        _cityOfDeparture = newValue;
-                        print("Departure " + _cityOfDeparture);
-                      });
-                      break;
-                    case 3:
-                      setState(() {
-                        _cityOfArrival = newValue;
-                        print("Arrival " + _cityOfArrival);
-                      });
-                      break;
-                  }
-                },
-              )
             ],
           ),
         ),
@@ -296,15 +122,13 @@ class CustomInputField extends StatelessWidget {
       {super.key,
       required this.fieldLabel,
       required this.fieldHintText,
-      required this.onChanged,
-      this.fieldId,
-      this.getUserInput});
+      required this.fieldId,
+      required this.onChanged});
 
-  final int? fieldId;
+  final int fieldId;
   final String fieldLabel;
   final String fieldHintText;
   final void Function(String) onChanged;
-  final void Function(Map<String, dynamic>)? getUserInput;
 
   @override
   Widget build(BuildContext context) {
@@ -332,7 +156,6 @@ class CustomInputField extends StatelessWidget {
             },
             onChanged: (value) {
               onChanged(value);
-              getUserInput?.call({"fieldId": fieldId, "newValue": value});
             },
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
@@ -344,9 +167,9 @@ class CustomInputField extends StatelessWidget {
 }
 
 class TripDetailsForm extends StatefulWidget {
-  const TripDetailsForm({super.key, this.getUserInput});
-
-  final void Function(Map<String, dynamic>)? getUserInput;
+  const TripDetailsForm({
+    super.key,
+  });
 
   @override
   State<TripDetailsForm> createState() => _TripDetailsFormState();
@@ -354,6 +177,12 @@ class TripDetailsForm extends StatefulWidget {
 
 class _TripDetailsFormState extends State<TripDetailsForm> {
   final _formKey = GlobalKey<FormState>();
+  List<DateTime?>? _tripDates = [];
+  var _name;
+  var _cityOfDeparture;
+  var _cityOfArrival;
+  var _startDate;
+  var _endDate;
 
   @override
   Widget build(BuildContext context) {
@@ -365,36 +194,174 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
             fieldId: 1,
             fieldLabel: "Title",
             fieldHintText: "e.g. My Trip",
-            onChanged: (value) {
-              (value);
+            onChanged: (userInput) {
+              print(userInput);
+              setState(() {
+                _name = userInput;
+              });
             },
-            getUserInput: widget.getUserInput,
           ),
           CustomInputField(
             fieldId: 2,
             fieldLabel: "Where from?",
             fieldHintText: "e.g. Bologna",
-            onChanged: (value) {
-              (value);
+            onChanged: (userInput) {
+              print(userInput);
+              setState(() {
+                _cityOfDeparture = userInput;
+              });
             },
-            getUserInput: widget.getUserInput,
           ),
           CustomInputField(
             fieldId: 3,
             fieldLabel: "Where to?",
             fieldHintText: "e.g. Madrid",
-            onChanged: (value) {
-              (value);
+            onChanged: (userInput) {
+              print("onChanged" + userInput);
+              setState(() {
+                _cityOfArrival = userInput;
+              });
             },
-            getUserInput: widget.getUserInput,
+          ),
+          const SizedBox(height: 16),
+          if (_tripDates!.length == 2)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Departure",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromRGBO(45, 45, 45, 1),
+                            fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Text(
+                      "${_tripDates![0]!.day.toString().padLeft(2, '0')}/${_tripDates![0]!.month.toString().padLeft(2, '0')}/${_tripDates![0]!.year}",
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Return",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromRGBO(45, 45, 45, 1),
+                            fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Text(
+                      "${_tripDates![1]!.day.toString().padLeft(2, '0')}/${_tripDates![1]!.month.toString().padLeft(2, '0')}/${_tripDates![1]!.year}",
+                      style: const TextStyle(fontSize: 16),
+                    )
+                  ],
+                )
+              ],
+            ),
+          if (_tripDates!.length == 1)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Departure",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromRGBO(45, 45, 45, 1),
+                            fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Text(
+                      "${_tripDates![0]!.day.toString().padLeft(2, '0')}/${_tripDates![0]!.month.toString().padLeft(2, '0')}/${_tripDates![0]!.year}",
+                      style: const TextStyle(fontSize: 16),
+                    )
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Return",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Color.fromRGBO(45, 45, 45, 1),
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "${_tripDates![0]!.day.toString().padLeft(2, '0')}/${_tripDates![0]!.month.toString().padLeft(2, '0')}/${_tripDates![0]!.year}",
+                      style: const TextStyle(fontSize: 16),
+                    )
+                  ],
+                )
+              ],
+            ),
+          const SizedBox(height: 16),
+          Container(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+                onPressed: () async {
+                  var results = await showCalendarDatePicker2Dialog(
+                    context: context,
+                    config: CalendarDatePicker2WithActionButtonsConfig(
+                      calendarType: CalendarDatePicker2Type.range,
+                      firstDate: DateTime.now(),
+                      controlsTextStyle: const TextStyle(
+                          fontFamily: 'Poppins',
+                          color: Color.fromRGBO(53, 16, 79, 1)),
+                    ),
+                    dialogSize: const Size(325, 400),
+                    value: [],
+                    borderRadius: BorderRadius.circular(16),
+                  );
+                  //If results (dates selected) is not empty, you set startDate and endDate according to the length of the trip
+                  //If the trip is 1 day long, startDate = endDate, otherwise they're set to the corresponding values
+                  if (results != null) {
+                    setState(() {
+                      _tripDates = results;
+                    });
+                    if (results.length == 2) {
+                      setState(() {
+                        _startDate = results[0];
+                        _endDate = results[1];
+                      });
+                    } else if (results.length == 1) {
+                      setState(() {
+                        _startDate = results[0];
+                        _endDate = results[0];
+                      });
+                    }
+                  }
+                },
+                icon: const Icon(
+                  Icons.calendar_month_outlined,
+                  color: Color.fromRGBO(53, 16, 79, 1),
+                ),
+                label: Text(_tripDates!.isEmpty
+                    ? "Select trip dates"
+                    : "Change trip dates"),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.all(16),
+                  side: const BorderSide(
+                      color: Color.fromRGBO(53, 16, 79, 1), width: 2),
+                  foregroundColor: const Color.fromRGBO(53, 16, 79, 1),
+                )),
           ),
           ElevatedButton(
             onPressed: () {
               // Validate returns true if the form is valid, or false otherwise.
               if (_formKey.currentState!.validate()) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
+                if (_tripDates!.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Trip dates must be selected')),
+                  );
+                } else {
+                  print(
+                      "Name: $_name + Depart: $_cityOfDeparture + Arrival: $_cityOfArrival + Start: $_startDate + End: $_endDate");
+                }
               }
             },
             child: const Text('Next'),
