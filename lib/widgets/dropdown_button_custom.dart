@@ -64,12 +64,17 @@ class _DropdownButtonCustomState extends State<DropdownButtonCustom> {
   Widget build(BuildContext context) {
     return DropdownButton<String>(
       value: _dropdownValue,
-      icon: const Icon(Icons.arrow_downward_sharp),
+      icon: const Icon(Icons.expand_more),
+      dropdownColor: Colors.white,
+      isExpanded: false,
+      isDense: false,
+      iconSize: 32,
+      
       elevation: 8,
-      style: const TextStyle(color: Colors.deepPurple,fontSize: 20),
+      style: const TextStyle(color: Color.fromRGBO(53,16,79,1),fontSize: 20),
       underline: Container(
         height: 2,
-        color: Colors.deepPurpleAccent,
+        color: Color.fromRGBO(53,16,79,1),
       ),
       onChanged: (String? value) {
         // Trova l'indice del valore selezionato

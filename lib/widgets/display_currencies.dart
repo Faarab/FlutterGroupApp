@@ -35,7 +35,6 @@ class _DisplayCurrenciesState extends State<DisplayCurrencies> {
   @override
   void didUpdateWidget(DisplayCurrencies oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print("aggiorno ");
     if (widget.startValue != oldWidget.startValue) {
       setState(() {
         _startValue = widget.startValue;
