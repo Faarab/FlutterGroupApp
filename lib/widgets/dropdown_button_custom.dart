@@ -33,8 +33,8 @@ class DropdownButtonCustom extends StatefulWidget {
 
 class _DropdownButtonCustomState extends State<DropdownButtonCustom> {
 
-  String _dropdownValue = "";
-  List<String> _list = [];
+  String _selectedValue = "";
+  List<String> _choicesList = [];
 
   @override
   void didUpdateWidget(DropdownButtonCustom oldWidget) {
@@ -42,12 +42,12 @@ class _DropdownButtonCustomState extends State<DropdownButtonCustom> {
     if (widget.startValue != oldWidget.startValue) {
       setState(() {
         String value = widget.listOfChoices.firstWhere((element) => element.substring(0,3) == widget.startValue);
-        _dropdownValue = value;
+        _selectedValue = value;
       });
     }
     if(widget.listOfChoices != oldWidget.listOfChoices){
       setState(() {
-        _list = List.from(widget.listOfChoices);
+        _choicesList = List.from(widget.listOfChoices);
       });
     }
   }
@@ -55,15 +55,15 @@ class _DropdownButtonCustomState extends State<DropdownButtonCustom> {
   @override
   void initState() {
     super.initState();
-    _list = List.from(widget.listOfChoices);
+    _choicesList = List.from(widget.listOfChoices);
     String value = widget.listOfChoices.firstWhere((element) => element.substring(0,3) == widget.startValue);
-    _dropdownValue = value;
+    _selectedValue = value;
   }
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
-      value: _dropdownValue,
+      value: _selectedValue,
       icon: const Icon(Icons.expand_more),
       dropdownColor: Colors.white,
       isExpanded: false,
@@ -79,12 +79,12 @@ class _DropdownButtonCustomState extends State<DropdownButtonCustom> {
       onChanged: (String? value) {
         // Trova l'indice del valore selezionato
         setState(() {
-          _dropdownValue = value!;
+          _selectedValue = value!;
          
         });
         widget.onChange(value!);
       },
-      items: _buildDropdownMenuItems(_list),
+      items: _buildDropdownMenuItems(_choicesList),
     );
   }
 }

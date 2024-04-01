@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:triptaptoe_app/services/Api.dart';
 
+import '../widgets/black_line_with_opacity.dart';
 import '../widgets/display_currencies.dart';
 import '../widgets/dropdown_button_custom.dart';
 
@@ -19,12 +20,12 @@ class Exchange_screen extends StatefulWidget {
 
 class _Exchange_screenState extends State<Exchange_screen> {
 
-  List<String> _listOfCurrencies = ["USD - US Dollar", "EUR - Euro", "GBP - British Pound"];
-  String _conversedValue = "0.00";
+  List<String> _currenciesList = ["USD - US Dollar", "EUR - Euro", "GBP - British Pound"];
+  String _convertedValue = "0.00";
   late String _currencyChosen ;
   late String _currencyToConvert;
-  late String _currencyRatio = "";
-  late String _currencyRatioInverted = "";
+  late String _exchangeRate = "";
+  late String _inverseExchangeRate = "";
   late List<String> _listOfCurrenciesFiltred;
   final myController = TextEditingController();
   bool isLoading = true;
@@ -32,16 +33,16 @@ class _Exchange_screenState extends State<Exchange_screen> {
   @override
   void initState() {
     super.initState();
-    _currencyChosen = _listOfCurrencies[0].substring(0, 3);
-    _currencyToConvert = _listOfCurrencies[1].substring(0, 3);
-    final tempList = _listOfCurrencies;
+    _currencyChosen = _currenciesList[0].substring(0, 3);
+    _currencyToConvert = _currenciesList[1].substring(0, 3);
+    final tempList = _currenciesList;
     _listOfCurrenciesFiltred = List.from(tempList);
     _listOfCurrenciesFiltred.removeWhere((currency) => currency.startsWith(_currencyChosen));
-     _fetchCurrencyRate();
+     fetchCurrencyRate();
      
   }
 
-  String covertValue(String value, String conversionRatio ) {
+  String convertValue(String value, String conversionRatio ) {
 
     try {
       double valueInDouble = double.parse(value);
@@ -55,33 +56,32 @@ class _Exchange_screenState extends State<Exchange_screen> {
     }
   }
 
-  String calculateInverseExchangeRate(String exchangeRate) {
+  String calculateInverseRate(String exchangeRate) {
     //TODO: fix the exchange rate, it's not working and return a wrong value
     double exchangeRateDouble = double.parse(exchangeRate);
     double inverseExchangeRate = 1 / exchangeRateDouble;
     return inverseExchangeRate.toStringAsFixed(2);
   }
-  Future<void> _fetchCurrencyRate() async {
+  Future<void> fetchCurrencyRate() async {
     isLoading = true;
-    print("parte la request");
     if(_currencyChosen == _currencyToConvert){
       setState(() {
-        _currencyRatio = "1";
-        _currencyRatioInverted = calculateInverseExchangeRate(_currencyRatio);
+        _exchangeRate = "1";
+        _inverseExchangeRate = calculateInverseRate(_exchangeRate);
         isLoading = false;
       });
     } else {
       String newCurrencyRate = await getCurrencyRateAsync(_currencyChosen, _currencyToConvert);
       setState(() {
-        _currencyRatio = newCurrencyRate;
-        _currencyRatioInverted = calculateInverseExchangeRate(_currencyRatio);
+        _exchangeRate = newCurrencyRate;
+        _inverseExchangeRate = calculateInverseRate(_exchangeRate);
         isLoading = false;
       });
     }
 
     if (myController.text.isNotEmpty) {
       setState(() {
-        _conversedValue = covertValue(myController.text, _currencyRatio);
+        _convertedValue = convertValue(myController.text, _exchangeRate);
       });
     }
   }
@@ -120,40 +120,34 @@ class _Exchange_screenState extends State<Exchange_screen> {
                   children: [
                     DisplayCurrencies(
                       startValue: _currencyChosen,
-                      listOfCurrencies: _listOfCurrencies,
+                      listOfCurrencies: _currenciesList,
                       text: "From",
                       onChange: (value) {
                         setState(() {
                           if(value.substring(0,3) == _currencyToConvert){
                             _currencyToConvert = _currencyChosen;
                             _currencyChosen = value.substring(0,3);
-                            List<String> tempList = List.from(_listOfCurrencies);
-                            
+                            List<String> tempList = List.from(_currenciesList);
                             tempList.removeWhere((currency) => currency.startsWith(_currencyChosen));
-                            
                             _listOfCurrenciesFiltred = List.from(tempList);
-                            
-                            _fetchCurrencyRate();
+                            fetchCurrencyRate();
                           } else {
-                            _currencyChosen = _listOfCurrencies.firstWhere((element) => element == value).substring(0,3);
-                            List<String> tempList = List.from(_listOfCurrencies);
-                            
+                            _currencyChosen = _currenciesList.firstWhere((element) => element == value).substring(0,3);
+                            List<String> tempList = List.from(_currenciesList);
                             tempList.removeWhere((currency) => currency.startsWith(_currencyChosen));
-                            
                             _listOfCurrenciesFiltred = List.from(tempList);
-                            
-                            _fetchCurrencyRate();
+                            fetchCurrencyRate();
                           }
                         });
                       },
                       ),
                     SizedBox(height: 8,),
-                    Text("1 : ${_currencyRatio}", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),),
+                    Text("1 : ${_exchangeRate}", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),),
                     SizedBox(height: 8,),
                     TextField(
                       onChanged: (value) {
                         setState(() {
-                          _conversedValue = covertValue(value, _currencyRatio);
+                          _convertedValue = convertValue(value, _exchangeRate);
                         });
                       },
                       controller: myController,
@@ -170,13 +164,7 @@ class _Exchange_screenState extends State<Exchange_screen> {
                     SizedBox(height: 24,),
                     Row(
                       children: [
-                        Container(
-                          height: 2,
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.3),
-                          ),
-                        ),
+                        BlackLineWithOpacity(),
                         Container(
                           height: 56,
                           width: 56,
@@ -193,8 +181,8 @@ class _Exchange_screenState extends State<Exchange_screen> {
                                   String temp = _currencyToConvert;
                                   _currencyToConvert = _currencyChosen;
                                   _currencyChosen = temp;
-                                  _fetchCurrencyRate();
-                                  List<String> tempList = List.from(_listOfCurrencies);
+                                  fetchCurrencyRate();
+                                  List<String> tempList = List.from(_currenciesList);
                                   tempList.removeWhere((currency) => currency.startsWith(_currencyChosen));
                                   _listOfCurrenciesFiltred = List.from(tempList);
                                 });
@@ -210,8 +198,8 @@ class _Exchange_screenState extends State<Exchange_screen> {
                       startValue: _currencyToConvert,
                       onChange: (value) {
                         setState(() {
-                          _currencyToConvert = _listOfCurrencies.firstWhere((element) => element == value).substring(0,3);
-                          _fetchCurrencyRate();
+                          _currencyToConvert = _currenciesList.firstWhere((element) => element == value).substring(0,3);
+                          fetchCurrencyRate();
                         });
                       },
                     ),
@@ -219,7 +207,7 @@ class _Exchange_screenState extends State<Exchange_screen> {
                     //Text("1 : ${_currencyRatioInverted}", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),), da sistemare
                     SizedBox(height: 16,),
                     Text(
-                      _conversedValue,
+                      _convertedValue,
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                       textAlign: TextAlign.center,
                     )
