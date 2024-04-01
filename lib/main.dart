@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
@@ -272,6 +273,8 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                   );
                   //If results (dates selected) is not empty, you set startDate and endDate according to the length of the trip
                   //If the trip is 1 day long, startDate = endDate, otherwise they're set to the corresponding values
+
+                  print(results);
                   if (results != null) {
                     setState(() {
                       _tripDates = results;
@@ -335,6 +338,78 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                     } else {
                       print(
                           "Name: $_name + Depart: $_cityOfDeparture + Arrival: $_cityOfArrival + Start: $_startDate + End: $_endDate");
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => Dialog(
+                              child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        "Your trip was created!",
+                                        style: TextStyle(
+                                            color:
+                                                Color.fromRGBO(45, 45, 45, 1),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      const Text(
+                                          textAlign: TextAlign.center,
+                                          "You can edit your itinerary now, or get back to it later.",
+                                          style: TextStyle(
+                                              color:
+                                                  Color.fromRGBO(45, 45, 45, 1),
+                                              fontSize: 16)),
+                                      const SizedBox(
+                                        height: 40,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: OutlinedButton(
+                                                onPressed: () {},
+                                                child: Text("Back to home"),
+                                                style: OutlinedButton.styleFrom(
+                                                  padding:
+                                                      const EdgeInsets.all(16),
+                                                  side: const BorderSide(
+                                                      color: Color.fromRGBO(
+                                                          53, 16, 79, 1),
+                                                      width: 2),
+                                                  foregroundColor:
+                                                      const Color.fromRGBO(
+                                                          53, 16, 79, 1),
+                                                )),
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Expanded(
+                                            child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  padding:
+                                                      const EdgeInsets.all(16),
+                                                  backgroundColor:
+                                                      Color.fromRGBO(
+                                                          53, 16, 79, 1),
+                                                  foregroundColor:
+                                                      Color.fromRGBO(
+                                                          255, 255, 255, 1),
+                                                ),
+                                                onPressed: () {},
+                                                child: Text("Edit trip")),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ))));
                     }
                   }
                 },
