@@ -22,6 +22,7 @@ class _BodyIteneraryState extends State<BodyItenerary> {
   late int _currentDayIndex;
   late bool _canGoBackward;
   late bool _canGoForward;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -59,6 +60,7 @@ class _BodyIteneraryState extends State<BodyItenerary> {
               if (_currentDayIndex > 0) {
                 _currentDayIndex--;
                 _canGoForward = true;
+                _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
               }
               if (_currentDayIndex == 0) {
                 _canGoBackward = false;
@@ -70,6 +72,7 @@ class _BodyIteneraryState extends State<BodyItenerary> {
               if (_currentDayIndex < widget.widget.trip.days!.length - 1) {
                 _currentDayIndex++;
                 _canGoBackward = true;
+                _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
               }
               if (_currentDayIndex == widget.widget.trip.days!.length - 1) {
                 _canGoForward = false;
@@ -80,7 +83,7 @@ class _BodyIteneraryState extends State<BodyItenerary> {
         SizedBox(
           height: 0,
         ),
-        CardItinerary(widget: widget, day: widget.widget.trip.days![_currentDayIndex], ),
+        CardItinerary(widget: widget, day: widget.widget.trip.days![_currentDayIndex],scrollController:_scrollController , ),
       ],
     );
   }
