@@ -94,7 +94,7 @@ class _CardItineraryState extends State<CardItinerary> {
                         ),
                         beforeLineStyle: LineStyle(
                           color: Color.fromRGBO(53,16,79,1),
-                          thickness: 3,
+                          thickness: 5,
                         ),
                         endChild: ListTile(
                           title: Text(
