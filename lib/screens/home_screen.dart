@@ -4,22 +4,38 @@ import 'package:triptaptoe_app/main.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:triptaptoe_app/widgets/home_screen_bottom_navigation_bar.dart';
 import 'package:triptaptoe_app/widgets/trip_card.dart';
+import 'package:flutter/services.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
 
-  final trip = TripDTO.fromJson(jsonDecode(tripJSON));
-  final trip2 = TripDTO.fromJson(jsonDecode(tripJSON));
-  final trip3 = TripDTO.fromJson(jsonDecode(tripJSON));
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   List<TripDTO> tripArray = [];
+
+  //Read the JSON file content and set the array to the list in the JSON
+  //This makes it so that you read the JSON file and can then display a card for each trip
+  Future<void> readJson() async {
+    final String response =
+        await rootBundle.loadString('assets/images/sample.json');
+    final Map<String, dynamic> data = await json.decode(response);
+    List<dynamic> dynamicTripsList = data["trips"];
+    var tripsList = dynamicTripsList.map(
+      (e) {
+        return TripDTO.fromJson(e);
+      },
+    ).toList();
+    setState(() {
+      tripArray = tripsList;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    tripArray = [];
-    tripArray.add(trip);
-    tripArray.add(trip2);
-    tripArray.add(trip3);
-
+    readJson();
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
@@ -35,9 +51,13 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print("Pressed floating button");
+        onPressed: () => {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => TripDetailsScreen()),
+          )
         },
+        hoverColor: Color.fromRGBO(99, 31, 147, 1),
         backgroundColor: Color.fromRGBO(53, 16, 79, 1),
         shape: CircleBorder(),
         child: Icon(
@@ -52,12 +72,6 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // const Text("Your trips",
-            //     style: TextStyle(
-            //         color: Color.fromRGBO(45, 45, 45, 1),
-            //         fontSize: 40,
-            //         fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
                 itemCount: tripArray.length,
@@ -75,32 +89,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
-            // Container(
-            //   decoration: BoxDecoration(
-            //     shape: BoxShape.circle,
-            //     boxShadow: [
-            //       BoxShadow(
-            //         color: Colors.black.withOpacity(0.3),
-            //         spreadRadius: 1,
-            //         blurRadius: 2,
-            //         offset: Offset(0, 2),
-            //       ),
-            //     ],
-            //   ),
-            //   child: Ink(
-            //     padding: const EdgeInsets.all(8.0),
-            //     decoration: const ShapeDecoration(
-            //       color: Color.fromRGBO(53, 16, 79, 1),
-            //       shape: CircleBorder(),
-            //     ),
-            //     child: IconButton(
-            //       onPressed: () {},
-            //       icon: const Icon(
-            //         Icons.add,
-            //         size: 32,
-            //         color: Color.fromRGBO(255, 255, 255, 1),
-            //       ),
-            //     ),
-            //   ),
-            // ),

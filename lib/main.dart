@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +8,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 
 import 'screens/home_screen.dart';
 import 'widgets/custom_input_field.dart';
 import 'widgets/home_screen_bottom_navigation_bar.dart';
 import 'widgets/trip_card.dart';
-
+import 'package:path_provider/path_provider.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 
 final tripJSON = """{
@@ -90,8 +92,14 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(53, 16, 79, 1),
         toolbarHeight: 64,
-        leading: Icon(
-          Icons.arrow_back,
+        leading: IconButton(
+          onPressed: () => {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            )
+          },
+          icon: Icon(Icons.arrow_back),
           color: Colors.white,
         ),
       ),
@@ -138,6 +146,36 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
   var _cityOfArrival;
   var _startDate;
   var _endDate;
+
+  Future<void> addTripToJson(TripDTO newTrip) async {
+    final String response =
+        await rootBundle.loadString('assets/images/sample.json');
+    final Map<String, dynamic> data = json.decode(response);
+    List<dynamic> dynamicTripsList = data["trips"];
+    //Copy the existing list and convert it to a list of TripDTOs, so that I can later add a new TripDTO item
+    var tripsList = dynamicTripsList.map(
+      (e) {
+        return TripDTO.fromJson(e);
+      },
+    ).toList();
+    print(tripsList);
+    //Add the new trip to the original list
+    tripsList.add(newTrip);
+    print("------------");
+    print(tripsList);
+  }
+
+  Future<void> readAndWriteJson() async {
+    // String filePath = 'C:\projects\FlutterGroupApp\assets\images\sample.json';
+    // final File myFile = File(filePath);
+    // String contents = myFile.readAsStringSync();
+
+    final merda = await rootBundle.loadString('assets/images/sample.json');
+    final merdaJSON = json.decode(merda);
+    print(merda);
+    print(merdaJSON.runtimeType);
+    print(merdaJSON["trips"]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -338,6 +376,15 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                     } else {
                       print(
                           "Name: $_name + Depart: $_cityOfDeparture + Arrival: $_cityOfArrival + Start: $_startDate + End: $_endDate");
+                      var _newTrip = new TripDTO(
+                          id: "1",
+                          name: _name,
+                          startDate: _startDate,
+                          endDate: _endDate,
+                          cityOfDeparture: _cityOfDeparture,
+                          cityOfArrival: _cityOfArrival);
+                      //addTripToJson(_newTrip);
+                      readAndWriteJson();
                       showDialog(
                           context: context,
                           builder: (BuildContext context) => Dialog(
@@ -376,7 +423,16 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                                         children: [
                                           Expanded(
                                             child: OutlinedButton(
-                                                onPressed: () {},
+                                                onPressed: () => {
+                                                      Navigator.of(context)
+                                                          .popUntil((route) =>
+                                                              route.isFirst),
+                                                      Navigator.pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  HomeScreen()))
+                                                    },
                                                 child: Text("Back to home"),
                                                 style: OutlinedButton.styleFrom(
                                                   padding:

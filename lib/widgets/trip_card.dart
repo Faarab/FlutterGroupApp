@@ -14,11 +14,18 @@ class TripCard extends StatelessWidget {
       children: [
         //If the index is 0, the "Your trips" title is added to the home screen
         if (index == 0)
-          const Text("Your trips",
-              style: TextStyle(
-                  color: Color.fromRGBO(45, 45, 45, 1),
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold)),
+          const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 16),
+              const Text("Your trips",
+                  style: TextStyle(
+                      color: Color.fromRGBO(45, 45, 45, 1),
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold)),
+              SizedBox(height: 16)
+            ],
+          ),
         Card(
           color: const Color.fromRGBO(255, 255, 255, 1),
           elevation: 4,
