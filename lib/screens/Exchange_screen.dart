@@ -89,134 +89,144 @@ class _Exchange_screenState extends State<Exchange_screen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 28.0, right: 28.0,top: 32.0),
-      child: Column(
-        textDirection: TextDirection.ltr,
-        children: [
-          Text("Currency Converter", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),),
-          SizedBox(height: 16,),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.58,
-            width: MediaQuery.of(context).size.width * 1,
-            child: Card(
-              elevation: 4,
-              child: 
-              isLoading ?
-              Center(
-                child: Container(
-                  height: 80,
-                  width: 80,
-                  child: CircularProgressIndicator(
-                    color: Color.fromRGBO(53,16,79,1),
-                    strokeWidth: 6,
+      padding: const EdgeInsets.only(left: 29.0, right: 29.0,top: 32.0),
+      child: SingleChildScrollView(
+        child: Column(
+          textDirection: TextDirection.ltr,
+          children: [
+            Text("Currency Converter", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),),
+            SizedBox(height: 16,),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.58,
+              width: MediaQuery.of(context).size.width * 1,
+              child: Card(
+                elevation: 4,
+                child: 
+                isLoading ?
+                Center(
+                  child: Container(
+                    height: 80,
+                    width: 80,
+                    child: CircularProgressIndicator(
+                      color: Color.fromRGBO(53,16,79,1),
+                      strokeWidth: 6,
+                    ),
                   ),
-                ),
-              ) :  
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  textDirection: TextDirection.ltr,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DisplayCurrencies(
-                      startValue: _currencyChosen,
-                      listOfCurrencies: _currenciesList,
-                      text: "From",
-                      onChange: (value) {
-                        setState(() {
-                          if(value.substring(0,3) == _currencyToConvert){
-                            _currencyToConvert = _currencyChosen;
-                            _currencyChosen = value.substring(0,3);
-                            List<String> tempList = List.from(_currenciesList);
-                            tempList.removeWhere((currency) => currency.startsWith(_currencyChosen));
-                            _listOfCurrenciesFiltred = List.from(tempList);
-                            fetchCurrencyRate();
-                          } else {
-                            _currencyChosen = _currenciesList.firstWhere((element) => element == value).substring(0,3);
-                            List<String> tempList = List.from(_currenciesList);
-                            tempList.removeWhere((currency) => currency.startsWith(_currencyChosen));
-                            _listOfCurrenciesFiltred = List.from(tempList);
-                            fetchCurrencyRate();
-                          }
-                        });
-                      },
+                ) :  
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    textDirection: TextDirection.ltr,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DisplayCurrencies(
+                        startValue: _currencyChosen,
+                        listOfCurrencies: _currenciesList,
+                        text: "From",
+                        onChange: (value) {
+                          setState(() {
+                            if(value.substring(0,3) == _currencyToConvert){
+                              _currencyToConvert = _currencyChosen;
+                              _currencyChosen = value.substring(0,3);
+                              List<String> tempList = List.from(_currenciesList);
+                              tempList.removeWhere((currency) => currency.startsWith(_currencyChosen));
+                              _listOfCurrenciesFiltred = List.from(tempList);
+                              fetchCurrencyRate();
+                            } else {
+                              _currencyChosen = _currenciesList.firstWhere((element) => element == value).substring(0,3);
+                              List<String> tempList = List.from(_currenciesList);
+                              tempList.removeWhere((currency) => currency.startsWith(_currencyChosen));
+                              _listOfCurrenciesFiltred = List.from(tempList);
+                              fetchCurrencyRate();
+                            }
+                          });
+                        },
+                        ),
+                      SizedBox(height: 8,),
+                      Text("1 : ${_exchangeRate}", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),),
+                      SizedBox(height: 8,),
+                      TextField(
+                        strutStyle: StrutStyle(
+
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            _convertedValue = convertValue(value, _exchangeRate);
+                          });
+                        },
+                        controller: myController,
+                        keyboardType: TextInputType.number,
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                        decoration: InputDecoration(
+                          hintText: '0.00',
+                          contentPadding: EdgeInsets.all(8),
+                          hintStyle: TextStyle(color: const Color.fromARGB(255, 84, 75, 75),fontSize: 24),
+                          border: OutlineInputBorder(
+                            gapPadding: 0,
+                          )
+
+                        ),
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*(?:\.\d{0,2})?$'))//regex che prende solo 10 cifre
+                        ],
                       ),
-                    SizedBox(height: 8,),
-                    Text("1 : ${_exchangeRate}", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),),
-                    SizedBox(height: 8,),
-                    TextField(
-                      onChanged: (value) {
-                        setState(() {
-                          _convertedValue = convertValue(value, _exchangeRate);
-                        });
-                      },
-                      controller: myController,
-                      keyboardType: TextInputType.number,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                      decoration: InputDecoration(
-                        hintText: '0.00',
-                        hintStyle: TextStyle(color: const Color.fromARGB(255, 84, 75, 75),fontSize: 24),
+                      SizedBox(height: 24,),
+                      Row(
+                        children: [
+                          BlackLineWithOpacity(),
+                          Container(
+                            height: 56,
+                            width: 56,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color.fromRGBO(53,16,79,1),
+                            ),
+                            child: Transform.rotate(
+                              angle: -90 * 3.14 / 180,
+                              child: IconButton(
+                                icon: Icon(Icons.compare_arrows, color: Colors.white, size: 40,),
+                                onPressed: () {
+                                  setState(() {
+                                    String temp = _currencyToConvert;
+                                    _currencyToConvert = _currencyChosen;
+                                    _currencyChosen = temp;
+                                    fetchCurrencyRate();
+                                    List<String> tempList = List.from(_currenciesList);
+                                    tempList.removeWhere((currency) => currency.startsWith(_currencyChosen));
+                                    _listOfCurrenciesFiltred = List.from(tempList);
+                                  });
+                                },
+                              )
+                            ),
+                          )
+                        ],
                       ),
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d{0,10}(?:\.\d{0,2})?$'))//regex che prende solo 10 cifre
-                      ],
-                    ),
-                    SizedBox(height: 24,),
-                    Row(
-                      children: [
-                        BlackLineWithOpacity(),
-                        Container(
-                          height: 56,
-                          width: 56,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color.fromRGBO(53,16,79,1),
-                          ),
-                          child: Transform.rotate(
-                            angle: -90 * 3.14 / 180,
-                            child: IconButton(
-                              icon: Icon(Icons.compare_arrows, color: Colors.white, size: 40,),
-                              onPressed: () {
-                                setState(() {
-                                  String temp = _currencyToConvert;
-                                  _currencyToConvert = _currencyChosen;
-                                  _currencyChosen = temp;
-                                  fetchCurrencyRate();
-                                  List<String> tempList = List.from(_currenciesList);
-                                  tempList.removeWhere((currency) => currency.startsWith(_currencyChosen));
-                                  _listOfCurrenciesFiltred = List.from(tempList);
-                                });
-                              },
-                            )
-                          ),
-                        )
-                      ],
-                    ),
-                    DisplayCurrencies(
-                      listOfCurrencies: _listOfCurrenciesFiltred,
-                      text: "To",
-                      startValue: _currencyToConvert,
-                      onChange: (value) {
-                        setState(() {
-                          _currencyToConvert = _currenciesList.firstWhere((element) => element == value).substring(0,3);
-                          fetchCurrencyRate();
-                        });
-                      },
-                    ),
-                    SizedBox(height: 16,),
-                    //Text("1 : ${_currencyRatioInverted}", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),), da sistemare
-                    SizedBox(height: 16,),
-                    Text(
-                      _convertedValue,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-              )
-            ),
-          )
-        ],
+                      DisplayCurrencies(
+                        listOfCurrencies: _listOfCurrenciesFiltred,
+                        text: "To",
+                        startValue: _currencyToConvert,
+                        onChange: (value) {
+                          setState(() {
+                            _currencyToConvert = _currenciesList.firstWhere((element) => element == value).substring(0,3);
+                            fetchCurrencyRate();
+                          });
+                        },
+                      ),
+                      SizedBox(height: 16,),
+                      //Text("1 : ${_currencyRatioInverted}", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),), da sistemare
+                      SizedBox(height: 16,),
+                      Text(
+                        _convertedValue,
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                )
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
