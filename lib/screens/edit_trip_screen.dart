@@ -1,5 +1,7 @@
 
 
+import 'dart:ffi';
+
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +60,12 @@ class _EditTripScreenState extends State<EditTripScreen> {
           _startDate: $_startDate
           _endDate: $_endDate
           """);
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return DialogEditTrip();
+            }
+          );
         }, 
         child: const Icon(Icons.save,color: Colors.white),
         backgroundColor: Color.fromRGBO(53, 16, 79, 1),
@@ -126,3 +134,77 @@ class _EditTripScreenState extends State<EditTripScreen> {
   }
 }
 
+class DialogEditTrip extends StatefulWidget {
+  const DialogEditTrip({Key? key});
+
+  @override
+  State<DialogEditTrip> createState() => _DialogEditTripState();
+}
+
+class _DialogEditTripState extends State<DialogEditTrip> {
+  final String contentText =
+      "Changing this section will permanently erase all your itinerary information.\nDo you want to proceed?";
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Warning!",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+              ),
+            ),
+            SizedBox(height: 20.0),
+            Text(contentText,textAlign: TextAlign.center,style: TextStyle(fontSize: 16.0),),
+            SizedBox(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    )
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("Cancel"),
+                ),
+                SizedBox(width: 20.0),
+                TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(53, 16, 79, 1)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    )
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: Text("Continue"),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
