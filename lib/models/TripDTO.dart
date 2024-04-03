@@ -21,6 +21,26 @@ class TripDTO {
   final String cityOfArrival;
   final List<DayDTO>? days;
 
+  TripDTO copyWith({
+    String? id,
+    String? name,
+    DateTime? startDate,
+    DateTime? endDate,
+    String? cityOfDeparture,
+    String? cityOfArrival,
+    List<DayDTO>? days,
+  }) {
+    return TripDTO(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      cityOfDeparture: cityOfDeparture ?? this.cityOfDeparture,
+      cityOfArrival: cityOfArrival ?? this.cityOfArrival,
+      days: days ?? this.days,
+    );
+  }
+
   factory TripDTO.fromJson(Map<String, dynamic> json) {
     late List<DayDTO>? days;
     final numOfDays = json['days'].length;
@@ -39,7 +59,7 @@ class TripDTO {
     );
   }
 
-
+  
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,

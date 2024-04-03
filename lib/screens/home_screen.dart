@@ -23,6 +23,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color.fromRGBO(53, 16, 79, 1),
         toolbarHeight: 64,
         actions: [

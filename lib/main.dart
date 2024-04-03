@@ -65,7 +65,7 @@ void main() {
   runApp(MaterialApp(
       theme:
           ThemeData.light().copyWith(textTheme: GoogleFonts.poppinsTextTheme()),
-      home: SafeArea(child: TripDetailsScreen())));
+      home: SafeArea(child: HomeScreen())));
 }
 
 class TripDetailsScreen extends StatefulWidget {

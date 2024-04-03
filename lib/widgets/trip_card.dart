@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
+import 'package:triptaptoe_app/screens/edit_trip_screen.dart';
 
 class TripCard extends StatelessWidget {
   const TripCard({super.key, required this.trip, required this.index});
@@ -79,7 +80,7 @@ class TripCard extends StatelessWidget {
                           shape: CircleBorder()),
                       child: IconButton(
                           onPressed: () {
-                            print("Edit button pressed");
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditTripScreen(trip: trip)));
                           },
                           icon: const Icon(
                             Icons.edit,
