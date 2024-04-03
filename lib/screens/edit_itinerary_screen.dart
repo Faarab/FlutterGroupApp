@@ -19,7 +19,7 @@ class EditItineraryScreen extends StatelessWidget {
           appBar: MyAppBar(
             goBack: Scaffold(body: Text("Create a new trip"),),
           ),
-         body: MyBody(activity: Scaffold(body: Text("Activity Overlay")),), 
+         body: MyBody(), 
          floatingActionButton: SaveBtn(),                       
         );                
   }    

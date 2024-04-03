@@ -11,7 +11,6 @@ final TripDTO trip = TripDTO.fromJson(jsonData);
 
 void main() {
   runApp(MaterialApp(
-      
       debugShowCheckedModeBanner: false,
       home: SafeArea(
         child: EditItineraryScreen()
