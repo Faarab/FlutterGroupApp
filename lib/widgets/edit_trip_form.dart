@@ -75,10 +75,10 @@ class _EditTripFormState extends State<EditTripForm> {
             fieldId: 3, 
             onChanged: (widget.onChangeCityOfArrival)
           ),
-          SizedBox(
-            height:16,
+          const SizedBox(
+            height:36,
           ),
-          Container(
+          SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
               onPressed: () async {
@@ -105,7 +105,7 @@ class _EditTripFormState extends State<EditTripForm> {
                 Icons.calendar_month_outlined,
                 color: Color.fromRGBO(53, 16, 79, 1),
               ),
-              label: Text("Change trip dates"),
+              label: const Text("Change trip dates"),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.all(16),
                 side: const BorderSide(

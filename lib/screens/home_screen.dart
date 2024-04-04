@@ -21,10 +21,10 @@ class HomeScreen extends StatelessWidget {
     tripArray.add(trip3);
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+      backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Color.fromRGBO(53, 16, 79, 1),
+        backgroundColor: const Color.fromRGBO(53, 16, 79, 1),
         toolbarHeight: 64,
         actions: [
           IconButton(
@@ -39,15 +39,15 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           print("Pressed floating button");
         },
-        backgroundColor: Color.fromRGBO(53, 16, 79, 1),
-        shape: CircleBorder(),
-        child: Icon(
+        backgroundColor: const Color.fromRGBO(53, 16, 79, 1),
+        shape: const CircleBorder(),
+        child: const Icon(
           Icons.add,
           color: Colors.white,
           size: 32,
         ),
       ),
-      bottomNavigationBar: HomeScreenBottomNavigationBar(),
+      bottomNavigationBar: const HomeScreenBottomNavigationBar(),
       body: Padding(
         padding: const EdgeInsets.only(left: 29, right: 29),
         child: Column(

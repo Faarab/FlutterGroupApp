@@ -61,12 +61,12 @@ class TripCard extends StatelessWidget {
               Padding(
                   padding: const EdgeInsets.only(left: 16, top: 8),
                   child: Text(
-                    "Leave from: " + trip.cityOfDeparture,
-                    style: TextStyle(color: Color.fromRGBO(45, 45, 45, 1)),
+                    "Leave from: ${trip.cityOfDeparture}",
+                    style: const TextStyle(color: Color.fromRGBO(45, 45, 45, 1)),
                   )),
               Padding(
-                  padding: EdgeInsets.only(left: 16, top: 8),
-                  child: Text("Arrive in: " + trip.cityOfArrival,
+                  padding: const EdgeInsets.only(left: 16, top: 8),
+                  child: Text("Arrive in: ${trip.cityOfArrival}",
                       style: const TextStyle(
                           color: Color.fromRGBO(45, 45, 45, 1)))),
               Padding(
@@ -94,7 +94,7 @@ class TripCard extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 16)
+        const SizedBox(height: 16)
       ],
     );
   }
