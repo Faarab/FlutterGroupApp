@@ -5,6 +5,8 @@ import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:triptaptoe_app/widgets/home_screen_bottom_navigation_bar.dart';
 import 'package:triptaptoe_app/widgets/trip_card.dart';
 import 'package:flutter/services.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
@@ -33,9 +35,23 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> readAndWriteJson() async {
+    final myDirectory = await getApplicationDocumentsDirectory();
+    final myPath = myDirectory.path;
+    //print(myPath);
+    final myFile = File('$myPath/trips.json');
+
+    final contents = await myFile.readAsString();
+    if (contents != "") {
+      final Map<String, dynamic> contentsJSON = jsonDecode(contents);
+      print(contentsJSON['cityOfDeparture']);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    readJson();
+    //readJson();
+    readAndWriteJson();
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(

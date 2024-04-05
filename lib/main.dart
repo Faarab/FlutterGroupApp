@@ -166,15 +166,27 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
   }
 
   Future<void> readAndWriteJson() async {
-    // String filePath = 'C:\projects\FlutterGroupApp\assets\images\sample.json';
-    // final File myFile = File(filePath);
-    // String contents = myFile.readAsStringSync();
+    // final contenutoJSON = json.decode(merda);
+    // contenutoJSON['trips'][0] = {"exampleKey": "exampleValue"};
+    // print(contenutoJSON);
 
-    final merda = await rootBundle.loadString('assets/images/sample.json');
-    final merdaJSON = json.decode(merda);
-    print(merda);
-    print(merdaJSON.runtimeType);
-    print(merdaJSON["trips"]);
+    final myDirectory = await getApplicationDocumentsDirectory();
+    final myPath = myDirectory.path;
+    print(myPath);
+    final myFile = File('$myPath/trips.json');
+    myFile.writeAsString("");
+    // myFile.writeAsString("""{
+    //   "id": "2",
+    //   "name": "Short Business Trip",
+    //   "startDate": "2024-05-05T00:00:00Z",
+    //   "endDate": "2024-05-07T00:00:00Z",
+    //   "cityOfDeparture": "San Francisco",
+    //   "cityOfArrival": "Chicago",
+    //   "days": []
+    // }""");
+
+    final contents = await myFile.readAsString();
+    print(contents);
   }
 
   @override
