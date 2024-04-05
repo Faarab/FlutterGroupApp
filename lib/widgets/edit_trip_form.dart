@@ -76,8 +76,44 @@ class _EditTripFormState extends State<EditTripForm> {
             onChanged: (widget.onChangeCityOfArrival)
           ),
           const SizedBox(
-            height:36,
+            height:16,
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Departure",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Color.fromRGBO(45, 45, 45, 1),
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Text(
+                    "${_startDate.day.toString().padLeft(2, '0')}/${_startDate.month.toString().padLeft(2, '0')}/${_startDate.year}",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Return",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Color.fromRGBO(45, 45, 45, 1),
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Text(
+                    "${_endDate.day.toString().padLeft(2, '0')}/${_endDate.month.toString().padLeft(2, '0')}/${_endDate.year}",
+                    style: const TextStyle(fontSize: 16),
+                  )
+                ],
+              )
+            ],
+          ),
+          SizedBox(height:16),
           SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(

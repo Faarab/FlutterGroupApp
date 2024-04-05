@@ -1,7 +1,6 @@
-
+//TODO sistemare bug spinning quando salvo le modifiche dal dialogue essro rimane aperto e non visualizzo lo spinning dietro
 
 import 'dart:ffi';
-
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +31,7 @@ class _EditTripScreenState extends State<EditTripScreen> {
   late String _cityOfArrival;
   late DateTime _startDate;
   late DateTime _endDate;
-
+  bool isSaving = false;
 
   @override
   void initState() {
@@ -51,19 +50,38 @@ class _EditTripScreenState extends State<EditTripScreen> {
         screen: HomeScreen()
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           if( _cityOfDeparture == widget.trip.cityOfDeparture 
               && _cityOfArrival == widget.trip.cityOfArrival 
               && _startDate == widget.trip.startDate 
               && _endDate == widget.trip.endDate){ 
+            setState(() {
+              print("sono qui");
+              isSaving = true;
+            });
             //TODO meto di salvataggio dati su json
-            //TODO inserire uno spinner di caricamento mentre salva i dati
+            await Future.delayed(Duration(seconds:3));
+            setState(() {
+              print("sono qua");
+              isSaving = false;
+            });
+            
             navigateToHomeWithSlideTransition(context);
           } else {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return const DialogEditTrip();
+                return DialogEditTrip(
+                  onPressed: (bool) {
+                    setState(() {
+                      isSaving = bool;
+                    });
+                    if(bool == false) {
+                      print("sono qui");
+                      navigateToHomeWithSlideTransition(context);
+                    }
+                  },
+                );
               }
             );
           }
@@ -72,8 +90,10 @@ class _EditTripScreenState extends State<EditTripScreen> {
         shape: const CircleBorder(), 
         child: const Icon(Icons.save,color: Colors.white),
       ),
-      body: ListView.builder(
-        itemCount: 1, // Numero di elementi nella lista (in questo caso, solo uno)
+      body: isSaving ? 
+        const Center(child: CircularProgressIndicator(),) : 
+        ListView.builder(
+        itemCount: 1, 
         itemBuilder: (BuildContext context, int index) {
           return Padding(
             padding: const EdgeInsets.only(left: 29, right: 29),
@@ -151,7 +171,13 @@ class _EditTripScreenState extends State<EditTripScreen> {
 }
 
 class DialogEditTrip extends StatefulWidget {
-  const DialogEditTrip({Key? key});
+  const DialogEditTrip({
+      Key? key,
+      required this.onPressed,
+    });
+
+  final Function(bool) onPressed;
+
 
   @override
   State<DialogEditTrip> createState() => _DialogEditTripState();
@@ -161,7 +187,6 @@ class _DialogEditTripState extends State<DialogEditTrip> {
   final String contentText =
       "Changing this section will permanently erase all your itinerary information.\nDo you want to proceed?";
   
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog.adaptive(
@@ -203,9 +228,12 @@ class _DialogEditTripState extends State<DialogEditTrip> {
                       ),
                     )
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    widget.onPressed(true);
+                    //TODO meto di salvataggio dati su json
+                    await Future.delayed(Duration(seconds:3));
+                    widget.onPressed(false);
                     //TODO inserire la funzione per salvare i dati e lo spinning
-                    navigateToHomeWithSlideTransition(context);
                   },
                   child: const Text("Continue",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),
                 ),
