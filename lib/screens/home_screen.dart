@@ -38,13 +38,28 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> readAndWriteJson() async {
     final myDirectory = await getApplicationDocumentsDirectory();
     final myPath = myDirectory.path;
-    //print(myPath);
+    print(myPath);
     final myFile = File('$myPath/trips.json');
-
+    //myFile.writeAsString("");
     final contents = await myFile.readAsString();
     if (contents != "") {
       final Map<String, dynamic> contentsJSON = jsonDecode(contents);
-      print(contentsJSON['cityOfDeparture']);
+      print(contentsJSON);
+
+      List<dynamic> dynamicTripsList = contentsJSON['trips'];
+      print(dynamicTripsList);
+      final List<TripDTO> tripsList = dynamicTripsList.map(
+        (e) {
+          return TripDTO.fromJson(e);
+        },
+      ).toList();
+      print(tripsList);
+
+      setState(() {
+        tripArray = tripsList;
+      });
+    } else {
+      print("File is empty");
     }
   }
 

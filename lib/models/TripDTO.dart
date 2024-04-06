@@ -21,7 +21,13 @@ class TripDTO {
 
   factory TripDTO.fromJson(Map<String, dynamic> json) {
     late List<DayDTO>? days;
-    final numOfDays = json['days'].length;
+    var numOfDays;
+    if (json['days'] != null) {
+      numOfDays = json['days'];
+    } else {
+      numOfDays = 0;
+    }
+
     if (numOfDays != 0) {
       days = List<DayDTO>.from(json['days'].map((day) => DayDTO.fromJson(day)));
     } else {

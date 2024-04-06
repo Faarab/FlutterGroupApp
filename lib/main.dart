@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:triptaptoe_app/models/DayDTO.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
@@ -170,11 +171,47 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     // contenutoJSON['trips'][0] = {"exampleKey": "exampleValue"};
     // print(contenutoJSON);
 
+    //Access the "trips.json" file
     final myDirectory = await getApplicationDocumentsDirectory();
     final myPath = myDirectory.path;
-    print(myPath);
     final myFile = File('$myPath/trips.json');
-    myFile.writeAsString("");
+
+    //Read the file contents, if the file is empty initialize it otherwise add a new trip
+    final contents = await myFile.readAsString();
+    if (contents == "") {
+      final _id = "0";
+      final newTrip = new TripDTO(
+        id: _id,
+        name: _name,
+        startDate: _startDate,
+        endDate: _endDate,
+        cityOfDeparture: _cityOfDeparture,
+        cityOfArrival: _cityOfArrival,
+      );
+      final fileStructure = {
+        "trips": [newTrip]
+      };
+      myFile.writeAsString(jsonEncode(fileStructure));
+      // myFile.writeAsString("""{
+      //   "trips": [$newTrip]
+      // }""");
+    } else {
+      final contentsJSON = jsonDecode(contents);
+      final tripsList = contentsJSON['trips'];
+      final _id = (tripsList.length + 1).toString();
+      final newTrip = new TripDTO(
+          id: _id,
+          name: _name,
+          startDate: _startDate,
+          endDate: _endDate,
+          cityOfDeparture: _cityOfDeparture,
+          cityOfArrival: _cityOfArrival,
+          days: [new DayDTO(date: DateTime.now())]);
+      final newTripsList = [...tripsList, newTrip];
+      contentsJSON['trips'] = newTripsList;
+      myFile.writeAsString(jsonEncode(contentsJSON));
+    }
+
     // myFile.writeAsString("""{
     //   "id": "2",
     //   "name": "Short Business Trip",
@@ -184,9 +221,6 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     //   "cityOfArrival": "Chicago",
     //   "days": []
     // }""");
-
-    final contents = await myFile.readAsString();
-    print(contents);
   }
 
   @override
