@@ -1,36 +1,38 @@
 
-import 'package:triptaptoe_app/models/ActivityDTO.dart';
+import 'package:triptaptoe_app/models/CityDTO.dart';
 
 class DayDTO {
   
   DayDTO({
     required this.date,
-    this.activities,
+    this.cities,
   });
 
   final DateTime date;
-  final List<ActivityDTO>? activities;
+  final List<CityDTO>? cities;
 
   Map<String, dynamic> toJson() => {
     'date': date,
-    'activities': activities
+    'activities': cities
   };
 
   @override
   String toString() {
-    return '{date: $date, activities: $activities}';
+    return '{date: $date, cities: $cities}';
   }
 
   factory DayDTO.fromJson(Map<String, dynamic> json) {
-
-    late List<ActivityDTO> activities;
-    if (json['activities'] != null) {
-      activities = List<ActivityDTO>.from(json['activities'].map((day) => ActivityDTO.fromJson(day)));
-    }
-
     return DayDTO(
       date: DateTime.parse(json['date']),
-      activities: activities,
+      cities: json['cities'] != null
+          ? (json['cities'] as List)
+              .map((i) => CityDTO.fromJson(i))
+              .toList()
+          : null,
     );
   }
+
+  String formatDate() {
+      return "${date.day.toString().padLeft(2,'0')}/${date.month.toString().padLeft(2,'0')}/${date.year}";
+    }
 }
