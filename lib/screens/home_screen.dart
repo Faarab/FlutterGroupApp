@@ -61,9 +61,10 @@ class _HomeScreenState extends State<HomeScreen> {
     //readJson();
     readJson();
     return Scaffold(
-      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+      backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(53, 16, 79, 1),
+        automaticallyImplyLeading: false,
+        backgroundColor: const Color.fromRGBO(53, 16, 79, 1),
         toolbarHeight: 64,
         actions: [
           IconButton(
@@ -90,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
           size: 32,
         ),
       ),
-      bottomNavigationBar: HomeScreenBottomNavigationBar(),
+      bottomNavigationBar: const HomeScreenBottomNavigationBar(),
       body: Padding(
         padding: const EdgeInsets.only(left: 29, right: 29),
         child: Column(

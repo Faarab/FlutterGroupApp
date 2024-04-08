@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
+import 'package:triptaptoe_app/screens/edit_trip_screen.dart';
 
 class TripCard extends StatelessWidget {
   const TripCard({super.key, required this.trip, required this.index});
@@ -67,12 +68,12 @@ class TripCard extends StatelessWidget {
               Padding(
                   padding: const EdgeInsets.only(left: 16, top: 8),
                   child: Text(
-                    "Leave from: " + trip.cityOfDeparture,
-                    style: TextStyle(color: Color.fromRGBO(45, 45, 45, 1)),
+                    "Leave from: ${trip.cityOfDeparture}",
+                    style: const TextStyle(color: Color.fromRGBO(45, 45, 45, 1)),
                   )),
               Padding(
-                  padding: EdgeInsets.only(left: 16, top: 8),
-                  child: Text("Arrive in: " + trip.cityOfArrival,
+                  padding: const EdgeInsets.only(left: 16, top: 8),
+                  child: Text("Arrive in: ${trip.cityOfArrival}",
                       style: const TextStyle(
                           color: Color.fromRGBO(45, 45, 45, 1)))),
               Padding(
@@ -86,7 +87,7 @@ class TripCard extends StatelessWidget {
                           shape: CircleBorder()),
                       child: IconButton(
                           onPressed: () {
-                            print("Edit button pressed");
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditTripScreen(trip: trip)));
                           },
                           icon: const Icon(
                             Icons.edit,
@@ -100,7 +101,7 @@ class TripCard extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 16)
+        const SizedBox(height: 16)
       ],
     );
   }

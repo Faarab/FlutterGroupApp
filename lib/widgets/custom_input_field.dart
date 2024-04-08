@@ -42,9 +42,11 @@ class CustomInputField extends StatelessWidget {
               onChanged(value);
             },
             decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              hintText: fieldHintText,
-            ))
+            border: const OutlineInputBorder(),
+            hintText: fieldHintText,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          )
+        )
       ],
     );
   }
