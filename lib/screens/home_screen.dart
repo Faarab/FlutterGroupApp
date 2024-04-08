@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+import 'trip_details_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
 
