@@ -15,7 +15,7 @@ Future<List<TripDTO>> readJson() async {
     print(contentsJSON);
 
     List<dynamic> dynamicTripsList = contentsJSON['trips'];
-    print(dynamicTripsList);
+    print("dynamictripslist" + dynamicTripsList.toString());
     final List<TripDTO> tripsList = dynamicTripsList.map(
       (e) {
         return TripDTO.fromJson(e);

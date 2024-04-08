@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:triptaptoe_app/models/DayDTO.dart';
 
 class TripDTO {
@@ -8,7 +10,7 @@ class TripDTO {
     required this.endDate,
     required this.cityOfDeparture,
     required this.cityOfArrival,
-    this.days,
+    required this.days,
   });
 
   final String id;
@@ -49,7 +51,8 @@ class TripDTO {
     }
 
     if (numOfDays != 0) {
-      days = List<DayDTO>.from(json['days'].map((day) => DayDTO.fromJson(day)));
+      final listOfDays = jsonDecode(json['days']);
+      days = List<DayDTO>.from(listOfDays.map((day) => DayDTO.fromJson(day)));
     } else {
       days = <DayDTO>[];
     }
@@ -72,6 +75,7 @@ class TripDTO {
         "endDate": endDate.toIso8601String(),
         "cityOfDeparture": cityOfDeparture,
         "cityOfArrival": cityOfArrival,
+        "days": jsonEncode(days)
       };
 
   @override

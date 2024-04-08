@@ -20,6 +20,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 
 import 'widgets/trip_details_form.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

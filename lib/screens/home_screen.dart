@@ -111,6 +111,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                     child: ListView.builder(
                       itemCount: (snapshot.data!).length,
                       itemBuilder: (context, index) {
+                        print("snapsht data" + (snapshot.data!).toString());
                         return TripCard(
                             trip: snapshot.data![index], index: index);
                       },

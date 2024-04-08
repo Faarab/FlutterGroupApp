@@ -10,6 +10,7 @@ import 'package:triptaptoe_app/main.dart';
 import 'package:triptaptoe_app/models/DayDTO.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:triptaptoe_app/screens/home_screen.dart';
+import 'package:triptaptoe_app/services/getDaysList.dart';
 import 'package:triptaptoe_app/widgets/custom_input_field.dart';
 
 class TripDetailsForm extends StatefulWidget {
@@ -63,16 +64,17 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     if (contents == "") {
       final _id = "0";
       final newTrip = new TripDTO(
-        id: _id,
-        name: _name,
-        startDate: _startDate,
-        endDate: _endDate,
-        cityOfDeparture: _cityOfDeparture,
-        cityOfArrival: _cityOfArrival,
-      );
+          id: _id,
+          name: _name,
+          startDate: _startDate,
+          endDate: _endDate,
+          cityOfDeparture: _cityOfDeparture,
+          cityOfArrival: _cityOfArrival,
+          days: getDaysList(_startDate, _endDate));
       final fileStructure = {
         "trips": [newTrip]
       };
+      print("fileStructure" + fileStructure.toString());
       myFile.writeAsString(jsonEncode(fileStructure));
       // myFile.writeAsString("""{
       //   "trips": [$newTrip]
@@ -88,8 +90,9 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
           endDate: _endDate,
           cityOfDeparture: _cityOfDeparture,
           cityOfArrival: _cityOfArrival,
-          days: [new DayDTO(date: DateTime.now())]);
+          days: getDaysList(_startDate, _endDate));
       final newTripsList = [...tripsList, newTrip];
+      print("newTripsList" + newTripsList.toString());
       contentsJSON['trips'] = newTripsList;
       myFile.writeAsString(jsonEncode(contentsJSON));
     }
@@ -300,7 +303,8 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                           startDate: _startDate,
                           endDate: _endDate,
                           cityOfDeparture: _cityOfDeparture,
-                          cityOfArrival: _cityOfArrival);
+                          cityOfArrival: _cityOfArrival,
+                          days: getDaysList(_startDate, _endDate)); //TODO
                       //addTripToJson(_newTrip);
                       readAndWriteJson();
                       showDialog(
