@@ -1,8 +1,5 @@
 // da fare:
-// fare in modo che la parte di aggiunta delle città sia scorrevole e che quando si apre la tastiera non dia errore di spazio.
-// togliere i vari colori dai bottoni e capire da dove arrivano
-// centrare autocomplete Material
-
+// fare in modo che la parte di aggiunta delle città sia scorrevole e che quando si apre la tastiera non dia errore di spazio. + sistemare aggiunta manuale
 // implementare logica per salvare dati inseriti da utente
 // implementare logica per aggiungere attività scelta da utente
 // sistemare font, colori e size
@@ -15,11 +12,17 @@ import '../screens/add_activity_modal_screen.dart';
 import 'days_navigation.dart';
 
 final List<Map<String, String>> citiesStartingWithMa = [
-  {"name": "Madrid", "country": "Spain"},
-  {"name": "Málaga", "country": "Spain"},
-  {"name": "Manchester", "country": "United Kingdom"},
-  {"name": "Malaga", "country": "Spain"},
-  {"name": "Malmo", "country": "Sweden"},
+  {"name": "Barcelona", "country": "Spain"},
+  {"name": "Seville", "country": "Spain"},
+  {"name": "Valencia", "country": "Spain"},
+  {"name": "Bilbao", "country": "Spain"},
+  {"name": "Granada", "country": "Spain"},
+  {"name": "London", "country": "United Kingdom"},
+  {"name": "Birmingham", "country": "United Kingdom"},
+  {"name": "Glasgow", "country": "United Kingdom"},
+  {"name": "Liverpool", "country": "United Kingdom"},
+  {"name": "Edinburgh", "country": "United Kingdom"}
+  
 ];
 
 class MyBody extends StatefulWidget {
@@ -85,7 +88,7 @@ class _MyBodyState extends State<MyBody> {
             onForward: _goToNextDay,
           ),
           const SizedBox(height: 30),
-          if (_isAddingCity || _citiesPerDay[_currentDayIndex].isNotEmpty) _buildAddedCities(),
+          if (_isAddingCity || _citiesPerDay[_currentDayIndex].isNotEmpty) SingleChildScrollView(child: _buildAddedCities()),
           const SizedBox(height: 10),
           _buildCityCard(),
         ],
@@ -113,7 +116,7 @@ class _MyBodyState extends State<MyBody> {
                 ),
                 const SizedBox(width: 24),
                   IconButton(
-                    icon: Icon(Icons.delete, color: Color.fromRGBO(53, 16, 79, 1)),
+                    icon: const Icon(Icons.delete, color: Color.fromRGBO(53, 16, 79, 1)),
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -122,9 +125,7 @@ class _MyBodyState extends State<MyBody> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            content: Container(
-                              child: Text("Do you want to delete this city?"),
-                            ),
+                            content: const Text("Do you want to delete this city?"),
                             actions: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -132,14 +133,15 @@ class _MyBodyState extends State<MyBody> {
                                   SizedBox(
                                     width: 120,
                                     child: TextButton(
+                                       style: ButtonStyle(
+                                        backgroundColor: MaterialStateProperty.all<Color>(const Color.fromRGBO(53, 16, 79, 1)),
+                                        shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                                      ),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
                                       child: const Text("Cancel", style: TextStyle(color: Colors.white),),
-                                      style: ButtonStyle(
-                                        backgroundColor: MaterialStateProperty.all<Color>(const Color.fromRGBO(53, 16, 79, 1)),
-                                        shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                                      )
+                                     
                                     ),
                                   ),
                                   const SizedBox(width: 20.0),
@@ -192,18 +194,34 @@ class _MyBodyState extends State<MyBody> {
         children: [
           if (!_isAddingCity)
             TextButton.icon(
-              onPressed: () {
-                setState(() {
-                  _isAddingCity = true;
-                });
-              },
-              icon: const Icon(Icons.add, color: Colors.black,),
-              label: const Text("Add a city", style: TextStyle(color: Colors.black),),
-            ),
+  onPressed: () {
+    setState(() {
+      _isAddingCity = true;
+    });
+  },
+  style: ButtonStyle(
+    backgroundColor: MaterialStateProperty.all(Colors.white), 
+    
+    minimumSize: MaterialStateProperty.all(const Size(double.infinity, 50)),
+    shape: MaterialStateProperty.all(
+    const RoundedRectangleBorder(
+      borderRadius: BorderRadius.zero, 
+    ),
+  ),
+    alignment: Alignment.centerLeft
+  ),
+  
+  icon: const Icon(Icons.add, color: Colors.black),
+  label: const Text("Add a city", style: TextStyle(color: Colors.black)),
+),
+
+
           if (_isAddingCity)
             Row(
               children: [
-                Expanded(
+                Flexible(
+                  fit: FlexFit.tight,
+                  
                   child: Autocomplete<CityDTO>(
                     optionsBuilder: (textEditingValue) {
                       if (textEditingValue.text.isEmpty) {
@@ -220,7 +238,10 @@ class _MyBodyState extends State<MyBody> {
                         focusNode: focusNode,
                         decoration: const InputDecoration(
                           hintText: 'Enter a city',
+                          filled: true,
+                          fillColor: Colors.transparent,                        
                         ),
+                        
                         onSubmitted: (value) {
                           final selectedCity = hardcodedcitieslist.firstWhereOrNull((city) => city.name == value);
                           if (selectedCity != null) {
@@ -235,7 +256,7 @@ class _MyBodyState extends State<MyBody> {
                     },
                     optionsViewBuilder: (context, onSelected, cities) {
                       return Material(
-                        color: Colors.green,
+                        color: Colors.transparent,
                         child: ListView.builder(
                           padding: const EdgeInsets.symmetric(vertical: 10,),
                           itemCount: cities.length,
