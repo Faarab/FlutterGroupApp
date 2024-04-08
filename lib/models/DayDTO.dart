@@ -5,12 +5,12 @@ class DayDTO {
   DayDTO({
     required this.date,
     this.cities,
-    this.cities,
+   
   });
 
   final DateTime date;
   final List<CityDTO>? cities;
-  final List<CityDTO>? cities;
+  
 
   Map<String, dynamic> toJson() {
     print(this);
@@ -21,7 +21,7 @@ class DayDTO {
   @override
   String toString() {
     return '{date: $date, cities: $cities}';
-    return '{date: $date, cities: $cities}';
+    
   }
 
   factory DayDTO.fromJson(Map<String, dynamic> json) {
