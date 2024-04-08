@@ -59,7 +59,7 @@ class _Exchange_screenState extends State<Exchange_screen> {
   String calculateInverseRate(String exchangeRate) {
     //TODO: fix the exchange rate, it's not working and return a wrong value
     double exchangeRateDouble = double.parse(exchangeRate);
-    double inverseExchangeRate = 1 / exchangeRateDouble;
+    double inverseExchangeRate = 1 / exchangeRateDouble; 
     return inverseExchangeRate.toStringAsFixed(2);
   }
   Future<void> fetchCurrencyRate() async {
@@ -143,7 +143,7 @@ class _Exchange_screenState extends State<Exchange_screen> {
                         },
                         ),
                       SizedBox(height: 8,),
-                      Text("1 : ${_exchangeRate}", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),),
+                      Text("1 : ${_exchangeRate.substring(0,4)}", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),),
                       SizedBox(height: 8,),
                       TextField(
                         strutStyle: StrutStyle(

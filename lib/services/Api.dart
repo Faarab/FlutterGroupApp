@@ -17,7 +17,7 @@ Future<String> getCurrencyRateAsync(String from, String to,) async {
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
     final currencyRate = data["data"][to];
-    return currencyRate.toString().substring(0,4);
+    return currencyRate.toString();
   } else {
     throw Exception('Failed to load data');
   }
