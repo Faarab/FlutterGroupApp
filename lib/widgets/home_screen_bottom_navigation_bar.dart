@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class HomeScreenBottomNavigationBar extends StatefulWidget {
-  const HomeScreenBottomNavigationBar({
-    super.key,
-  });
+  const HomeScreenBottomNavigationBar({super.key, required this.onPressed});
+
+  final Function(int) onPressed;
 
   @override
   State<HomeScreenBottomNavigationBar> createState() =>
@@ -17,6 +17,7 @@ class _HomeScreenBottomNavigationBarState
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      widget.onPressed(index);
     });
   }
 
