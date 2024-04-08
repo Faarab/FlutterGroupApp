@@ -1,10 +1,15 @@
 import 'package:triptaptoe_app/models/ActivityDTO.dart';
 
 class CityDTO {
-  CityDTO({required this.name, this.activities});
-
+  final String? country;
   final String name;
   final List<ActivityDTO>? activities;
+
+  CityDTO({
+    this.country,
+    required this.name,
+    this.activities,
+  });
 
   factory CityDTO.fromJson(Map<String, dynamic> json) {
     late List<ActivityDTO> activities;
@@ -14,6 +19,7 @@ class CityDTO {
     }
 
     return CityDTO(
+      country: json['country'],
       name: json['name'],
       activities: activities,
     );
