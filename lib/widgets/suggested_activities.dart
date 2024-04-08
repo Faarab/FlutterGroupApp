@@ -96,4 +96,3 @@ class _SuggestedActivitiesState extends State<SuggestedActivities> {
     );
   }
 }
-//prova

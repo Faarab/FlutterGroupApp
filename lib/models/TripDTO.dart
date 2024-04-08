@@ -1,5 +1,3 @@
-
-
 import 'package:triptaptoe_app/models/DayDTO.dart';
 
 class TripDTO {
@@ -38,7 +36,6 @@ class TripDTO {
       days: days,
     );
   }
-
 
   Map<String, dynamic> toJson() => {
         "id": id,
