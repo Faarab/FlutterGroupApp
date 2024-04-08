@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/main.dart';
@@ -16,26 +17,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<TripDTO> tripArray = [];
+  Future<List<TripDTO>>? tripArray;
 
-  //Read the JSON file content and set the array to the list in the JSON
-  //This makes it so that you read the JSON file and can then display a card for each trip
-  Future<void> readJson() async {
-    final String response =
-        await rootBundle.loadString('assets/images/sample.json');
-    final Map<String, dynamic> data = await json.decode(response);
-    List<dynamic> dynamicTripsList = data["trips"];
-    var tripsList = dynamicTripsList.map(
-      (e) {
-        return TripDTO.fromJson(e);
-      },
-    ).toList();
-    setState(() {
-      tripArray = tripsList;
-    });
+  @override
+  void initState() {
+    super.initState();
+    tripArray = readJson();
   }
 
-  Future<void> readAndWriteJson() async {
+  Future<List<TripDTO>> readJson() async {
     final myDirectory = await getApplicationDocumentsDirectory();
     final myPath = myDirectory.path;
     print(myPath);
@@ -54,19 +44,20 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ).toList();
       print(tripsList);
-
-      setState(() {
-        tripArray = tripsList;
-      });
+      return tripsList;
+      // setState(() {
+      //   tripArray = tripsList;
+      // });
     } else {
       print("File is empty");
+      return <TripDTO>[];
     }
   }
 
   @override
   Widget build(BuildContext context) {
     //readJson();
-    readAndWriteJson();
+    readJson();
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
@@ -103,17 +94,69 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: tripArray.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return TripCard(
-                    trip: tripArray[index],
-                    index: index,
-                  );
-                },
-              ),
-            ),
+            FutureBuilder<List<TripDTO>>(
+              future: readJson(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.isNotEmpty) {
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: (snapshot.data!).length,
+                        itemBuilder: (context, index) {
+                          return TripCard(
+                              trip: snapshot.data![index], index: index);
+                        },
+                      ),
+                    );
+                  } else {
+                    return Expanded(
+                        child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 240,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "There are no trips yet.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromRGBO(45, 45, 45, 1)),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "You can add a trip by clicking on the '+' button",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Color.fromRGBO(45, 45, 45, 1)),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ));
+                  }
+                } else {
+                  return Container();
+                }
+              },
+            )
+            // Expanded(
+            //   child: ListView.builder(
+            //     itemCount: tripArray.length,
+            //     itemBuilder: (BuildContext context, int index) {
+            //       return TripCard(
+            //         trip: tripArray[index],
+            //         index: index,
+            //       );
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),
