@@ -6,9 +6,11 @@ import 'package:triptaptoe_app/models/TripDTO.dart';
 Future<List<TripDTO>> readJson() async {
   final myDirectory = await getApplicationDocumentsDirectory();
   final myPath = myDirectory.path;
-  print(myPath);
+  print("myPath " + myPath);
   final myFile = File('$myPath/trips.json');
-  //myFile.writeAsString("");
+  if (!await myFile.exists()) {
+    await myFile.writeAsString("");
+  }
   final contents = await myFile.readAsString();
   if (contents != "") {
     final Map<String, dynamic> contentsJSON = jsonDecode(contents);
