@@ -70,6 +70,9 @@ flutter:
     - assets/images/logo.png
     - assets/images/sample.json
     - assets/images/img2.jpg
+    - assets/images/uk-flag.jfif
+    - assets/images/usa-flag.jfif
+    - assets/images/eu-flag.jfif
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

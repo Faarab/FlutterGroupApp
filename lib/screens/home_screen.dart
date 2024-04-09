@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/main.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
-import 'package:triptaptoe_app/screens/Exchange_screen.dart';
+import 'package:triptaptoe_app/widgets/Exchange_body.dart';
 import 'package:triptaptoe_app/services/readJson.dart';
 import 'package:triptaptoe_app/widgets/home_screen_bottom_navigation_bar.dart';
 import 'package:triptaptoe_app/widgets/trip_card.dart';
@@ -23,14 +23,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   Future<List<TripDTO>>? tripArray;
   Widget _screenBody = HomeScreenBody();
+  bool _isInHOme = true;
 
   void setScreenBody(index) {
     setState(() {
       switch (index) {
         case 0:
+          _isInHOme = false;
           _screenBody = ExchangeBody();
           break;
         case 1:
+          _isInHOme = true;
           _screenBody = HomeScreenBody();
           break;
         default:
@@ -65,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: _isInHOme ? FloatingActionButton(
           onPressed: () => {
             Navigator.pushReplacement(
               context,
@@ -80,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
             size: 32,
           ),
-        ),
+        ) : null,
         bottomNavigationBar: HomeScreenBottomNavigationBar(
             onPressed: (index) => {setScreenBody(index)}),
         body: _screenBody);

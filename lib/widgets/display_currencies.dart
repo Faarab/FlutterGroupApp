@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/widgets/dropdown_button_custom.dart';
+
+import 'circle_flag.dart';
 
 class DisplayCurrencies extends StatefulWidget {
   const DisplayCurrencies({
@@ -25,11 +26,28 @@ class _DisplayCurrenciesState extends State<DisplayCurrencies> {
   
   late List<String> _list = widget.listOfCurrencies; 
   late String _startValue ;
+  late AssetImage _flag;
+
+  void changeFlag( String flag) {
+    switch (flag) {
+      case "EUR":
+        _flag = const AssetImage('assets/images/eu-flag.jfif');
+        break;
+      case "USD":
+        _flag = const AssetImage('assets/images/usa-flag.jfif');
+        break;
+      case "GBP":
+        _flag = const AssetImage('assets/images/uk-flag.jfif');
+        break;
+      default:
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _startValue = widget.startValue;
+    changeFlag(_startValue);
   }
 
   @override
@@ -38,9 +56,9 @@ class _DisplayCurrenciesState extends State<DisplayCurrencies> {
     if (widget.startValue != oldWidget.startValue) {
       setState(() {
         _startValue = widget.startValue;
+        changeFlag(_startValue);
       });
     }
-
     if (widget.listOfCurrencies != oldWidget.listOfCurrencies) {
       setState(() {
         _list = widget.listOfCurrencies;
@@ -53,20 +71,15 @@ class _DisplayCurrenciesState extends State<DisplayCurrencies> {
     return Row(
       textDirection: TextDirection.ltr,
       children: [
-        Container(
-          height: 60,
-          width: 60,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.blue,
-          ),
+        CircleFlag(
+          flagImage: _flag,
         ),
-        SizedBox(width: 16,),
+        const SizedBox(width: 8,),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           textDirection: TextDirection.ltr,
           children: [
-            Text(widget.text!, style: TextStyle(fontSize: 16,)),
+            Text(widget.text, style: const TextStyle(fontSize: 16,)),
             DropdownButtonCustom(
               startValue: _startValue,
               listOfChoices: _list, 
@@ -80,4 +93,3 @@ class _DisplayCurrenciesState extends State<DisplayCurrencies> {
     );
   }
 }
-

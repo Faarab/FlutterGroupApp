@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:triptaptoe_app/services/Api.dart';
-
-import '../widgets/black_line_with_opacity.dart';
-import '../widgets/display_currencies.dart';
-import '../widgets/dropdown_button_custom.dart';
+import 'black_line_with_opacity.dart';
+import 'display_currencies.dart';
+import 'load_spinner.dart';
 
 class ExchangeBody extends StatefulWidget {
   const ExchangeBody({super.key});
@@ -16,7 +15,7 @@ class ExchangeBody extends StatefulWidget {
 }
 
 class _ExchangeBodyState extends State<ExchangeBody> {
-  List<String> _currenciesList = [
+  final List<String> _currenciesList = [
     "USD - US Dollar",
     "EUR - Euro",
     "GBP - British Pound"
@@ -25,9 +24,8 @@ class _ExchangeBodyState extends State<ExchangeBody> {
   late String _currencyChosen;
   late String _currencyToConvert;
   late String _exchangeRate = "";
-  late String _inverseExchangeRate = "";
   late List<String> _listOfCurrenciesFiltred;
-  final myController = TextEditingController();
+  final myController = TextEditingController(); 
   bool isLoading = true;
 
   @override
@@ -49,16 +47,8 @@ class _ExchangeBodyState extends State<ExchangeBody> {
       double convertedValue = valueInDouble * conversionRatioInDouble;
       return convertedValue.toStringAsFixed(2);
     } catch (e) {
-      print("error ${e}");
       return "Error";
     }
-  }
-
-  String calculateInverseRate(String exchangeRate) {
-    //TODO: fix the exchange rate, it's not working and return a wrong value
-    double exchangeRateDouble = double.parse(exchangeRate);
-    double inverseExchangeRate = 1 / exchangeRateDouble;
-    return inverseExchangeRate.toStringAsFixed(2);
   }
 
   Future<void> fetchCurrencyRate() async {
@@ -66,7 +56,6 @@ class _ExchangeBodyState extends State<ExchangeBody> {
     if (_currencyChosen == _currencyToConvert) {
       setState(() {
         _exchangeRate = "1";
-        _inverseExchangeRate = calculateInverseRate(_exchangeRate);
         isLoading = false;
       });
     } else {
@@ -74,7 +63,6 @@ class _ExchangeBodyState extends State<ExchangeBody> {
           await getCurrencyRateAsync(_currencyChosen, _currencyToConvert);
       setState(() {
         _exchangeRate = newCurrencyRate;
-        _inverseExchangeRate = calculateInverseRate(_exchangeRate);
         isLoading = false;
       });
     }
@@ -92,13 +80,12 @@ class _ExchangeBodyState extends State<ExchangeBody> {
       padding: const EdgeInsets.only(left: 29.0, right: 29.0, top: 32.0),
       child: SingleChildScrollView(
         child: Column(
-          textDirection: TextDirection.ltr,
           children: [
-            Text(
+            const Text(
               "Currency Converter",
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             SizedBox(
@@ -107,20 +94,10 @@ class _ExchangeBodyState extends State<ExchangeBody> {
               child: Card(
                   elevation: 4,
                   child: isLoading
-                      ? Center(
-                          child: Container(
-                            height: 80,
-                            width: 80,
-                            child: CircularProgressIndicator(
-                              color: Color.fromRGBO(53, 16, 79, 1),
-                              strokeWidth: 6,
-                            ),
-                          ),
-                        )
+                      ? const loadSpinner()
                       : Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
-                            textDirection: TextDirection.ltr,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               DisplayCurrencies(
@@ -156,19 +133,22 @@ class _ExchangeBodyState extends State<ExchangeBody> {
                                   });
                                 },
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 8,
                               ),
-                              Text(
-                                "1 : ${_exchangeRate.substring(0, 4)}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400, fontSize: 16),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: Text(
+                                  "1 $_currencyChosen = ${_exchangeRate.substring(0, 4)} $_currencyToConvert",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w300, fontSize: 16),
+                                ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 8,
                               ),
                               TextField(
-                                strutStyle: StrutStyle(),
+                                strutStyle: const StrutStyle(),
                                 onChanged: (value) {
                                   setState(() {
                                     _convertedValue =
@@ -176,41 +156,39 @@ class _ExchangeBodyState extends State<ExchangeBody> {
                                   });
                                 },
                                 controller: myController,
-                                keyboardType: TextInputType.number,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 24),
-                                decoration: InputDecoration(
-                                    hintText: '0.00',
-                                    contentPadding: EdgeInsets.all(8),
-                                    hintStyle: TextStyle(
-                                        color: const Color.fromARGB(
-                                            255, 84, 75, 75),
-                                        fontSize: 24),
-                                    border: OutlineInputBorder(
-                                      gapPadding: 0,
-                                    )),
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.allow(RegExp(
-                                      r'^\d*(?:\.\d{0,2})?$')) //regex che prende solo 10 cifre
+                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                                 ],
+                                style:const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 24),
+                                    decoration: const InputDecoration(
+                                      hintText: '0.00',
+                                      contentPadding: EdgeInsets.only(left: 8),
+                                      hintStyle: TextStyle(
+                                          color:  Color.fromARGB(
+                                              255, 84, 75, 75),
+                                          fontSize: 24),
+                                      border: UnderlineInputBorder()
+                                    ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 24,
                               ),
                               Row(
                                 children: [
-                                  BlackLineWithOpacity(),
+                                  const BlackLineWithOpacity(),
                                   Container(
                                     height: 56,
                                     width: 56,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Color.fromRGBO(53, 16, 79, 1),
                                     ),
                                     child: Transform.rotate(
                                         angle: -90 * 3.14 / 180,
                                         child: IconButton(
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Icons.compare_arrows,
                                             color: Colors.white,
                                             size: 40,
@@ -249,16 +227,16 @@ class _ExchangeBodyState extends State<ExchangeBody> {
                                   });
                                 },
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 16,
                               ),
                               //Text("1 : ${_currencyRatioInverted}", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),), da sistemare
-                              SizedBox(
+                              const SizedBox(
                                 height: 16,
                               ),
                               Text(
                                 _convertedValue,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 24),
                                 textAlign: TextAlign.center,
                               )
