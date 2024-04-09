@@ -9,6 +9,7 @@ import 'package:triptaptoe_app/screens/home_screen.dart';
 import 'package:triptaptoe_app/services/navigation.dart';
 import 'package:triptaptoe_app/widgets/app_bar_with_back_arrow.dart';
 import 'package:triptaptoe_app/widgets/custom_input_field.dart';
+import 'package:triptaptoe_app/widgets/edit_trip_body.dart';
 
 import '../widgets/edit_trip_form.dart';
 
@@ -32,6 +33,7 @@ class _EditTripScreenState extends State<EditTripScreen> {
   late DateTime _startDate;
   late DateTime _endDate;
   bool isSaving = false;
+  int selectedIndex = 0;
 
   @override
   void initState() {
@@ -42,6 +44,13 @@ class _EditTripScreenState extends State<EditTripScreen> {
     _startDate = widget.trip.startDate;
     _endDate = widget.trip.endDate;
   }
+
+  void onItemSelected (int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +100,8 @@ class _EditTripScreenState extends State<EditTripScreen> {
         child: const Icon(Icons.save,color: Colors.white),
       ),
       body: isSaving ? 
-        const Center(child: CircularProgressIndicator(),) : 
+        const Center(child: CircularProgressIndicator(),) 
+        : selectedIndex == 0 ? 
         ListView.builder(
         itemCount: 1, 
         itemBuilder: (BuildContext context, int index) {
@@ -158,12 +168,16 @@ class _EditTripScreenState extends State<EditTripScreen> {
             ),
           );
         },
-      ),
+      ) : 
+
+      EditTripBody(),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.abc),label: "Ciao"),
-          BottomNavigationBarItem(icon: Icon(Icons.abc),label:  "Ciao"),
-        ]
+          BottomNavigationBarItem(icon: Icon(Icons.info),label: "Info"),
+          BottomNavigationBarItem(icon: Icon(Icons.add_location_alt),label:  "Location"),
+        ],
+        currentIndex: selectedIndex,
+        onTap: onItemSelected,
       ),
     );
 

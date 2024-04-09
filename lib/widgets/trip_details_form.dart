@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/main.dart';
 import 'package:triptaptoe_app/models/DayDTO.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
+import 'package:triptaptoe_app/screens/edit_itinerary_screen.dart';
 import 'package:triptaptoe_app/screens/home_screen.dart';
 import 'package:triptaptoe_app/services/getDaysList.dart';
 import 'package:triptaptoe_app/widgets/custom_input_field.dart';
@@ -381,7 +382,8 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                                                       Color.fromRGBO(
                                                           255, 255, 255, 1),
                                                 ),
-                                                onPressed: () {},
+                                                onPressed: () {Navigator.push(context, MaterialPageRoute(
+                builder: (context) => EditItineraryScreen()));},
                                                 child: Text("Edit trip")),
                                           )
                                         ],

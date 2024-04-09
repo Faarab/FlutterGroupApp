@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
-import '../widgets/my_body.dart';
+import 'package:triptaptoe_app/screens/trip_details_screen.dart';
+import '../widgets/edit_trip_body.dart';
 
 class EditItineraryScreen extends StatelessWidget {
   EditItineraryScreen({super.key});
@@ -19,14 +20,14 @@ class EditItineraryScreen extends StatelessWidget {
             icon: Icon(Icons.arrow_back, color: Colors.white,),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(
-                builder: (context) => Scaffold(body: Text("Torna a creazione viaggio"),)));
+                builder: (context) => const TripDetailsScreen()));
             },
       ),
       backgroundColor: Color.fromRGBO(99, 31, 147, 1),
       toolbarHeight: 64,
     ),
     
-         body: MyBody(), 
+         body: const EditTripBody(), 
          floatingActionButton:ElevatedButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith((states) => Color.fromRGBO(53, 16, 79, 1)),
