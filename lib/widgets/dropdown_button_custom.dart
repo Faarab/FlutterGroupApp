@@ -22,8 +22,6 @@ class DropdownButtonCustom extends StatefulWidget {
   final List<String> listOfChoices;
   final Function(String) onChange;
 
-  
-
   @override
   State<DropdownButtonCustom> createState() => _DropdownButtonCustomState();
 }
@@ -60,6 +58,7 @@ class _DropdownButtonCustomState extends State<DropdownButtonCustom> {
   @override
   Widget build(BuildContext context) {
     return DropdownMenu<String>(
+
       initialSelection: _selectedValue,
       width: 200,
       inputDecorationTheme: InputDecorationTheme(
@@ -72,7 +71,6 @@ class _DropdownButtonCustomState extends State<DropdownButtonCustom> {
         });
         widget.onChange(value!);
       },
-      trailingIcon: const Icon(Icons.expand_more),
       dropdownMenuEntries: _choicesList.map<DropdownMenuEntry<String>>((String value) {
         return DropdownMenuEntry<String>(
           value: value,
