@@ -1,7 +1,5 @@
 //TODO sistemare bug spinning quando salvo le modifiche dal dialogue essro rimane aperto e non visualizzo lo spinning dietro
 
-import 'dart:ffi';
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
@@ -9,8 +7,11 @@ import 'package:triptaptoe_app/screens/home_screen.dart';
 import 'package:triptaptoe_app/services/modifyTripFromJson.dart';
 import 'package:triptaptoe_app/services/navigation.dart';
 import 'package:triptaptoe_app/widgets/app_bar_with_back_arrow.dart';
-import 'package:triptaptoe_app/widgets/custom_input_field.dart';
 
+import '../widgets/dialog_edit_trip.dart';
+import '../widgets/edit_trip_body.dart';
+import '../widgets/edit_trip_bottom_navigation_bar.dart';
+import '../widgets/edit_trip_floating_action_button.dart';
 import '../widgets/edit_trip_form.dart';
 
 class EditTripScreen extends StatefulWidget {
@@ -33,7 +34,43 @@ class _EditTripScreenState extends State<EditTripScreen> {
   late DateTime _startDate;
   late DateTime _endDate;
   bool isSaving = false;
+  int _indexOfselectionBody = 0;
+  late Widget _body ;
 
+
+  void changeBody() {
+    switch (_indexOfselectionBody) {
+      case 0:
+        setState(() {
+          _body = EditTripBody(
+            trip: widget.trip,
+            startDate: _startDate,
+            endDate: _endDate,
+            onChangeName: (value) {
+              _name = value;
+            },
+            onChangeCityOfDeparture: (value) {
+              _cityOfDeparture = value;
+            },
+            onChangeCityOfArrival: (value) {
+              _cityOfArrival = value;
+            },
+            onChangeDate: (value) {
+              _startDate = value[0]!;
+              _endDate = value[1]!;
+            }
+          );
+        });
+        break;
+      case 1:
+        setState(() {
+          _body = const Center(child: Text("Pagina modifica itinerary"),);
+        });
+        
+        break;
+      default:
+    }
+  }
   @override
   void initState() {
     super.initState();
@@ -42,6 +79,25 @@ class _EditTripScreenState extends State<EditTripScreen> {
     _cityOfArrival = widget.trip.cityOfArrival;
     _startDate = widget.trip.startDate;
     _endDate = widget.trip.endDate;
+    _body = EditTripBody(
+          trip: widget.trip,
+          startDate: _startDate,
+          endDate: _endDate,
+          onChangeName: (value) {
+            _name = value;
+          },
+          onChangeCityOfDeparture: (value) {
+            _cityOfDeparture = value;
+          },
+          onChangeCityOfArrival: (value) {
+            _cityOfArrival = value;
+          },
+          onChangeDate: (value) {
+            _startDate = value[0]!;
+            _endDate = value[1]!;
+          }
+        );
+      
   }
 
   @override
@@ -50,213 +106,44 @@ class _EditTripScreenState extends State<EditTripScreen> {
       appBar: AppBarWithBackArrow(
         screen: HomeScreen()
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: _indexOfselectionBody == 0 ? EditTripFloatingActionButton(
         onPressed: () async {
-          if( _cityOfDeparture == widget.trip.cityOfDeparture 
-              && _cityOfArrival == widget.trip.cityOfArrival 
-              && _startDate == widget.trip.startDate 
-              && _endDate == widget.trip.endDate){ 
-            setState(() {
-              print("sono qui");
-              isSaving = true;
-            });
-            //TODO gestire caso di errore
-            await modifyTripFromJson(widget.trip.id, _name, _startDate, _endDate, _cityOfDeparture, _cityOfArrival);
-            setState(() {
-              print("sono qua");
-              isSaving = false;
-            });
-            navigateToHomeWithSlideTransition(context);
-          } else {
-            showDialog(
+          setState(() {
+            isSaving = true;
+          });
+          //TODO gestire caso di errore
+          await modifyTripFromJson(widget.trip.id, _name, _startDate, _endDate, _cityOfDeparture, _cityOfArrival);
+          setState(() {
+            isSaving = false;
+          });
+          navigateToHomeWithSlideTransition(context);
+        },
+      ): EditTripFloatingActionButton(
+        onPressed: () {
+          //TODO logica per salvataggio di itinerary
+        },
+      ),
+      body: isSaving ? 
+        const Center(child: CircularProgressIndicator(),) : 
+        _body,
+      bottomNavigationBar: EditTripBottomNavigationBar(
+  onPressed: (index) {
+          showDialog(
               context: context,
               builder: (BuildContext context) {
                 return DialogEditTrip(
-                  onPressed: (bool) async {
-                    setState(() {
-                      isSaving = bool;
-                    });
-                    //TODO gestire caso di errore
-                    await modifyTripFromJson(widget.trip.id, _name, _startDate, _endDate, _cityOfDeparture, _cityOfArrival);
-                    if(bool == false) {
-                      navigateToHomeWithSlideTransition(context);
+                  onPressed: (value) async {                
+                    if(value) {
+                      setState(() {
+                        _indexOfselectionBody = index;
+                        changeBody();
+                      });
                     }
                   },
                 );
               }
             );
-          }
         },
-        backgroundColor: const Color.fromRGBO(53, 16, 79, 1),
-        shape: const CircleBorder(), 
-        child: const Icon(Icons.save,color: Colors.white),
-      ),
-      body: isSaving ? 
-        const Center(child: CircularProgressIndicator(),) : 
-        ListView.builder(
-        itemCount: 1, 
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 29, right: 29),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              textDirection: TextDirection.ltr,
-              children: [
-                const SizedBox(height: 32,),
-                const Text(
-                  "Edit your trip",
-                  style: TextStyle(
-                      color: Color.fromRGBO(45, 45, 45, 1),
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold),
-                ),
-                EditTripForm(
-                  trip: widget.trip,
-                  startDate: _startDate,
-                  endDate: _endDate,
-                  onChangeName: (input) {
-                    setState(() {
-                      if(input.length > 0) {
-                        _name = input;
-                      } else {
-                        _name = widget.trip.name;
-                      }
-                    });
-                  },
-                  onChangeCityOfDeparture: (input) {
-                    setState(() {
-                      if(input.length > 0) {
-                        _cityOfDeparture = input;
-                      } else {
-                        _cityOfDeparture = widget.trip.cityOfDeparture;
-                      }
-                    });
-                  },
-                  onChangeCityOfArrival: (input) {
-                    setState(() {
-                      if(input.length > 0) {
-                        _cityOfArrival = input;
-                      } else {
-                        _cityOfArrival = widget.trip.cityOfArrival;
-                      }
-                    });
-                  },
-                  onChangeDate: (dates) {
-                    if (dates.length == 2) {
-                      setState(() {
-                        _startDate = dates[0]!;
-                        _endDate = dates[1]!;
-                      });
-                    } else {
-                      setState(() {
-                        _startDate = dates[0]!;
-                        _endDate = dates[0]!;
-                      });
-                    }
-                  },
-                )
-              ],
-            ),
-          );
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.abc),label: "Ciao"),
-          BottomNavigationBarItem(icon: Icon(Icons.abc),label:  "Ciao"),
-        ]
-      ),
-    );
-
-  }
-}
-
-class DialogEditTrip extends StatefulWidget {
-  const DialogEditTrip({
-      Key? key,
-      required this.onPressed,
-    });
-
-  final Function(bool) onPressed;
-
-
-  @override
-  State<DialogEditTrip> createState() => _DialogEditTripState();
-}
-
-class _DialogEditTripState extends State<DialogEditTrip> {
-  final String contentText =
-      "Changing this section will permanently erase all your itinerary information.\nDo you want to proceed?";
-  
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog.adaptive(
-      insetAnimationDuration: const Duration(milliseconds: 100),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      actions: [
-        Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 120,
-                child : TextButton(
-                  style: ButtonStyle(
-                    side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: Color.fromRGBO(53, 16, 79, 1))),
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    )
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Cancel",style: TextStyle(color: Color.fromRGBO(53, 16, 79, 1),fontWeight: FontWeight.bold,fontSize: 18)),
-                ),
-              ),
-              const SizedBox(width: 20.0),
-              SizedBox(
-                width: 120,
-                child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(const Color.fromRGBO(53, 16, 79, 1)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    )
-                  ),
-                  onPressed: () async {
-                    widget.onPressed(true);
-                    
-                    widget.onPressed(false);
-                    //TODO inserire la funzione per salvare i dati e lo spinning
-                  },
-                  child: const Text("Continue",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),
-                ),
-              ),
-            ],
-          ),
-      ],
-      content: Container(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              "Warning!",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            Text(contentText,textAlign: TextAlign.center,style: const TextStyle(fontSize: 20.0),),
-          ],
-        ),
       ),
     );
   }
