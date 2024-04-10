@@ -57,13 +57,14 @@ class ActivityDTO {
   
   Map<String, dynamic> toJson() => {
     "name": name,
-    "startTime": startTime,
-    "openingTime": openingTime,
-    "closingTime": closingTime,
+    "startTime": startTime.toIso8601String(),
+    "openingTime": openingTime != null ? openingTime!.toIso8601String() : null,
+    "closingTime": closingTime != null ? closingTime!.toIso8601String() : null,
     "location": location,
     "price": price,
     "image": image,
-    };
+  };
+
 
   @override
   String toString() {

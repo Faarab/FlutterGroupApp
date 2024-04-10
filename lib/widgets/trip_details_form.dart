@@ -62,8 +62,8 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     //Read the file contents, if the file is empty initialize it otherwise add a new trip
     final contents = await myFile.readAsString();
     if (contents == "") {
-      final _id = "0";
-      final newTrip = new TripDTO(
+      const _id = "0";
+      final newTrip = TripDTO(
           id: _id,
           name: _name,
           startDate: _startDate,
@@ -83,7 +83,7 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
       final contentsJSON = jsonDecode(contents);
       final tripsList = contentsJSON['trips'];
       final _id = (tripsList.length + 1).toString();
-      final newTrip = new TripDTO(
+      final newTrip =  TripDTO(
           id: _id,
           name: _name,
           startDate: _startDate,
@@ -92,7 +92,7 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
           cityOfArrival: _cityOfArrival,
           days: getDaysList(_startDate, _endDate));
       final newTripsList = [...tripsList, newTrip];
-      print("newTripsList" + newTripsList.toString());
+      print("newTripsList$newTripsList");
       contentsJSON['trips'] = newTripsList;
       myFile.writeAsString(jsonEncode(contentsJSON));
     }

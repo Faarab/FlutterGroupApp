@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:triptaptoe_app/screens/home_screen.dart';
+import 'package:triptaptoe_app/services/modifyTripFromJson.dart';
 import 'package:triptaptoe_app/services/navigation.dart';
 import 'package:triptaptoe_app/widgets/app_bar_with_back_arrow.dart';
 import 'package:triptaptoe_app/widgets/custom_input_field.dart';
@@ -59,25 +60,25 @@ class _EditTripScreenState extends State<EditTripScreen> {
               print("sono qui");
               isSaving = true;
             });
-            //TODO meto di salvataggio dati su json
-            await Future.delayed(Duration(seconds:3));
+            //TODO gestire caso di errore
+            await modifyTripFromJson(widget.trip.id, _name, _startDate, _endDate, _cityOfDeparture, _cityOfArrival);
             setState(() {
               print("sono qua");
               isSaving = false;
             });
-            
             navigateToHomeWithSlideTransition(context);
           } else {
             showDialog(
               context: context,
               builder: (BuildContext context) {
                 return DialogEditTrip(
-                  onPressed: (bool) {
+                  onPressed: (bool) async {
                     setState(() {
                       isSaving = bool;
                     });
+                    //TODO gestire caso di errore
+                    await modifyTripFromJson(widget.trip.id, _name, _startDate, _endDate, _cityOfDeparture, _cityOfArrival);
                     if(bool == false) {
-                      print("sono qui");
                       navigateToHomeWithSlideTransition(context);
                     }
                   },
@@ -230,8 +231,7 @@ class _DialogEditTripState extends State<DialogEditTrip> {
                   ),
                   onPressed: () async {
                     widget.onPressed(true);
-                    //TODO meto di salvataggio dati su json
-                    await Future.delayed(Duration(seconds:3));
+                    
                     widget.onPressed(false);
                     //TODO inserire la funzione per salvare i dati e lo spinning
                   },

@@ -47,12 +47,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     tripArray = readJson();
+    print("tripArray" + tripArray.toString());
   }
 
   @override
   Widget build(BuildContext context) {
-    //readJson();
-    readJson();
+    
     return Scaffold(
         backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
         appBar: AppBar(

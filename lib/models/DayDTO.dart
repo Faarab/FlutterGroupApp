@@ -12,10 +12,12 @@ class DayDTO {
   final List<CityDTO>? cities;
   
 
-  Map<String, dynamic> toJson() {
+   Map<String, dynamic> toJson() {
     print(this);
-    return {'date': date.toIso8601String()};
-    //'activities': cities
+    return {
+      'date': date.toIso8601String(),
+      'cities': cities?.map((city) => city.toJson()).toList(),
+    };
   }
 
   @override
