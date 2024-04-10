@@ -86,7 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ) : null,
         bottomNavigationBar: HomeScreenBottomNavigationBar(
             onPressed: (index) => {setScreenBody(index)}),
-        body: _screenBody);
+        body: AnimatedSwitcher(
+          duration: Duration(milliseconds: 500),
+          switchInCurve: Curves.easeIn,
+          switchOutCurve: Curves.easeOut,
+          child: _screenBody,
+          )
+        );
   }
 }
 
