@@ -52,7 +52,12 @@ class _ExchangeBodyState extends State<ExchangeBody> {
   }
 
   Future<void> fetchCurrencyRate() async {
-    isLoading = true;
+    if (!mounted) return; // Verifica se lo stato del widget è ancora montato
+
+    setState(() {
+      isLoading = true;
+    });
+
     if (_currencyChosen == _currencyToConvert) {
       setState(() {
         _exchangeRate = "1";
@@ -61,6 +66,7 @@ class _ExchangeBodyState extends State<ExchangeBody> {
     } else {
       String newCurrencyRate =
           await getCurrencyRateAsync(_currencyChosen, _currencyToConvert);
+      if (!mounted) return;
       setState(() {
         _exchangeRate = newCurrencyRate;
         isLoading = false;
@@ -73,6 +79,7 @@ class _ExchangeBodyState extends State<ExchangeBody> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
