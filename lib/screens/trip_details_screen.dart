@@ -34,18 +34,18 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               MaterialPageRoute(builder: (context) => HomeScreen()),
             )
           },
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           color: Colors.white,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 29, right: 29),
+      body: const Padding(
+        padding: EdgeInsets.only(left: 29, right: 29),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
-              const Text(
+              SizedBox(height: 16),
+               Text(
                 "Create a new trip",
                 style: TextStyle(
                     color: Color.fromRGBO(45, 45, 45, 1),
@@ -53,7 +53,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     fontWeight: FontWeight.bold),
               ),
               TripDetailsForm(),
-              const SizedBox(
+               SizedBox(
                 height: 16,
               ),
             ],

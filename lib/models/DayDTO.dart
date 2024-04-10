@@ -14,7 +14,7 @@ class DayDTO {
 
   Map<String, dynamic> toJson() {
     print(this);
-    return {'date': date.toIso8601String()};
+    return {'date': date.toIso8601String(), };
     //'activities': cities
   }
 

@@ -69,7 +69,11 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/sample.json
+    - assets/images/sagrada_familia.jpg
     - assets/images/img2.jpg
+    - assets/images/camp_nou.jpg
+    - assets/images/casa_batllo.jpg
+    - assets/images/la_rambla.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

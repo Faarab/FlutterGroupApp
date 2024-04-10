@@ -60,11 +60,12 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     final myPath = myDirectory.path;
     final myFile = File('$myPath/trips.json');
 
+
     //Read the file contents, if the file is empty initialize it otherwise add a new trip
     final contents = await myFile.readAsString();
     if (contents == "") {
-      final _id = "0";
-      final newTrip = new TripDTO(
+      const _id = "0";
+      final newTrip = TripDTO(
           id: _id,
           name: _name,
           startDate: _startDate,
@@ -75,7 +76,7 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
       final fileStructure = {
         "trips": [newTrip]
       };
-      print("fileStructure" + fileStructure.toString());
+      // print("fileStructure" + fileStructure.toString());
       myFile.writeAsString(jsonEncode(fileStructure));
       // myFile.writeAsString("""{
       //   "trips": [$newTrip]
@@ -84,7 +85,7 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
       final contentsJSON = jsonDecode(contents);
       final tripsList = contentsJSON['trips'];
       final _id = (tripsList.length + 1).toString();
-      final newTrip = new TripDTO(
+      final newTrip = TripDTO(
           id: _id,
           name: _name,
           startDate: _startDate,
@@ -93,7 +94,7 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
           cityOfArrival: _cityOfArrival,
           days: getDaysList(_startDate, _endDate));
       final newTripsList = [...tripsList, newTrip];
-      print("newTripsList" + newTripsList.toString());
+      // print("newTripsList" + newTripsList.toString());
       contentsJSON['trips'] = newTripsList;
       myFile.writeAsString(jsonEncode(contentsJSON));
     }
@@ -296,9 +297,8 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                             content: Text('Trip dates must be selected')),
                       );
                     } else {
-                      print(
-                          "Name: $_name + Depart: $_cityOfDeparture + Arrival: $_cityOfArrival + Start: $_startDate + End: $_endDate");
-                      var _newTrip = new TripDTO(
+                     
+                      var _newTrip = TripDTO(
                           id: "1",
                           name: _name,
                           startDate: _startDate,
@@ -382,8 +382,16 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                                                       Color.fromRGBO(
                                                           255, 255, 255, 1),
                                                 ),
-                                                onPressed: () {Navigator.push(context, MaterialPageRoute(
-                builder: (context) => EditItineraryScreen()));},
+                                                onPressed: ()  => {
+                                                      Navigator.of(context)
+                                                          .popUntil((route) =>
+                                                              route.isFirst),
+                                                      Navigator.pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  EditItineraryScreen()))
+                                                    },
                                                 child: Text("Edit trip")),
                                           )
                                         ],

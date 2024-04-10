@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
+import 'package:triptaptoe_app/screens/add_activity_modal_screen.dart';
+import 'package:triptaptoe_app/screens/edit_itinerary_screen.dart';
 import 'package:triptaptoe_app/screens/edit_trip_screen.dart';
 import 'package:triptaptoe_app/screens/itinerary_screen.dart';
 
@@ -20,7 +22,7 @@ class TripCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 16),
-              const Text("Your trips",
+               Text("Your trips",
                   style: TextStyle(
                       color: Color.fromRGBO(45, 45, 45, 1),
                       fontSize: 40,
@@ -108,6 +110,7 @@ class TripCard extends StatelessWidget {
                               color: Color.fromRGBO(255, 255, 255, 1),
                             )),
                       ),
+                      IconButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => EditItineraryScreen()));}, icon: Icon(Icons.ac_unit_rounded))
                     ],
                   ),
                 ),

@@ -1,16 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:triptaptoe_app/main.dart';
+
 import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:triptaptoe_app/screens/Exchange_screen.dart';
 import 'package:triptaptoe_app/services/readJson.dart';
 import 'package:triptaptoe_app/widgets/home_screen_bottom_navigation_bar.dart';
 import 'package:triptaptoe_app/widgets/trip_card.dart';
-import 'package:flutter/services.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-
 import 'trip_details_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,19 +18,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Future<List<TripDTO>>? tripArray;
-  Widget _screenBody = HomeScreenBody();
+  Widget _screenBody = const HomeScreenBody();
 
   void setScreenBody(index) {
     setState(() {
       switch (index) {
         case 0:
-          _screenBody = ExchangeBody();
+          _screenBody = const ExchangeBody();
           break;
         case 1:
-          _screenBody = HomeScreenBody();
+          _screenBody = const HomeScreenBody();
           break;
         default:
-          _screenBody = HomeScreenBody();
+          _screenBody = const HomeScreenBody();
           break;
       }
     });
@@ -69,13 +65,13 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () => {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => TripDetailsScreen()),
+              MaterialPageRoute(builder: (context) => const TripDetailsScreen()),
             )
           },
-          hoverColor: Color.fromRGBO(99, 31, 147, 1),
-          backgroundColor: Color.fromRGBO(53, 16, 79, 1),
-          shape: CircleBorder(),
-          child: Icon(
+          hoverColor: const Color.fromRGBO(99, 31, 147, 1),
+          backgroundColor: const Color.fromRGBO(53, 16, 79, 1),
+          shape: const CircleBorder(),
+          child: const Icon(
             Icons.add,
             color: Colors.white,
             size: 32,
@@ -125,7 +121,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                     children: [
                       Container(
                         width: 240,
-                        child: Column(
+                        child: const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
@@ -136,7 +132,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                                   fontWeight: FontWeight.bold,
                                   color: Color.fromRGBO(45, 45, 45, 1)),
                             ),
-                            const SizedBox(height: 4),
+                             SizedBox(height: 4),
                             Text(
                               "You can add a trip by clicking on the '+' button",
                               textAlign: TextAlign.center,

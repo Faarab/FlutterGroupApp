@@ -1,3 +1,4 @@
+
 // da fare:
 // fare in modo che la parte di aggiunta delle città sia scorrevole e che quando si apre la tastiera non dia errore di spazio. + sistemare aggiunta manuale
 // implementare logica per salvare dati inseriti da utente
@@ -5,11 +6,15 @@
 // sistemare font, colori e size
 //scorrimento tra giorni fatto, mancano le date di fianco al giorno e sistemare total days perché è hardcoded
 
+
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:triptaptoe_app/models/ActivityDTO.dart';
 import 'package:triptaptoe_app/models/CityDTO.dart';
 import '../screens/add_activity_modal_screen.dart';
 import 'days_navigation.dart';
+import 'package:intl/intl.dart';
+
 
 final List<Map<String, String>> citiesStartingWithMa = [
   {"name": "Barcelona", "country": "Spain"},
@@ -36,6 +41,14 @@ class _EditTripBodyState extends State<EditTripBody> {
   final TextEditingController _cityController = TextEditingController();
   bool _isAddingCity = false;
   late List<CityDTO> hardcodedcitieslist;
+  List<ActivityDTO> activities = [];
+
+  void _onActivityAdded( activity) {
+    setState(() {
+      activities.add(activity);
+      
+    });
+  }
 
   //rappresenta le città per ogni giorno, impostato hardcoded da CAMBIARE!
   late List<List<CityDTO>> _citiesPerDay = List.generate(10, (_) => []);
@@ -88,52 +101,76 @@ class _EditTripBodyState extends State<EditTripBody> {
             onForward: _goToNextDay,
           ),
           const SizedBox(height: 30),
+          
           if (_isAddingCity || _citiesPerDay[_currentDayIndex].isNotEmpty) SingleChildScrollView(child: _buildAddedCities()),
           const SizedBox(height: 10),
           _buildCityCard(),
+          
         ],
       ),
     );
   }
-
-  Widget _buildAddedCities() {
-    final currentCities = _citiesPerDay[_currentDayIndex];
+  Widget _buildAddedActivities() {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: currentCities.length,
+      itemCount: activities.length,
       itemBuilder: (BuildContext context, int index) {
-        return Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                   
-                Text(
-                  currentCities[index].name, 
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                ),
-                const SizedBox(width: 24),
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Color.fromRGBO(53, 16, 79, 1)),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            content: const Text("Do you want to delete this city?"),
-                            actions: [
+        return ListTile(
+  title: Row(
+    children: [
+      Text(activities[index].name),
+      SizedBox(width: 8), // Aggiungi spazio tra il nome e l'orario
+      Text(DateFormat('HH:mm').format(activities[index].startTime)), // Aggiungi l'orario
+    ],
+  ),
+);
+
+      },
+    );
+  }
+
+  Widget _buildAddedCities() {
+  final currentCities = _citiesPerDay[_currentDayIndex];
+  if (currentCities.isEmpty) {
+    return Container(); 
+  }
+
+  return ListView.separated(
+    shrinkWrap: true,
+    itemCount: currentCities.length,
+    separatorBuilder: (BuildContext context, int index) => SizedBox(height: 10), // Spazio tra le città
+    itemBuilder: (BuildContext context, int index) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                currentCities[index].name, 
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              ),
+              const SizedBox(width: 24),
+              IconButton(
+                icon: const Icon(Icons.delete, color: Color.fromRGBO(53, 16, 79, 1)),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        content: const Text("Do you want to delete this city?"),
+                        actions: [
+                          Column(
+                            children: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(
                                     width: 120,
                                     child: TextButton(
-                                       style: ButtonStyle(
+                                      style: ButtonStyle(
                                         backgroundColor: MaterialStateProperty.all<Color>(const Color.fromRGBO(53, 16, 79, 1)),
                                         shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                                       ),
@@ -141,7 +178,6 @@ class _EditTripBodyState extends State<EditTripBody> {
                                         Navigator.of(context).pop();
                                       },
                                       child: const Text("Cancel", style: TextStyle(color: Colors.white),),
-                                     
                                     ),
                                   ),
                                   const SizedBox(width: 20.0),
@@ -153,38 +189,81 @@ class _EditTripBodyState extends State<EditTripBody> {
                                         shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                                       ),
                                       onPressed: () {
-                                              setState(() {
-                                                _citiesPerDay[_currentDayIndex].removeAt(index);
-                                              });
-                                              Navigator.of(context).pop();
-                                            },
+                                        setState(() {
+                                          _citiesPerDay[_currentDayIndex].removeAt(index);
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
                                       child: const Text("Delete",style: TextStyle(color: Colors.white)),
                                     ),
                                   ),
                                 ],
-                              )
+                              ),
                             ],
-                          );
-                        },
+                          )
+                        ],
                       );
                     },
-                   
-                  ),
-                ],
+                  );
+                },
+              ),
+            ],
+          ),
+          Container(
+             // Imposta un bordo grigio
+  
+  height: activities.isNotEmpty ? null : 0,
+  child: ListView.builder(
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    itemCount: activities.length,
+    itemBuilder: (BuildContext context, int index) {
+      return Card(
+        
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween ,
+            children: [
+              Text(
+                activities[index].name,
+                style: TextStyle(fontSize: 16),
+              ),
+              Text(
+                activities[index].startTime.hour.toString() + ":" + activities[index].startTime.minute.toString(),
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  ),
+),
+
+
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left:16.0),
+                child: TextButton.icon(
+                  icon: const Icon(Icons.add),
+                  label: const Text("Add an activity"),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => AddActivityModal(onActivityAdded: _onActivityAdded),
+                    );
+                  },
                 ),
-                const Row(
-                  children: [
-                    AddActivityModal(),
-                  ],
-                )
-               
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
+              ),
+            ],
+          ),
+        ],
+      );
+    },
+  );
+}
 
 
   Widget _buildCityCard() {
@@ -193,27 +272,32 @@ class _EditTripBodyState extends State<EditTripBody> {
       child: Column(
         children: [
           if (!_isAddingCity)
-            TextButton.icon(
-  onPressed: () {
-    setState(() {
-      _isAddingCity = true;
-    });
-  },
-  style: ButtonStyle(
-    backgroundColor: MaterialStateProperty.all(Colors.white), 
-    
-    minimumSize: MaterialStateProperty.all(const Size(double.infinity, 50)),
-    shape: MaterialStateProperty.all(
-    const RoundedRectangleBorder(
-      borderRadius: BorderRadius.zero, 
+            Row(
+  children: [
+    Expanded(
+      child: TextButton.icon(
+        onPressed: () {
+          setState(() {
+            _isAddingCity = true;
+          });
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Colors.white), 
+          minimumSize: MaterialStateProperty.all(const Size(double.infinity, 50)),
+          shape: MaterialStateProperty.all(
+            const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero, 
+            ),
+          ),
+          alignment: Alignment.centerLeft
+        ),
+        label: const Text("Add a city", style: TextStyle(color: Colors.black)),
+        icon: const Icon(Icons.add, color: Colors.black),
+      ),
     ),
-  ),
-    alignment: Alignment.centerLeft
-  ),
-  
-  icon: const Icon(Icons.add, color: Colors.black),
-  label: const Text("Add a city", style: TextStyle(color: Colors.black)),
+  ],
 ),
+
 
 
           if (_isAddingCity)
