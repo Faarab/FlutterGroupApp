@@ -73,6 +73,9 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
           cityOfDeparture: _cityOfDeparture,
           cityOfArrival: _cityOfArrival,
           days: getDaysList(_startDate, _endDate));
+      
+          
+          
       final fileStructure = {
         "trips": [newTrip]
       };
@@ -390,7 +393,8 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                                                           context,
                                                           MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  EditItineraryScreen()))
+                                                                  
+                                                                  Text("mettere id viaggio ee eventuale giorno")))
                                                     },
                                                 child: Text("Edit trip")),
                                           )

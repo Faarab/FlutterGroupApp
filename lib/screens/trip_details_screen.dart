@@ -7,6 +7,7 @@ import '../widgets/trip_details_form.dart';
 
 class TripDetailsScreen extends StatefulWidget {
   const TripDetailsScreen({super.key});
+  
 
   @override
   State<TripDetailsScreen> createState() => _TripDetailsScreenState();

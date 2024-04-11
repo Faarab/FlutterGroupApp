@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/DayDTO.dart';
 import 'package:triptaptoe_app/widgets/body_itenerary.dart';
@@ -17,7 +17,7 @@ class ChangeDayItinerary extends StatefulWidget {
 
   final int dayIndex;
   final DayDTO day;
-  final BodyItenerary widget;
+  final Widget widget;
   final VoidCallback onBackward;
   final VoidCallback onForward;
   final bool canGoForward;

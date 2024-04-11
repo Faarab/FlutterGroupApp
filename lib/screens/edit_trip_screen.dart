@@ -9,7 +9,9 @@ import 'package:triptaptoe_app/screens/home_screen.dart';
 import 'package:triptaptoe_app/services/navigation.dart';
 import 'package:triptaptoe_app/widgets/app_bar_with_back_arrow.dart';
 import 'package:triptaptoe_app/widgets/custom_input_field.dart';
-import 'package:triptaptoe_app/widgets/edit_trip_body.dart';
+
+import 'package:triptaptoe_app/widgets/edit_itinerary_body.dart';
+import 'package:triptaptoe_app/widgets/edit_itinerary_body_bot_nav_version.dart';
 
 import '../widgets/edit_trip_form.dart';
 
@@ -170,7 +172,7 @@ class _EditTripScreenState extends State<EditTripScreen> {
         },
       ) : 
 
-      EditTripBody(),
+      EditItineraryBodyBotNavVersion(widget: widget),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.info),label: "Info"),

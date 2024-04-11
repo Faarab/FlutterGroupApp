@@ -1,22 +1,14 @@
-
-// da fare:
-// fare in modo che la parte di aggiunta delle città sia scorrevole e che quando si apre la tastiera non dia errore di spazio. + sistemare aggiunta manuale
-// implementare logica per salvare dati inseriti da utente
-// implementare logica per aggiungere attività scelta da utente
-// sistemare font, colori e size
-//scorrimento tra giorni fatto, mancano le date di fianco al giorno e sistemare total days perché è hardcoded
-
-
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:triptaptoe_app/models/ActivityDTO.dart';
 import 'package:triptaptoe_app/models/CityDTO.dart';
+import 'package:triptaptoe_app/screens/edit_itinerary_screen.dart';
+import 'package:triptaptoe_app/widgets/change_day_itinerary.dart';
 import '../screens/add_activity_modal_screen.dart';
-import 'days_navigation.dart';
 import 'package:intl/intl.dart';
 
 
-final List<Map<String, String>> citiesStartingWithMa = [
+final List<Map<String, dynamic>> citiesStartingWithMa = [
   {"name": "Barcelona", "country": "Spain"},
   {"name": "Seville", "country": "Spain"},
   {"name": "Valencia", "country": "Spain"},
@@ -30,67 +22,64 @@ final List<Map<String, String>> citiesStartingWithMa = [
   
 ];
 
-class EditTripBody extends StatefulWidget {
-  const EditTripBody({super.key});
+class EditItineraryBody extends StatefulWidget {
+  const EditItineraryBody({super.key, required this.widget});
+
+  final EditItineraryScreen widget;
 
   @override
-  _EditTripBodyState createState() => _EditTripBodyState();
+  State<EditItineraryBody> createState() => _EditItineraryBodyState();
 }
 
-class _EditTripBodyState extends State<EditTripBody> {
+class _EditItineraryBodyState extends State<EditItineraryBody> {
   final TextEditingController _cityController = TextEditingController();
   bool _isAddingCity = false;
   late List<CityDTO> hardcodedcitieslist;
   List<ActivityDTO> activities = [];
+  late int _currentDayIndex;
+  late bool _canGoBackward;
+  late bool _canGoForward;
+  final ScrollController _scrollController = ScrollController();
+  late List<List<CityDTO>> _citiesPerDay =[];
 
   void _onActivityAdded(ActivityDTO activity) {
   setState(() {
-    int activityIndex = 0;
+    int insertIndex = 0;
     for (int i = 0; i < activities.length; i++) {
       if (activity.startTime.isBefore(activities[i].startTime)) {
-        activityIndex = i;
+        insertIndex = i;
         break;
       } else {
-        activityIndex = i + 1;
+        insertIndex = i + 1;
       }
     }
-    activities.insert(activityIndex, activity);
+    activities.insert(insertIndex, activity);
   });
-}
-
-  
-
-  //rappresenta le città per ogni giorno, impostato hardcoded da CAMBIARE!
-  late List<List<CityDTO>> _citiesPerDay = List.generate(10, (_) => []);
-
-
-  int _currentDayIndex = 0; 
-
-  void _goToPreviousDay(int newIndex) {
-    setState(() {
-      _currentDayIndex = newIndex;
-    });
-  }
-
-  void _goToNextDay(int newIndex) {
-    setState(() {
-      _currentDayIndex = newIndex;
-    });
-  }
+} 
 
   @override
   void initState() {
     super.initState();
     hardcodedcitieslist =
         citiesStartingWithMa.map((city) => CityDTO(name: city["name"]!, country: city["country"]!)).toList();
-    
-    _citiesPerDay = List.generate(10, (_) => []);
+      
+
+   _currentDayIndex = 0;
+    _canGoBackward = false;
+    if (widget.widget.trip.days!.length > 1) {
+      _canGoForward = true;
+    } else {
+      _canGoForward = false;
+    }
+    _citiesPerDay = List.generate(widget.widget.trip.days!.length, (_) => []);
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 29, right: 29),
+Widget build(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.only(left: 29, right: 29),
+    child: SingleChildScrollView( 
+      controller: _scrollController,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -104,22 +93,51 @@ class _EditTripBodyState extends State<EditTripBody> {
             ),
           ),
           const SizedBox(height: 30),
-          DaysNavigation(
+          ChangeDayItinerary(
+            widget: widget,
+            day: widget.widget.trip.days![_currentDayIndex],
+            canGoBackward: _canGoBackward,
+            canGoForward: _canGoForward,
             dayIndex: _currentDayIndex,
-            totalDays: 10,
-            onBackward: _goToPreviousDay,
-            onForward: _goToNextDay,
+            onBackward: () {
+              setState(() {
+                if (_currentDayIndex > 0) {
+                  _currentDayIndex--;
+                  _canGoForward = true;
+                  _scrollController.animateTo(0,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut);
+                }
+                if (_currentDayIndex == 0) {
+                  _canGoBackward = false;
+                }
+              });
+            },
+            onForward: () {
+              setState(() {
+                if (_currentDayIndex < widget.widget.trip.days!.length - 1) {
+                  _currentDayIndex++;
+                  _canGoBackward = true;
+                  _scrollController.animateTo(0,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut);
+                }
+                if (_currentDayIndex == widget.widget.trip.days!.length - 1) {
+                  _canGoForward = false;
+                }
+              });
+            },
           ),
           const SizedBox(height: 30),
-          
-          if (_isAddingCity || _citiesPerDay[_currentDayIndex].isNotEmpty) SingleChildScrollView(child: _buildAddedCities()),
+          if (_isAddingCity || _citiesPerDay[_currentDayIndex].isNotEmpty) _buildAddedCities(),
           const SizedBox(height: 10),
           _buildCityCard(),
-          
         ],
       ),
-    );
-  }
+    ),
+  );
+}
+
   Widget _buildAddedActivities() {
     
     return ListView.builder(
@@ -130,8 +148,8 @@ class _EditTripBodyState extends State<EditTripBody> {
   title: Row(
     children: [
       Text(activities[index].name),
-      SizedBox(width: 8), // Aggiungi spazio tra il nome e l'orario
-      Text(DateFormat('HH:mm').format(activities[index].startTime)), // Aggiungi l'orario
+      const SizedBox(width: 8), 
+      Text(DateFormat('HH:mm').format(activities[index].startTime)),
     ],
   ),
 );
@@ -149,7 +167,7 @@ class _EditTripBodyState extends State<EditTripBody> {
   return ListView.separated(
     shrinkWrap: true,
     itemCount: currentCities.length,
-    separatorBuilder: (BuildContext context, int index) => SizedBox(height: 10), // Spazio tra le città
+    separatorBuilder: (BuildContext context, int index) => SizedBox(height: 10),
     itemBuilder: (BuildContext context, int index) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,35 +239,34 @@ class _EditTripBodyState extends State<EditTripBody> {
             ],
           ),
           Container(
-             // Imposta un bordo grigio
   
-  height: activities.isNotEmpty ? null : 0,
-  child: ListView.builder(
-    shrinkWrap: true,
-    physics: const NeverScrollableScrollPhysics(),
-    itemCount: activities.length,
-    itemBuilder: (BuildContext context, int index) {
-      return Card(
-        
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween ,
-            children: [
-              Text(
-                activities[index].name,
-                style: TextStyle(fontSize: 16),
-              ),
-              Text(
-                activities[index].startTime.hour.toString() + ":" + activities[index].startTime.minute.toString(),
-              )
-            ],
+            height: activities.isNotEmpty ? null : 0,
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: activities.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween ,
+                      children: [
+                        Text(
+                          activities[index].name,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          activities[index].startTime.hour.toString() + ":" + activities[index].startTime.minute.toString(),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-      );
-    },
-  ),
-),
 
 
           Row(
@@ -308,10 +325,7 @@ class _EditTripBodyState extends State<EditTripBody> {
     ),
   ],
 ),
-
-
-
-          if (_isAddingCity)
+       if (_isAddingCity)
             Row(
               children: [
                 Flexible(
