@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:triptaptoe_app/models/ActivityDTO.dart';
 
 

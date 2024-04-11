@@ -4,11 +4,16 @@ import 'package:triptaptoe_app/models/ActivityDTO.dart';
 import '../widgets/suggested_activities.dart';
 
 //TODO 
-//ordinare attività in ordine cronologico
+
 //capire come sistemare la questione campi non required (ex image) per quanto riguarda l'itinerario
 //inserire logica per salvare dati in file json
 //sistemare inserimento attività per singola città
 //sistemare la questione scorrimento tra giorni
+//sistemare secondo numero dei minuti
+//implementare logica schermata edit trip
+//scorrimento città + attività
+//font size ecc
+//navigator check
 
 class AddActivityModal extends StatefulWidget {
   const AddActivityModal({super.key, required this.onActivityAdded});
@@ -67,7 +72,7 @@ class _AddActivityModalState extends State<AddActivityModal> {
                   Icon(Icons.location_on),
                   SizedBox(width: 16),
                   //TODO ricordarsi di far sì che il nome della città cambi dinamicamente
-                  Text("Madrid", style: TextStyle(fontSize: 24),),
+                  Text("Barcelona", style: TextStyle(fontSize: 24),),
                 ],
               ),
               const SizedBox(height: 16), 

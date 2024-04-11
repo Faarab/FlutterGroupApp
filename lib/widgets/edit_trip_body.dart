@@ -43,12 +43,22 @@ class _EditTripBodyState extends State<EditTripBody> {
   late List<CityDTO> hardcodedcitieslist;
   List<ActivityDTO> activities = [];
 
-  void _onActivityAdded( activity) {
-    setState(() {
-      activities.add(activity);
-      
-    });
-  }
+  void _onActivityAdded(ActivityDTO activity) {
+  setState(() {
+    int activityIndex = 0;
+    for (int i = 0; i < activities.length; i++) {
+      if (activity.startTime.isBefore(activities[i].startTime)) {
+        activityIndex = i;
+        break;
+      } else {
+        activityIndex = i + 1;
+      }
+    }
+    activities.insert(activityIndex, activity);
+  });
+}
+
+  
 
   //rappresenta le città per ogni giorno, impostato hardcoded da CAMBIARE!
   late List<List<CityDTO>> _citiesPerDay = List.generate(10, (_) => []);
@@ -111,6 +121,7 @@ class _EditTripBodyState extends State<EditTripBody> {
     );
   }
   Widget _buildAddedActivities() {
+    
     return ListView.builder(
       shrinkWrap: true,
       itemCount: activities.length,
