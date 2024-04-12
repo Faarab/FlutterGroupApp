@@ -12,7 +12,7 @@ class EditItineraryScreen extends StatefulWidget {
 }
 
 class _EditItineraryScreenState extends State<EditItineraryScreen> {
-    late Widget _body = EditItineraryBody(widget: widget); // Inizializza il corpo
+    late Widget _body = EditItineraryBody(widget: widget); 
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,8 @@ class _EditItineraryScreenState extends State<EditItineraryScreen> {
               shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
             ),
             onPressed: () {
-              // Inserire la logica di salvataggio 
+              print(widget.trip);
+              
             },
             child: Text("Save", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),),
           )                       

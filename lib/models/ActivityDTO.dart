@@ -32,7 +32,7 @@ class ActivityDTO {
     category: json["category"]
     );
 
-  //da trasferire per essere resi usabili fuori dalla classe ActivityDTO
+
   String formatStartTime() {
     return '${startTime.hour.toString().padLeft(2, '0')}:${startTime.minute.toString().padLeft(2, '0')}';
   }
