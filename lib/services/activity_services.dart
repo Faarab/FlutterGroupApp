@@ -13,6 +13,7 @@ class ActivityService {
 
     return toReturn;
   }
+  
 
   List<String> getCategories() {
     final Map<String, dynamic> data = jsonDecode(activitiesJson);
@@ -98,16 +99,6 @@ const activitiesJson= """
     "category": "Zoos"
   },
   {
-    "name": "Montjuïc Cable Car",
-    "startTime": "2024-04-09T10:00:00.000Z",
-    "openingTime": "2024-04-09T10:00:00.000Z",
-    "closingTime": "2024-04-09T18:00:00.000Z",
-    "location": "Avinguda Miramar, 08038 Barcelona, Spain",
-    "price": null,
-    "image": "camp_nou.jpg",
-    "category": "Transportation"
-  },
-  {
     "name": "Picasso Museum",
     "startTime": "2024-04-09T10:00:00.000Z",
     "openingTime": "2024-04-09T10:00:00.000Z",
@@ -128,3 +119,89 @@ const activitiesJson= """
     "category": "Aquariums"
   }]}
 """;
+//TODO utilizzare questo json per inserire due alternative di attività. Implementare logica.
+
+// {
+//   "results": [
+//     {
+//       "name": "Museo del Prado",
+//       "startTime": "2024-04-09T09:00:00.000Z",
+//       "openingTime": "2024-04-09T09:00:00.000Z",
+//       "closingTime": "2024-04-09T20:00:00.000Z",
+//       "location": "Calle de Ruiz de Alarcón, 23, 28014 Madrid, Spain",
+//       "price": null,
+//       "image": "prado_museum.jpg",
+//       "category": "Museums"
+//     },
+//     {
+//       "name": "Parque del Retiro",
+//       "startTime": "2024-04-09T08:00:00.000Z",
+//       "openingTime": "2024-04-09T08:00:00.000Z",
+//       "closingTime": "2024-04-09T22:00:00.000Z",
+//       "location": "Plaza de la Independencia, 7, 28001 Madrid, Spain",
+//       "price": null,
+//       "image": "retiro_park.jpg",
+//       "category": "Parks"
+//     },
+//     {
+//       "name": "Plaza Mayor",
+//       "startTime": "2024-04-09T08:00:00.000Z",
+//       "openingTime": "2024-04-09T08:00:00.000Z",
+//       "closingTime": "2024-04-09T00:00:00.000Z",
+//       "location": "Plaza Mayor, 28012 Madrid, Spain",
+//       "price": null,
+//       "image": "plaza_mayor.jpg",
+//       "category": "Squares"
+//     },
+//     {
+//       "name": "Royal Palace of Madrid",
+//       "startTime": "2024-04-09T10:00:00.000Z",
+//       "openingTime": "2024-04-09T10:00:00.000Z",
+//       "closingTime": "2024-04-09T18:00:00.000Z",
+//       "location": "Calle de Bailén, s/n, 28071 Madrid, Spain",
+//       "price": null,
+//       "image": "royal_palace.jpg",
+//       "category": "Palaces"
+//     },
+//     {
+//       "name": "Thyssen-Bornemisza Museum",
+//       "startTime": "2024-04-09T10:00:00.000Z",
+//       "openingTime": "2024-04-09T10:00:00.000Z",
+//       "closingTime": "2024-04-09T19:00:00.000Z",
+//       "location": "Paseo del Prado, 8, 28014 Madrid, Spain",
+//       "price": null,
+//       "image": "thyssen_museum.jpg",
+//       "category": "Museums"
+//     },
+//     {
+//       "name": "Gran Vía",
+//       "startTime": "2024-04-09T08:00:00.000Z",
+//       "openingTime": "2024-04-09T08:00:00.000Z",
+//       "closingTime": "2024-04-09T00:00:00.000Z",
+//       "location": "Gran Vía, 28013 Madrid, Spain",
+//       "price": null,
+//       "image": "gran_via.jpg",
+//       "category": "Shopping"
+//     },
+//     {
+//       "name": "Puerta del Sol",
+//       "startTime": "2024-04-09T08:00:00.000Z",
+//       "openingTime": "2024-04-09T08:00:00.000Z",
+//       "closingTime": "2024-04-09T00:00:00.000Z",
+//       "location": "Puerta del Sol, 28013 Madrid, Spain",
+//       "price": null,
+//       "image": "puerta_del_sol.jpg",
+//       "category": "Squares"
+//     },
+//     {
+//       "name": "Temple of Debod",
+//       "startTime": "2024-04-09T09:00:00.000Z",
+//       "openingTime": "2024-04-09T09:00:00.000Z",
+//       "closingTime": "2024-04-09T20:00:00.000Z",
+//       "location": "Calle Ferraz, 1, 28008 Madrid, Spain",
+//       "price": null,
+//       "image": "temple_of_debod.jpg",
+//       "category": "Historical Sites"
+//     }
+//   ]
+// }

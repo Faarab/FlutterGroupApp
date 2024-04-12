@@ -1,60 +1,64 @@
+
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/ActivityDTO.dart';
-import 'package:triptaptoe_app/services/activity_services.dart';
+import 'package:triptaptoe_app/models/CityDTO.dart';
+import 'package:triptaptoe_app/services/city_service.dart';
 
 class SuggestedActivities extends StatefulWidget {
-  const SuggestedActivities({super.key, required this.onActivityTapped});
+   const SuggestedActivities({super.key, required this.onActivityTapped, this.selectedCity});
+    
 
   final Function(ActivityDTO) onActivityTapped;
+  final CityDTO? selectedCity;
 
   @override
   State<SuggestedActivities> createState() => _SuggestedActivitiesState();
-
-  
 }
 
 class _SuggestedActivitiesState extends State<SuggestedActivities> {
   late List<String> categories;
   late Map<String, bool> filters;
-
+  late List<ActivityDTO> activities;
 
   @override
   void initState() {
     super.initState();
     
-    categories = ActivityService().getCategories();
+    categories = CityService().getCategories().toList();
+    filters = { for (var category in categories) category: false };
 
-   
-    filters = { for (var category in categories) category : false };
+    activities = _getAllActivities();
   }
 
-  
+  List<ActivityDTO> _getAllActivities() {
+    List<ActivityDTO> allActivities = [];
+    final List<CityDTO> cities = CityService().getCities().toList();
+    
+    for (var city in cities) {
+      allActivities.addAll(city.activities!);
+    }
+    
+    return allActivities;
+  }
 
-  final activities = ActivityService().getActivity(results: 9).toList();
-
-  
   @override
   Widget build(BuildContext context) {
-
     final filteredActivities = activities.where((activity) {
       if (filters.values.any((selected) => selected)) {
         return filters.entries.any((filter) => filter.value && activity.category == filter.key);
       } else {
         return true;
-      }     
-
+      }
     }).toList();
-
-
 
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
-            padding:  EdgeInsets.symmetric(vertical: 8.0),
+            padding: EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
-              "Suggested Activities",
+              "Suggested activities",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
@@ -63,24 +67,25 @@ class _SuggestedActivitiesState extends State<SuggestedActivities> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Row(
               children: filters.entries
-                  .map((filter) => 
-                  Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: FilterChip(
-                          backgroundColor: Colors.transparent,
-                          label: Text(filter.key),
-                          selected: filter.value,
-                          onSelected: (selected) {
-                            setState(() {
-                              filters[filter.key] = selected;
-                            });
-                          },
-                          selectedColor: Colors.purple,
-                          labelStyle: TextStyle(
-                            color: filter.value ? Colors.white : Colors.black,
-                          ),
+                  .map(
+                    (filter) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: FilterChip(
+                        backgroundColor: Colors.transparent,
+                        label: Text(filter.key),
+                        selected: filter.value,
+                        onSelected: (selected) {
+                          setState(() {
+                            filters[filter.key] = selected;
+                          });
+                        },
+                        selectedColor: Colors.purple,
+                        labelStyle: TextStyle(
+                          color: filter.value ? Colors.white : Colors.black,
                         ),
-                      ))
+                      ),
+                    ),
+                  )
                   .toList(),
             ),
           ),
@@ -92,16 +97,15 @@ class _SuggestedActivitiesState extends State<SuggestedActivities> {
             child: GridView.count(
               shrinkWrap: true,
               crossAxisCount: 2,
-             children: 
-              List.generate(
-                  filteredActivities.length, (index) {
-                    final activity = filteredActivities[index]; 
-                    return InkWell(
+              children: List.generate(
+                filteredActivities.length,
+                (index) {
+                  final activity = filteredActivities[index];
+                  return InkWell(
                     onTap: () {
-                      widget.onActivityTapped(activity);  
+                      widget.onActivityTapped(activity);
                     },
                     child: Card(
-                      
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -114,7 +118,7 @@ class _SuggestedActivitiesState extends State<SuggestedActivities> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              activity.name, 
+                              activity.name,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 fontSize: 16,
@@ -126,14 +130,12 @@ class _SuggestedActivitiesState extends State<SuggestedActivities> {
                       ),
                     ),
                   );
-                }),
-
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                }
-
-
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

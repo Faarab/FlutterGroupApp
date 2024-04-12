@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/ActivityDTO.dart';
+import 'package:triptaptoe_app/models/CityDTO.dart';
 
 import '../widgets/suggested_activities.dart';
 
@@ -7,18 +8,18 @@ import '../widgets/suggested_activities.dart';
 
 //capire come sistemare la questione campi non required (ex image) per quanto riguarda l'itinerario
 //inserire logica per salvare dati in file json
-//sistemare inserimento attività per singola città
-//sistemare la questione scorrimento tra giorni
+
 //sistemare secondo numero dei minuti
-//implementare logica schermata edit trip
+
 //scorrimento città + attività
 //font size ecc
 //navigator check
 
 class AddActivityModal extends StatefulWidget {
-  const AddActivityModal({super.key, required this.onActivityAdded});
+  const AddActivityModal({super.key, required this.onActivityAdded,  this.selectedCity});
 
   final Function(ActivityDTO) onActivityAdded;
+  final CityDTO? selectedCity;
 
   @override
   State<AddActivityModal> createState() => _AddActivityModalState();
@@ -35,7 +36,6 @@ class _AddActivityModalState extends State<AddActivityModal> {
 
   @override
   void initState() {
-    
     super.initState();
 
     _nameController = TextEditingController();
@@ -67,12 +67,13 @@ class _AddActivityModalState extends State<AddActivityModal> {
                 ],
               ),
               const SizedBox(height: 16), 
-              const Row(
+               Row(
                 children: [
-                  Icon(Icons.location_on),
-                  SizedBox(width: 16),
-                  //TODO ricordarsi di far sì che il nome della città cambi dinamicamente
-                  Text("Barcelona", style: TextStyle(fontSize: 24),),
+                  const Icon(Icons.location_on),
+                  const SizedBox(width: 16),
+                 
+                  Text("${widget.selectedCity?.name}", style: const TextStyle(fontSize: 24),),
+
                 ],
               ),
               const SizedBox(height: 16), 
@@ -205,7 +206,7 @@ class _AddActivityModalState extends State<AddActivityModal> {
                  _locationController.text = _location;
                 });
                 
-              },)
+              }, )
             ],
           ),
         ),

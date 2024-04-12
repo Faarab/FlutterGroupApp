@@ -393,8 +393,10 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                                                           context,
                                                           MaterialPageRoute(
                                                               builder: (context) =>
+
+                                                              EditItineraryScreen(trip: _newTrip)
                                                                   
-                                                                  Text("mettere id viaggio ee eventuale giorno")))
+                                                                  ))
                                                     },
                                                 child: Text("Edit trip")),
                                           )

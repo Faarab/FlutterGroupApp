@@ -7,6 +7,7 @@ import 'package:triptaptoe_app/widgets/change_day_itinerary.dart';
 import '../screens/add_activity_modal_screen.dart';
 import 'package:intl/intl.dart';
 
+//TODO ricordarsi di sistemare il fatto che se cancello una città quando la ricreo l'attività rimane
 
 final List<Map<String, dynamic>> citiesStartingWithMa = [
   {"name": "Barcelona", "country": "Spain"},
@@ -41,21 +42,34 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
   late bool _canGoForward;
   final ScrollController _scrollController = ScrollController();
   late List<List<CityDTO>> _citiesPerDay =[];
+  CityDTO? _selectedCity;
+  
 
-  void _onActivityAdded(ActivityDTO activity) {
+void _onActivityAdded(ActivityDTO activity) {
   setState(() {
-    int insertIndex = 0;
-    for (int i = 0; i < activities.length; i++) {
-      if (activity.startTime.isBefore(activities[i].startTime)) {
-        insertIndex = i;
-        break;
-      } else {
-        insertIndex = i + 1;
+    if (_selectedCity != null) {
+      int cityIndex = _citiesPerDay[_currentDayIndex].indexOf(_selectedCity!);
+      if (cityIndex != -1) {
+        if (_citiesPerDay[_currentDayIndex][cityIndex].activities != null) {
+          int insertIndex = 0;
+          for (int i = 0; i < _citiesPerDay[_currentDayIndex][cityIndex].activities!.length; i++) {
+            if (activity.startTime.isBefore(_citiesPerDay[_currentDayIndex][cityIndex].activities![i].startTime)) {
+              insertIndex = i;
+              break;
+            } else {
+              insertIndex = i + 1;
+            }
+          }
+          _citiesPerDay[_currentDayIndex][cityIndex].activities!.insert(insertIndex, activity);
+        } else {
+          
+          _citiesPerDay[_currentDayIndex][cityIndex].activities = [activity];
+        }
       }
     }
-    activities.insert(insertIndex, activity);
   });
-} 
+}
+
 
   @override
   void initState() {
@@ -105,7 +119,7 @@ Widget build(BuildContext context) {
                   _currentDayIndex--;
                   _canGoForward = true;
                   _scrollController.animateTo(0,
-                      duration: Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 500),
                       curve: Curves.easeInOut);
                 }
                 if (_currentDayIndex == 0) {
@@ -119,7 +133,7 @@ Widget build(BuildContext context) {
                   _currentDayIndex++;
                   _canGoBackward = true;
                   _scrollController.animateTo(0,
-                      duration: Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 500),
                       curve: Curves.easeInOut);
                 }
                 if (_currentDayIndex == widget.widget.trip.days!.length - 1) {
@@ -167,8 +181,9 @@ Widget build(BuildContext context) {
   return ListView.separated(
     shrinkWrap: true,
     itemCount: currentCities.length,
-    separatorBuilder: (BuildContext context, int index) => SizedBox(height: 10),
+    separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10),
     itemBuilder: (BuildContext context, int index) {
+      final city = currentCities[index];
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -240,12 +255,14 @@ Widget build(BuildContext context) {
           ),
           Container(
   
-            height: activities.isNotEmpty ? null : 0,
+            height: city.activities?.isNotEmpty ?? false ? null : 0,
+
             child: ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: activities.length,
-              itemBuilder: (BuildContext context, int index) {
+              itemCount: city.activities?.length,
+              itemBuilder: (BuildContext context, int activityIndex) {
+                final activity = city.activities?[activityIndex];
                 return Card(
                   
                   child: Padding(
@@ -254,12 +271,18 @@ Widget build(BuildContext context) {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween ,
                       children: [
                         Text(
-                          activities[index].name,
-                          style: TextStyle(fontSize: 16),
+                          city.activities != null && index < city.activities!.length
+                              ? city.activities![index].name
+                              : 'no city no party',
+                          style: const TextStyle(fontSize: 16),
                         ),
+
                         Text(
-                          activities[index].startTime.hour.toString() + ":" + activities[index].startTime.minute.toString(),
+                          city.activities != null && activityIndex < city.activities!.length
+                              ? '${city.activities![activityIndex].startTime.hour}:${city.activities![activityIndex].startTime.minute}'
+                              : '',
                         )
+
                       ],
                     ),
                   ),
@@ -280,7 +303,7 @@ Widget build(BuildContext context) {
                     showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
-                      builder: (context) => AddActivityModal(onActivityAdded: _onActivityAdded),
+                      builder: (context) => AddActivityModal(onActivityAdded: _onActivityAdded, selectedCity: _selectedCity,),
                     );
                   },
                 ),
@@ -292,8 +315,6 @@ Widget build(BuildContext context) {
     },
   );
 }
-
-
   Widget _buildCityCard() {
     return Card(
       elevation: 0,
@@ -349,8 +370,7 @@ Widget build(BuildContext context) {
                           hintText: 'Enter a city',
                           filled: true,
                           fillColor: Colors.transparent,                        
-                        ),
-                        
+                        ),                        
                         onSubmitted: (value) {
                           final selectedCity = hardcodedcitieslist.firstWhereOrNull((city) => city.name == value);
                           if (selectedCity != null) {
@@ -385,11 +405,12 @@ Widget build(BuildContext context) {
                     },
                     onSelected: (CityDTO city) {
                       setState(() {
+                        _selectedCity = city;
                         _citiesPerDay[_currentDayIndex].add(city);
                         _cityController.clear();
                         _isAddingCity = false;
                       });
-                    },
+                    }
                   ),
                 ),
                 IconButton(
