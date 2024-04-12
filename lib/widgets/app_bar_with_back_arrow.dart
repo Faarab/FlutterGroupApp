@@ -24,11 +24,19 @@ class AppBarWithBackArrow extends StatefulWidget
 class _AppBarWithBackArrowState extends State<AppBarWithBackArrow> {
   @override
   Widget build(BuildContext context) {
+    late double fontSizeOfTitle;
+    if(widget.title != null) {
+      if(widget.title!.length > 10) {
+        fontSizeOfTitle = 24;
+      } else {
+        fontSizeOfTitle = 32;
+      }
+    }
     return AppBar(
       centerTitle: true,
       automaticallyImplyLeading: false,
       toolbarHeight: 64,
-      title: widget.title != null ? Text(widget.title!, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)) : null,
+      title: widget.title != null ? Text(widget.title!, style: TextStyle(fontSize: fontSizeOfTitle, fontWeight: FontWeight.bold, color: Colors.white)) : null,
       backgroundColor: const Color.fromRGBO(53, 16, 79, 1),
       leading: IconButton(
         icon: const Icon(
