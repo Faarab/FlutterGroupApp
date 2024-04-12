@@ -175,7 +175,7 @@ class _EditTripScreenState extends State<EditTripScreen> {
               context: context,
               builder: (BuildContext context) {
                 return DialogEditTrip(
-                  contentText: "Changing this section will permanently erase all your changes. You will lose any unsaved information.\nDo you want to proceed?",
+                  contentText: "Changing this section will permanently erase all your changes.\nYou will lose any unsaved information.\nDo you want to proceed?",
                   onPressed: (value) async {                
                     if(value) {
                       setState(() {
