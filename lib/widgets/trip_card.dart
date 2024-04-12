@@ -9,12 +9,17 @@ import 'package:triptaptoe_app/screens/itinerary_screen.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TripCard extends StatelessWidget {
-  const TripCard({super.key, required this.trip, required this.index});
+  const TripCard(
+      {super.key,
+      required this.trip,
+      required this.index,
+      required this.onPressedDelete});
 
   final TripDTO trip;
   final int index;
+  final Function onPressedDelete;
 
-  void deleteTrip(String _tripId) async {
+  Future deleteTrip(String _tripId) async {
     print("TRIPID " + _tripId);
     final myDirectory = await getApplicationDocumentsDirectory();
     final myPath = myDirectory.path;
@@ -161,20 +166,14 @@ class TripCard extends StatelessWidget {
                                                             Color.fromRGBO(255,
                                                                 255, 255, 1),
                                                       ),
-                                                      onPressed: () => {
-                                                            deleteTrip(trip.id),
-                                                            Navigator.of(
-                                                                    context)
-                                                                .popUntil((route) =>
-                                                                    route
-                                                                        .isFirst),
-                                                            Navigator.pushReplacement(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            HomeScreen()))
-                                                          },
+                                                      onPressed: () async {
+                                                        await deleteTrip(
+                                                            trip.id);
+                                                        Navigator.of(context)
+                                                            .popUntil((route) =>
+                                                                route.isFirst);
+                                                        onPressedDelete();
+                                                      },
                                                       child:
                                                           Text("Yes, delete")),
                                                 )

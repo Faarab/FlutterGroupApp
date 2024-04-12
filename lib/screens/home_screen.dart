@@ -55,11 +55,11 @@ class _HomeScreenState extends State<HomeScreen> {
     //   tripArray = readJson();
     // });
     //WidgetsBinding.instance.addPostFrameCallback((_) => tripArray = readJson());
-    WidgetsBinding.instance.addPostFrameCallback((_) => () {
-          setState(() {
-            tripArray = readJson();
-          });
-        });
+    // WidgetsBinding.instance.addPostFrameCallback((_) => () {
+    //       setState(() {
+    //         tripArray = readJson();
+    //       });
+    //     });
     print("tripArray" + tripArray.toString());
   }
 
@@ -130,6 +130,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
             future: readJson(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                print({'sn': snapshot.data});
                 if (snapshot.data!.isNotEmpty) {
                   return Expanded(
                     child: ListView.builder(
@@ -137,7 +138,10 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                       itemBuilder: (context, index) {
                         print("snapsht data" + (snapshot.data!).toString());
                         return TripCard(
-                            trip: snapshot.data![index], index: index);
+                          trip: snapshot.data![index],
+                          index: index,
+                          onPressedDelete: () => setState(() {}),
+                        );
                       },
                     ),
                   );
