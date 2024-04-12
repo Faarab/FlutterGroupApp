@@ -5,7 +5,7 @@ void navigateToHomeWithSlideTransition(BuildContext context) {
   Navigator.pushReplacement(
     context,
     PageRouteBuilder(
-      transitionDuration: Duration(milliseconds: 500),
+      transitionDuration: Duration(milliseconds: 550),
       pageBuilder: (_, __, ___) => HomeScreen(),
       transitionsBuilder: (_, animation, __, child) {
         return SlideTransition(
@@ -15,7 +15,7 @@ void navigateToHomeWithSlideTransition(BuildContext context) {
           ).animate(
             CurvedAnimation(
               parent: animation,
-              curve: Curves.easeOutCubic,
+              curve: Curves.easeInOut,
             ),
           ),
           child: child,

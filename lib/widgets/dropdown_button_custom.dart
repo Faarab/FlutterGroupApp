@@ -1,8 +1,5 @@
-import 'dart:ffi';
-
-import 'package:flutter/cupertino.dart';
+import 'dart:ui' as ui ;
 import 'package:flutter/material.dart';
-import 'package:triptaptoe_app/screens/Exchange_screen.dart';
 
 List<DropdownMenuItem<String>> _buildDropdownMenuItems(List<String> items) {
   return items.map((String value) {
@@ -24,8 +21,6 @@ class DropdownButtonCustom extends StatefulWidget {
   final String startValue;
   final List<String> listOfChoices;
   final Function(String) onChange;
-
-  
 
   @override
   State<DropdownButtonCustom> createState() => _DropdownButtonCustomState();
@@ -62,29 +57,26 @@ class _DropdownButtonCustomState extends State<DropdownButtonCustom> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: _selectedValue,
-      icon: const Icon(Icons.expand_more),
-      dropdownColor: Colors.white,
-      isExpanded: false,
-      isDense: false,
-      iconSize: 32,
-      
-      elevation: 8,
-      style: const TextStyle(color: Color.fromRGBO(53,16,79,1),fontSize: 20),
-      underline: Container(
-        height: 2,
-        color: Color.fromRGBO(53,16,79,1),
+    return DropdownMenu<String>(
+
+      initialSelection: _selectedValue,
+      width: 200,
+      inputDecorationTheme: InputDecorationTheme(
+        disabledBorder: const InputDecoration().disabledBorder,
       ),
-      onChanged: (String? value) {
-        // Trova l'indice del valore selezionato
+      textStyle: const TextStyle(fontSize: 20,fontWeight: ui.FontWeight.bold),
+      onSelected: (value) {
         setState(() {
           _selectedValue = value!;
-         
         });
         widget.onChange(value!);
       },
-      items: _buildDropdownMenuItems(_choicesList),
+      dropdownMenuEntries: _choicesList.map<DropdownMenuEntry<String>>((String value) {
+        return DropdownMenuEntry<String>(
+          value: value,
+          label: value,
+        );
+      }).toList(),
     );
   }
 }

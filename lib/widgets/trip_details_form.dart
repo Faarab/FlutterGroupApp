@@ -102,7 +102,7 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
           cityOfArrival: _cityOfArrival,
           days: getDaysList(_startDate, _endDate));
       final newTripsList = [...tripsList, newTrip];
-      print("newTripsList" + newTripsList.toString());
+      print("newTripsList$newTripsList");
       contentsJSON['trips'] = newTripsList;
       myFile.writeAsString(jsonEncode(contentsJSON));
     }

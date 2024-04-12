@@ -8,6 +8,7 @@ Future<List<TripDTO>> readJson() async {
   final myPath = myDirectory.path;
   final myFile = File('$myPath/trips.json');
   //myFile.writeAsString("");
+
   if (!await myFile.exists()) {
     await myFile.writeAsString("");
   }
@@ -23,7 +24,7 @@ Future<List<TripDTO>> readJson() async {
         return TripDTO.fromJson(e);
       },
     ).toList();
-    print(tripsList);
+    print("tripsList" + tripsList.toString());
     return tripsList;
     // setState(() {
     //   tripArray = tripsList;

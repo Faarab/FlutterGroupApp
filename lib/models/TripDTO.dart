@@ -51,7 +51,7 @@ class TripDTO {
     }
 
     if (numOfDays != 0) {
-      final listOfDays = jsonDecode(json['days']);
+      final listOfDays = json['days'];
       days = List<DayDTO>.from(listOfDays.map((day) => DayDTO.fromJson(day)));
     } else {
       days = <DayDTO>[];
@@ -69,14 +69,14 @@ class TripDTO {
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "startDate": startDate.toIso8601String(),
-        "endDate": endDate.toIso8601String(),
-        "cityOfDeparture": cityOfDeparture,
-        "cityOfArrival": cityOfArrival,
-        "days": jsonEncode(days)
-      };
+    "id": id,
+    "name": name,
+    "startDate": startDate.toIso8601String(),
+    "endDate": endDate.toIso8601String(),
+    "cityOfDeparture": cityOfDeparture,
+    "cityOfArrival": cityOfArrival,
+    "days": days?.map((day) => day.toJson()).toList(),
+  };
 
   @override
   String toString() {

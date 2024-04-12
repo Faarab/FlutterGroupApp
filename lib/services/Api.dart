@@ -1,14 +1,9 @@
 import 'dart:convert';
-
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:dotenv/dotenv.dart';
 import 'package:http/http.dart' as http;
 
-final urlApiConversion = "https://api.freecurrencyapi.com/v1/latest";
+const urlApiConversion = "https://api.freecurrencyapi.com/v1/latest";
+const String apiKey = "fca_live_S3oF9tI9LqlYm9GtDcSWXw211NeYSP4jXYV1sOvc";
 
-//qui prendo l'api key dall'env con la libreria dotenv
-var env = DotEnv()..load();
-final String apiKey = "fca_live_S3oF9tI9LqlYm9GtDcSWXw211NeYSP4jXYV1sOvc";
 Future<String> getCurrencyRateAsync(
   String from,
   String to,

@@ -2,7 +2,6 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
-import 'package:triptaptoe_app/screens/edit_trip_screen.dart';
 import 'package:triptaptoe_app/widgets/custom_input_field.dart';
 
 class EditTripForm extends StatefulWidget {
@@ -113,7 +112,7 @@ class _EditTripFormState extends State<EditTripForm> {
               )
             ],
           ),
-          SizedBox(height:16),
+          const SizedBox(height:16),
           SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(

@@ -24,4 +24,10 @@ class CityDTO {
       activities: activities,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        "country": country,
+        "name": name,
+        "activities": activities?.map((activity) => activity.toJson()).toList(),
+      };
 }
