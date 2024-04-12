@@ -38,18 +38,11 @@ class _BodyIteneraryState extends State<BodyItenerary> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.widget.trip.days!.length);
+    
     return Column(
       children: [
-        Row(
-          children: [
-            Text(
-              "${widget.widget.trip.name} ",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        SizedBox(
+        
+        const SizedBox(
           height: 0,
         ),
         ChangeDayItinerary(
@@ -64,7 +57,7 @@ class _BodyIteneraryState extends State<BodyItenerary> {
                 _currentDayIndex--;
                 _canGoForward = true;
                 _scrollController.animateTo(0,
-                    duration: Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 500),
                     curve: Curves.easeInOut);
               }
               if (_currentDayIndex == 0) {
@@ -78,7 +71,7 @@ class _BodyIteneraryState extends State<BodyItenerary> {
                 _currentDayIndex++;
                 _canGoBackward = true;
                 _scrollController.animateTo(0,
-                    duration: Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 500),
                     curve: Curves.easeInOut);
               }
               if (_currentDayIndex == widget.widget.trip.days!.length - 1) {
@@ -87,7 +80,7 @@ class _BodyIteneraryState extends State<BodyItenerary> {
             });
           },
         ),
-        SizedBox(
+        const SizedBox(
           height: 0,
         ),
         CardItinerary(

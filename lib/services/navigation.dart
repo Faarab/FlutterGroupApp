@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:triptaptoe_app/screens/home_screen.dart';
 
 void navigateToHomeWithSlideTransition(BuildContext context) {
-  Navigator.pushReplacement(
+
+  Navigator.pushAndRemoveUntil(
     context,
     PageRouteBuilder(
       transitionDuration: Duration(milliseconds: 550),
@@ -22,5 +23,6 @@ void navigateToHomeWithSlideTransition(BuildContext context) {
         );
       },
     ),
+    (route) => false,
   );
 }

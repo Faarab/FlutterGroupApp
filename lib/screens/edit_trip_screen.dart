@@ -108,9 +108,7 @@ class _EditTripScreenState extends State<EditTripScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWithBackArrow(
-        screen: HomeScreen()
-      ),
+      appBar:  AppBarWithBackArrow(),
       floatingActionButton: _indexOfselectionBody == 0 ? EditTripFloatingActionButton(
         onPressed: () async {
 
@@ -120,22 +118,20 @@ class _EditTripScreenState extends State<EditTripScreen> {
           || _endDate != widget.trip.endDate){
             showDialog(
               context: context, 
-              builder: (BuildContext context) {
+              builder: (BuildContext dContext) {
                 return DialogEditTrip(
                   contentText: "Changing this information will permanently erase all your itinerary information\nDo you want to proceed?",
                   onPressed: (value) async {
                     if(value) {
-                      setState(() {
-                        isSaving = true;
-                      });
-                      //TODO gestire caso di errore
-                      await modifyTripFromJson(widget.trip.id, _name, _startDate, _endDate, _cityOfDeparture, _cityOfArrival);
-                      setState(() {
-                        isSaving = false;
-                      });
-                      navigateToHomeWithSlideTransition(context);
-                    } else {
-                      Navigator.pop(context);
+                      
+                        //TODO gestire caso di errore
+                        await modifyTripFromJson(widget.trip.id, _name, _startDate, _endDate, _cityOfDeparture, _cityOfArrival);
+                        navigateToHomeWithSlideTransition(context);
+                      
+                    } else  {
+                      if (mounted) {
+                        Navigator.pop(dContext);
+                      }
                     }
                   }
                 );
@@ -158,11 +154,10 @@ class _EditTripScreenState extends State<EditTripScreen> {
           //TODO logica per salvataggio di itinerary
         },
       ),
-      body: SingleChildScrollView(
-        child: isSaving ? 
-          const Center(child: CircularProgressIndicator(),) : 
-          _body,
-      ),
+      body: isSaving ? 
+            const Center(child: CircularProgressIndicator(),) : 
+            SingleChildScrollView(child: _body),
+      
       bottomNavigationBar: EditTripBottomNavigationBar(
       onPressed: (index) {
           if(_indexOfselectionBody == 0 &&
