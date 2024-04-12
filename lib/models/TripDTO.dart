@@ -49,13 +49,20 @@ class TripDTO {
     } else {
       numOfDays = 0;
     }
+if (numOfDays != 0) {
+  final listOfDays = jsonDecode(json['days']);
 
-    if (numOfDays != 0) {
-      final listOfDays = json['days'];
-      days = List<DayDTO>.from(listOfDays.map((day) => DayDTO.fromJson(day)));
-    } else {
-      days = <DayDTO>[];
-    }
+  
+  if (listOfDays is List<dynamic>) {
+    days = listOfDays.map((day) => DayDTO.fromJson(day)).toList();
+  } else {
+    
+    days = <DayDTO>[];
+  }
+} else {
+  days = <DayDTO>[];
+}
+
 
     return TripDTO(
       id: json["id"],

@@ -3,7 +3,7 @@ import 'package:triptaptoe_app/models/ActivityDTO.dart';
 class CityDTO {
   final String? country;
   final String name;
-  final List<ActivityDTO>? activities;
+  List<ActivityDTO>? activities;
 
   CityDTO({
     this.country,

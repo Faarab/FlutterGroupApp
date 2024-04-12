@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:triptaptoe_app/main.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:triptaptoe_app/screens/fake_screen.dart';
 import 'package:triptaptoe_app/widgets/app_bar_with_back_arrow.dart';
