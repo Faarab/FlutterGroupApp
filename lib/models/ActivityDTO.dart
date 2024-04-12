@@ -1,6 +1,6 @@
 
 class ActivityDTO {
-  ActivityDTO({
+  ActivityDTO( {
     required this.name,
     required this.startTime,
     this.openingTime,
@@ -8,6 +8,8 @@ class ActivityDTO {
     this.location,
     this.price,
     this.image,
+    this.category
+
     });
     
   final String name;
@@ -17,15 +19,17 @@ class ActivityDTO {
   final String? location;
   final double? price;
   final String? image;
+  final String? category;
 
   factory ActivityDTO.fromJson(Map<String, dynamic> json) => ActivityDTO(
     name: json["name"],
     startTime: DateTime.parse(json["startTime"]),
-    openingTime: DateTime.parse(json["openingTime"]) ?? null,
-    closingTime: DateTime.parse(json["closingTime"]) ?? null,
-    location: json["location"] ?? null,
-    price: json["price"] ?? null,
-    image: json["image"] ?? null,
+    openingTime: DateTime.parse(json["openingTime"]),
+    closingTime: DateTime.parse(json["closingTime"]),
+    location: json["location"],
+    price: json["price"],
+    image: json["image"],
+    category: json["category"]
     );
 
   //da trasferire per essere resi usabili fuori dalla classe ActivityDTO
@@ -63,11 +67,12 @@ class ActivityDTO {
     "location": location,
     "price": price,
     "image": image,
-  };
+    "category": category
+    };
 
 
   @override
   String toString() {
-    return '{name: $name, startTime: $startTime, openingTime: $openingTime, closingTime: $closingTime, location: $location, price: $price, image: $image}';
+    return '{name: $name, startTime: $startTime, openingTime: $openingTime, closingTime: $closingTime, location: $location, price: $price, image: $image, category: $category}';
   }
 }

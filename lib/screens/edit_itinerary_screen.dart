@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
-import '../widgets/my_body.dart';
+import 'package:triptaptoe_app/screens/trip_details_screen.dart';
+import '../widgets/edit_itinerary_body.dart';
 
-class EditItineraryScreen extends StatelessWidget {
-  EditItineraryScreen({super.key});
+class EditItineraryScreen extends StatefulWidget {
+  EditItineraryScreen({super.key, required this.trip});
+  final TripDTO trip;
 
-  final List<TripDTO> trips = [];
+  @override
+  State<EditItineraryScreen> createState() => _EditItineraryScreenState();
+}
 
-  
+class _EditItineraryScreenState extends State<EditItineraryScreen> {
+    late Widget _body = EditItineraryBody(widget: widget); // Inizializza il corpo
+
   @override
   Widget build(BuildContext context) {
     return 
@@ -19,14 +25,14 @@ class EditItineraryScreen extends StatelessWidget {
             icon: Icon(Icons.arrow_back, color: Colors.white,),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(
-                builder: (context) => Scaffold(body: Text("Torna a creazione viaggio"),)));
+                builder: (context) => const TripDetailsScreen()));
             },
       ),
       backgroundColor: Color.fromRGBO(99, 31, 147, 1),
       toolbarHeight: 64,
     ),
     
-         body: MyBody(), 
+         body: _body, 
          floatingActionButton:ElevatedButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith((states) => Color.fromRGBO(53, 16, 79, 1)),
@@ -34,7 +40,7 @@ class EditItineraryScreen extends StatelessWidget {
               shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
             ),
             onPressed: () {
-              // Inserire la logica di salvataggio qui
+              // Inserire la logica di salvataggio 
             },
             child: Text("Save", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),),
           )                       

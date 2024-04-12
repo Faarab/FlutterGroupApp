@@ -7,6 +7,7 @@ import 'package:triptaptoe_app/screens/home_screen.dart';
 import 'package:triptaptoe_app/services/modifyTripFromJson.dart';
 import 'package:triptaptoe_app/services/navigation.dart';
 import 'package:triptaptoe_app/widgets/app_bar_with_back_arrow.dart';
+import 'package:triptaptoe_app/widgets/custom_input_field.dart';
 
 import '../widgets/dialog_edit_trip.dart';
 import '../widgets/edit_trip_body.dart';
@@ -79,25 +80,6 @@ class _EditTripScreenState extends State<EditTripScreen> {
     _cityOfArrival = widget.trip.cityOfArrival;
     _startDate = widget.trip.startDate;
     _endDate = widget.trip.endDate;
-    _body = EditTripBody(
-          trip: widget.trip,
-          startDate: _startDate,
-          endDate: _endDate,
-          onChangeName: (value) {
-            _name = value;
-          },
-          onChangeCityOfDeparture: (value) {
-            _cityOfDeparture = value;
-          },
-          onChangeCityOfArrival: (value) {
-            _cityOfArrival = value;
-          },
-          onChangeDate: (value) {
-            _startDate = value[0]!;
-            _endDate = value[1]!;
-          }
-        );
-      
   }
 
   @override
