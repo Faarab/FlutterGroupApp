@@ -64,6 +64,11 @@ class _EditTripScreenState extends State<EditTripScreen> {
         break;
       case 1:
         setState(() {
+          _name = widget.trip.name;
+          _cityOfDeparture = widget.trip.cityOfDeparture;
+          _cityOfArrival = widget.trip.cityOfArrival;
+          _startDate = widget.trip.startDate;
+          _endDate = widget.trip.endDate;
           _body = const Center(child: Text("Pagina modifica itinerary"),);
         });
         
@@ -108,30 +113,69 @@ class _EditTripScreenState extends State<EditTripScreen> {
       ),
       floatingActionButton: _indexOfselectionBody == 0 ? EditTripFloatingActionButton(
         onPressed: () async {
-          setState(() {
+
+        if(_cityOfArrival != widget.trip.cityOfArrival 
+          || _cityOfDeparture != widget.trip.cityOfDeparture 
+          || _startDate != widget.trip.startDate 
+          || _endDate != widget.trip.endDate){
+            showDialog(
+              context: context, 
+              builder: (BuildContext context) {
+                return DialogEditTrip(
+                  contentText: "Changing this information will permanently erase all your itinerary information\nDo you want to proceed?",
+                  onPressed: (value) async {
+                    if(value) {
+                      setState(() {
+                        isSaving = true;
+                      });
+                      //TODO gestire caso di errore
+                      await modifyTripFromJson(widget.trip.id, _name, _startDate, _endDate, _cityOfDeparture, _cityOfArrival);
+                      setState(() {
+                        isSaving = false;
+                      });
+                      navigateToHomeWithSlideTransition(context);
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  }
+                );
+              }
+            );
+          } else {
+            setState(() {
             isSaving = true;
-          });
-          //TODO gestire caso di errore
-          await modifyTripFromJson(widget.trip.id, _name, _startDate, _endDate, _cityOfDeparture, _cityOfArrival);
-          setState(() {
-            isSaving = false;
-          });
-          navigateToHomeWithSlideTransition(context);
+            });
+            //TODO gestire caso di errore
+            await modifyTripFromJson(widget.trip.id, _name, _startDate, _endDate, _cityOfDeparture, _cityOfArrival);
+            setState(() {
+              isSaving = false;
+            });
+            navigateToHomeWithSlideTransition(context);
+          } 
         },
       ): EditTripFloatingActionButton(
         onPressed: () {
           //TODO logica per salvataggio di itinerary
         },
       ),
-      body: isSaving ? 
-        const Center(child: CircularProgressIndicator(),) : 
-        _body,
+      body: SingleChildScrollView(
+        child: isSaving ? 
+          const Center(child: CircularProgressIndicator(),) : 
+          _body,
+      ),
       bottomNavigationBar: EditTripBottomNavigationBar(
-  onPressed: (index) {
-          showDialog(
+      onPressed: (index) {
+          if(_indexOfselectionBody == 0 &&
+            (_cityOfArrival != widget.trip.cityOfArrival 
+          || _cityOfDeparture != widget.trip.cityOfDeparture 
+          || _startDate != widget.trip.startDate 
+          || _endDate != widget.trip.endDate
+          || _name != widget.trip.name)) {
+            showDialog(
               context: context,
               builder: (BuildContext context) {
                 return DialogEditTrip(
+                  contentText: "Changing this section will permanently erase all your changes. You will lose any unsaved information.\nDo you want to proceed?",
                   onPressed: (value) async {                
                     if(value) {
                       setState(() {
@@ -143,6 +187,12 @@ class _EditTripScreenState extends State<EditTripScreen> {
                 );
               }
             );
+          } else {
+            setState(() {
+              _indexOfselectionBody = index;
+              changeBody();
+            });
+          }       
         },
       ),
     );
