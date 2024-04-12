@@ -65,6 +65,7 @@ class _EditTripScreenState extends State<EditTripScreen> {
         break;
       case 1:
         setState(() {
+          //TODO aggiungere edititinerarybody
           _body = const Center(child: Text("Pagina modifica itinerary"),);
         });
         
