@@ -22,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Future<List<TripDTO>>? tripArray;
+  bool isHome = true;
   Widget _screenBody = HomeScreenBody();
 
   void setScreenBody(index) {
@@ -29,12 +30,15 @@ class _HomeScreenState extends State<HomeScreen> {
       switch (index) {
         case 0:
           _screenBody = ExchangeBody();
+          isHome = false;
           break;
         case 1:
           _screenBody = HomeScreenBody();
+          isHome = true;
           break;
         default:
           _screenBody = HomeScreenBody();
+          isHome = true;
           break;
       }
     });
@@ -43,13 +47,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    tripArray = readJson();
+    //tripArray = readJson();
+    // setState(() {
+    //   tripArray = readJson();
+    // });
+    //WidgetsBinding.instance.addPostFrameCallback((_) => tripArray = readJson());
+    WidgetsBinding.instance.addPostFrameCallback((_) => () {
+          setState(() {
+            tripArray = readJson();
+          });
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     //readJson();
-    readJson();
     return Scaffold(
         backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
         appBar: AppBar(
@@ -65,22 +77,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => TripDetailsScreen()),
-            )
-          },
-          hoverColor: Color.fromRGBO(99, 31, 147, 1),
-          backgroundColor: Color.fromRGBO(53, 16, 79, 1),
-          shape: CircleBorder(),
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 32,
-          ),
-        ),
+        floatingActionButton: isHome
+            ? FloatingActionButton(
+                onPressed: () => {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TripDetailsScreen()),
+                  )
+                },
+                hoverColor: Color.fromRGBO(99, 31, 147, 1),
+                backgroundColor: Color.fromRGBO(53, 16, 79, 1),
+                shape: CircleBorder(),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              )
+            : null,
         bottomNavigationBar: HomeScreenBottomNavigationBar(
             onPressed: (index) => {setScreenBody(index)}),
         body: _screenBody);

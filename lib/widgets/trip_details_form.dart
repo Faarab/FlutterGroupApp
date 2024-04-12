@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -49,8 +50,17 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     print(tripsList);
   }
 
+  String getRandomString(int length) {
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+    final randomString = String.fromCharCodes(Iterable.generate(
+        length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+    return randomString;
+  }
+
   Future<void> readAndWriteJson() async {
-    // final contenutoJSON = json.decode(merda);
+    // final contenutoJSON = json.decode(fileContent);
     // contenutoJSON['trips'][0] = {"exampleKey": "exampleValue"};
     // print(contenutoJSON);
 
@@ -62,7 +72,7 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     //Read the file contents, if the file is empty initialize it otherwise add a new trip
     final contents = await myFile.readAsString();
     if (contents == "") {
-      final _id = "0";
+      final _id = getRandomString(5);
       final newTrip = new TripDTO(
           id: _id,
           name: _name,
@@ -82,7 +92,7 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     } else {
       final contentsJSON = jsonDecode(contents);
       final tripsList = contentsJSON['trips'];
-      final _id = (tripsList.length + 1).toString();
+      final _id = getRandomString(5);
       final newTrip = new TripDTO(
           id: _id,
           name: _name,
