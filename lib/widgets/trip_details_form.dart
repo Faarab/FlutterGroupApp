@@ -102,13 +102,42 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
       myFile.writeAsString(jsonEncode(contentsJSON));
     }
   }
+  Future<void> resetJsonFile() async {
+  final myDirectory = await getApplicationDocumentsDirectory();
+  final myPath = myDirectory.path;
+  final myFile = File('$myPath/trips.json');
+
+  final fileStructure = {
+    "trips": []
+  };
+
+  await myFile.writeAsString(jsonEncode(fileStructure));
+}
+
 
   @override
   Widget build(BuildContext context) {
+  
     return Form(
       key: _formKey,
       child: Column(
         children: [
+           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.all(16),
+              backgroundColor: Color.fromRGBO(53, 16, 79, 1),
+              foregroundColor: Color.fromRGBO(255, 255, 255, 1),
+            ),
+            onPressed: () async {
+              await resetJsonFile();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('File JSON resettato!'),
+                ),
+              );
+            },
+            child: const Text('Reset JSON File'),
+          ),
           CustomInputField(
             fieldId: 1,
             fieldLabel: "Title",

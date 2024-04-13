@@ -19,7 +19,7 @@ class TripDTO {
   final DateTime endDate;
   final String cityOfDeparture;
   final String cityOfArrival;
-  final List<DayDTO>? days;
+  List<DayDTO>? days;
 
   TripDTO copyWith({
     String? id,
@@ -42,31 +42,30 @@ class TripDTO {
   }
 
   factory TripDTO.fromJson(Map<String, dynamic> json) {
-    late List<DayDTO>? days;
-    var numOfDays;
-    if (json['days'] != null) {
-      numOfDays = json['days'];
-    } else {
-      numOfDays = 0;
-    }
+  List<DayDTO>? days;
 
-    if (numOfDays != 0) {
-      final listOfDays = jsonDecode(json['days']);
-      days = List<DayDTO>.from(listOfDays.map((day) => DayDTO.fromJson(day)));
+  if (json['days'] != null) {
+    if (json['days'] is String) {
+      final List<dynamic> listOfDays = jsonDecode(json['days']);
+      days = listOfDays.map((day) => DayDTO.fromJson(day)).toList();
     } else {
-      days = <DayDTO>[];
+      days = (json['days'] as List).map((day) => DayDTO.fromJson(day)).toList();
     }
-
-    return TripDTO(
-      id: json["id"],
-      name: json["name"],
-      startDate: DateTime.parse(json["startDate"]),
-      endDate: DateTime.parse(json["endDate"]),
-      cityOfDeparture: json["cityOfDeparture"],
-      cityOfArrival: json["cityOfArrival"],
-      days: days,
-    );
+  } else {
+    days = <DayDTO>[];
   }
+
+  return TripDTO(
+    id: json["id"],
+    name: json["name"],
+    startDate: DateTime.parse(json["startDate"]),
+    endDate: DateTime.parse(json["endDate"]),
+    cityOfDeparture: json["cityOfDeparture"],
+    cityOfArrival: json["cityOfArrival"],
+    days: days,
+  );
+}
+
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -75,7 +74,7 @@ class TripDTO {
         "endDate": endDate.toIso8601String(),
         "cityOfDeparture": cityOfDeparture,
         "cityOfArrival": cityOfArrival,
-        "days": jsonEncode(days)
+        "days": days?.map((day) => day.toJson()).toList(),
       };
 
   @override
