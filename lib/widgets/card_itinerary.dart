@@ -32,10 +32,11 @@ class _CardItineraryState extends State<CardItinerary> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.day.toString());
     return Expanded(
       child: Card(
         elevation: 4,
-        child: widget.day.cities!.isEmpty
+        child: widget.day.cities == null || widget.day.cities!.isEmpty
             ? ListView.builder(
                 controller: _scrollController,
                 itemCount: 1,
