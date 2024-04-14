@@ -38,7 +38,7 @@ class _ChangeDayItineraryState extends State<ChangeDayItinerary> {
           icon: Icon(Icons.arrow_back_ios, size: 28),
           color: widget.canGoBackward ? null : Colors.grey.withOpacity(0.5), // Imposta il colore grigio se non è possibile tornare indietro
         ),
-        Text("Day ${widget.dayIndex + 1} - ${widget.day.formatDate()}", style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+        Text("Day ${widget.dayIndex + 1} - ${widget.day.formatDate()}", style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
         IconButton(
           onPressed: widget.canGoForward ? widget.onForward : null, // Imposta null se non è possibile andare avanti
           icon: Icon(Icons.arrow_forward_ios, size: 28),

@@ -17,35 +17,45 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<List<TripDTO>>? tripArray;
-  Widget _screenBody = const HomeScreenBody();
+  late Future<List<TripDTO>> tripArrayFuture;
+  List<TripDTO> tripArray = [];
+  bool isHome = true;
+  Widget _screenBody = HomeScreenBody();
+  bool _isInHOme = true;
 
   void setScreenBody(index) {
     setState(() {
       switch (index) {
         case 0:
           _screenBody = const ExchangeBody();
+          isHome = false;
           break;
         case 1:
           _screenBody = const HomeScreenBody();
+          isHome = true;
           break;
         default:
           _screenBody = const HomeScreenBody();
+          isHome = true;
           break;
       }
     });
   }
 
-  @override
+@override
   void initState() {
     super.initState();
-    tripArray = readJson();
-    print("tripArray" + tripArray.toString());
+    tripArrayFuture = readJson();
+    tripArrayFuture.then((value) {
+      setState(() {
+        tripArray = value;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    
+    //readJson();
     return Scaffold(
         backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
         appBar: AppBar(
@@ -61,22 +71,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton:  FloatingActionButton(
-          onPressed: () => {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const TripDetailsScreen()),
-            )
-          },
-          hoverColor: const Color.fromRGBO(99, 31, 147, 1),
-          backgroundColor: const Color.fromRGBO(53, 16, 79, 1),
-          shape: const CircleBorder(),
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 32,
-          ),
-        ),
+        floatingActionButton: isHome
+            ? FloatingActionButton(
+                onPressed: () => {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TripDetailsScreen()),
+                  )
+                },
+                hoverColor: Color.fromRGBO(99, 31, 147, 1),
+                backgroundColor: Color.fromRGBO(53, 16, 79, 1),
+                shape: CircleBorder(),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              )
+            : null,
         bottomNavigationBar: HomeScreenBottomNavigationBar(
             onPressed: (index) => {setScreenBody(index)}),
         body: AnimatedSwitcher(
@@ -84,8 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
           switchInCurve: Curves.easeIn,
           switchOutCurve: Curves.easeOut,
           child: _screenBody,
-          )
-        );
+        ));
   }
 }
 
@@ -108,6 +120,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
             future: readJson(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                print({'sn': snapshot.data});
                 if (snapshot.data!.isNotEmpty) {
                   return Expanded(
                     child: ListView.builder(
@@ -115,7 +128,10 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                       itemBuilder: (context, index) {
                         print("snapsht data" + (snapshot.data!).toString());
                         return TripCard(
-                            trip: snapshot.data![index], index: index);
+                          trip: snapshot.data![index],
+                          index: index,
+                          onPressedDelete: () => setState(() {}),
+                        );
                       },
                     ),
                   );
