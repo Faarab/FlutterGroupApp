@@ -50,7 +50,7 @@ class TripDTO {
       numOfDays = 0;
     }
 if (numOfDays != 0) {
-  final listOfDays = jsonDecode(json['days']);
+  final listOfDays = json['days'];
 
   
   if (listOfDays is List<dynamic>) {
