@@ -1,8 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-
 import 'package:triptaptoe_app/models/TripDTO.dart';
+import 'package:triptaptoe_app/screens/profile_screen.dart';
 import 'package:triptaptoe_app/widgets/Exchange_body.dart';
 import 'package:triptaptoe_app/services/readJson.dart';
 import 'package:triptaptoe_app/widgets/home_screen_bottom_navigation_bar.dart';
@@ -34,6 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
           _screenBody = const HomeScreenBody();
           isHome = true;
           break;
+        case 2:
+          _screenBody = const ProfileScreen();
+          isHome = false;
         default:
           _screenBody = const HomeScreenBody();
           isHome = true;
@@ -42,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-@override
+  @override
   void initState() {
     super.initState();
     tripArrayFuture = readJson();
@@ -154,7 +156,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                                   fontWeight: FontWeight.bold,
                                   color: Color.fromRGBO(45, 45, 45, 1)),
                             ),
-                             SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text(
                               "You can add a trip by clicking on the '+' button",
                               textAlign: TextAlign.center,

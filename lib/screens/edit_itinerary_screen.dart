@@ -12,39 +12,46 @@ class EditItineraryScreen extends StatefulWidget {
 }
 
 class _EditItineraryScreenState extends State<EditItineraryScreen> {
-    late Widget _body = EditItineraryBody(widget: widget); 
+  late Widget _body = EditItineraryBody(widget: widget);
 
   @override
   Widget build(BuildContext context) {
-    return 
-        Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-      
-            leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white,),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) => const TripDetailsScreen()));
-            },
-      ),
-      backgroundColor: Color.fromRGBO(99, 31, 147, 1),
-      toolbarHeight: 64,
-    ),
-    
-         body: _body, 
-         floatingActionButton:ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith((states) => Color.fromRGBO(53, 16, 79, 1)),
-              overlayColor: MaterialStateColor.resolveWith((states) => Color.fromRGBO(199, 156, 230, 0.094)), 
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
+    return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
             ),
             onPressed: () {
-              print(widget.trip);
-              
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const TripDetailsScreen()));
             },
-            child: Text("Save", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),),
-          )                       
-        );                
-  }    
+          ),
+          backgroundColor: Color.fromRGBO(99, 31, 147, 1),
+          toolbarHeight: 64,
+        ),
+        body: _body,
+        floatingActionButton: ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith(
+                (states) => Color.fromRGBO(53, 16, 79, 1)),
+            overlayColor: MaterialStateColor.resolveWith(
+                (states) => Color.fromRGBO(199, 156, 230, 0.094)),
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50))),
+          ),
+          onPressed: () {
+            print(widget.trip);
+          },
+          child: Text(
+            "Save",
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+        ));
+  }
 }
