@@ -31,4 +31,9 @@ class CityDTO {
         "name": name,
         "activities": activities?.map((activity) => activity.toJson()).toList(),
       };
+
+      @override
+  String toString() {
+    return 'CityDTO(name: $name, country: $country, activities: $activities)';
+  }
 }

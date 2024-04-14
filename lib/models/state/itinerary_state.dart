@@ -1,12 +1,13 @@
 import 'dart:collection';
-
 import 'package:flutter/cupertino.dart';
 import 'package:triptaptoe_app/models/ActivityDTO.dart';
 import 'package:triptaptoe_app/models/CityDTO.dart';
 import 'package:triptaptoe_app/models/DayDTO.dart';
 
+
 class ItineraryState extends ChangeNotifier {
   final List<DayDTO> _days = List.empty(growable: true);
+
 
 
   UnmodifiableListView<DayDTO> get cityView => UnmodifiableListView(_days);
@@ -37,4 +38,5 @@ class ItineraryState extends ChangeNotifier {
 
     notifyListeners();
   }
+
 }

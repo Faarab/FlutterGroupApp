@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:triptaptoe_app/models/CityDTO.dart';
 
 class DayDTO {

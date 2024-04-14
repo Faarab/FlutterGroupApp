@@ -236,7 +236,7 @@ class TripCard extends StatelessWidget {
                               color: Color.fromRGBO(255, 255, 255, 1),
                             )),
                       ),
-                      IconButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => EditItineraryScreen(trip: trip,)));}, icon: Icon(Icons.ac_unit_rounded))
+                      
                     ],
                   ),
                 ),

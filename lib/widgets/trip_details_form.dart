@@ -60,7 +60,7 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     return randomString;
   }
 
-  Future<void> readAndWriteJson() async {
+  Future<void> readAndWriteJson(TripDTO newTrip) async {
     // final contenutoJSON = json.decode(fileContent);
     // contenutoJSON['trips'][0] = {"exampleKey": "exampleValue"};
     // print(contenutoJSON);
@@ -70,22 +70,19 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     final myPath = myDirectory.path;
     final myFile = File('$myPath/trips.json');
 
-
     //Read the file contents, if the file is empty initialize it otherwise add a new trip
     final contents = await myFile.readAsString();
     if (contents == "") {
-      final _id = getRandomString(5);
-      final newTrip = new TripDTO(
-          id: _id,
-          name: _name,
-          startDate: _startDate,
-          endDate: _endDate,
-          cityOfDeparture: _cityOfDeparture,
-          cityOfArrival: _cityOfArrival,
-          days: getDaysList(_startDate, _endDate));
-      
-          
-          
+      //final _id = getRandomString(5);
+      // final newTrip = new TripDTO(
+      //     id: _id,
+      //     name: _name,
+      //     startDate: _startDate,
+      //     endDate: _endDate,
+      //     cityOfDeparture: _cityOfDeparture,
+      //     cityOfArrival: _cityOfArrival,
+      //     days: getDaysList(_startDate, _endDate));
+
       final fileStructure = {
         "trips": [newTrip]
       };
@@ -97,57 +94,28 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     } else {
       final contentsJSON = jsonDecode(contents);
       final tripsList = contentsJSON['trips'];
-      final _id = getRandomString(5);
-      final newTrip = new TripDTO(
-          id: _id,
-          name: _name,
-          startDate: _startDate,
-          endDate: _endDate,
-          cityOfDeparture: _cityOfDeparture,
-          cityOfArrival: _cityOfArrival,
-          days: getDaysList(_startDate, _endDate));
+      // final _id = getRandomString(5);
+      // final newTrip = new TripDTO(
+      //     id: _id,
+      //     name: _name,
+      //     startDate: _startDate,
+      //     endDate: _endDate,
+      //     cityOfDeparture: _cityOfDeparture,
+      //     cityOfArrival: _cityOfArrival,
+      //     days: getDaysList(_startDate, _endDate));
       final newTripsList = [...tripsList, newTrip];
       // print("newTripsList" + newTripsList.toString());
       contentsJSON['trips'] = newTripsList;
       myFile.writeAsString(jsonEncode(contentsJSON));
     }
   }
-  Future<void> resetJsonFile() async {
-  final myDirectory = await getApplicationDocumentsDirectory();
-  final myPath = myDirectory.path;
-  final myFile = File('$myPath/trips.json');
-
-  final fileStructure = {
-    "trips": []
-  };
-
-  await myFile.writeAsString(jsonEncode(fileStructure));
-}
-
 
   @override
   Widget build(BuildContext context) {
-  
     return Form(
       key: _formKey,
       child: Column(
         children: [
-           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.all(16),
-              backgroundColor: Color.fromRGBO(53, 16, 79, 1),
-              foregroundColor: Color.fromRGBO(255, 255, 255, 1),
-            ),
-            onPressed: () async {
-              await resetJsonFile();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('File JSON resettato!'),
-                ),
-              );
-            },
-            child: const Text('Reset JSON File'),
-          ),
           CustomInputField(
             fieldId: 1,
             fieldLabel: "Title",
@@ -339,9 +307,8 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                             content: Text('Trip dates must be selected')),
                       );
                     } else {
-                     
                       var _newTrip = TripDTO(
-                          id: "1",
+                          id: getRandomString(5),
                           name: _name,
                           startDate: _startDate,
                           endDate: _endDate,
@@ -349,7 +316,7 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                           cityOfArrival: _cityOfArrival,
                           days: getDaysList(_startDate, _endDate)); //TODO
                       //addTripToJson(_newTrip);
-                      readAndWriteJson();
+                      readAndWriteJson(_newTrip);
                       showDialog(
                           context: context,
                           builder: (BuildContext context) => Dialog(
@@ -424,7 +391,7 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                                                       Color.fromRGBO(
                                                           255, 255, 255, 1),
                                                 ),
-                                                onPressed: ()  => {
+                                                onPressed: () => {
                                                       Navigator.of(context)
                                                           .popUntil((route) =>
                                                               route.isFirst),
@@ -432,10 +399,9 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                                                           context,
                                                           MaterialPageRoute(
                                                               builder: (context) =>
-
-                                                              EditItineraryScreen(trip: _newTrip)
-                                                                  
-                                                                  ))
+                                                                  EditItineraryScreen(
+                                                                      trip:
+                                                                          _newTrip)))
                                                     },
                                                 child: Text("Edit trip")),
                                           )

@@ -7,7 +7,7 @@ import 'package:triptaptoe_app/models/DayDTO.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:triptaptoe_app/models/state/itinerary_state.dart';
 import 'package:triptaptoe_app/screens/edit_itinerary_screen.dart';
-import 'package:triptaptoe_app/screens/home_screen.dart';
+import 'package:triptaptoe_app/screens/edit_trip_screen.dart';
 import 'package:triptaptoe_app/services/modifyCompleteTripFromJson.dart';
 import 'package:triptaptoe_app/widgets/added_cities.dart';
 import 'package:triptaptoe_app/widgets/change_day_itinerary.dart';
@@ -16,7 +16,6 @@ import 'package:intl/intl.dart';
 
 List<DayDTO> maptoDayDto(List<DayDTO> days, List<List<CityDTO>> citiesPerDay) {
   int i = 0;
-
   final m = citiesPerDay.map((e) {
     final d = days[i];
     final dd = DayDTO(date: d.date, cities: citiesPerDay[i]);
@@ -25,6 +24,7 @@ List<DayDTO> maptoDayDto(List<DayDTO> days, List<List<CityDTO>> citiesPerDay) {
   });
   return m.toList();
 }
+
 
 //TODO ricordarsi di sistemare il fatto che se cancello una città quando la ricreo l'attività rimane
 
@@ -41,20 +41,20 @@ final List<Map<String, dynamic>> citiesStartingWithMa = [
   {"name": "Edinburgh", "country": "United Kingdom"}
 ];
 
-class EditItineraryBody extends StatefulWidget {
-  const EditItineraryBody(
-      {super.key, required this.widget, required this.trip});
+class EditItineraryBottomNavig extends StatefulWidget {
+  const EditItineraryBottomNavig({super.key, required this.widget, required this.trip});
 
-  final EditItineraryScreen widget;
+  final EditTripScreen widget;
   final TripDTO trip;
+ 
 
   @override
-  State<EditItineraryBody> createState() => _EditItineraryBodyState();
+  State<EditItineraryBottomNavig> createState() => _EditItineraryBottomNavigState();
 }
 
 //     final days = context.watch<ItineraryState>().cityView;
 //     final cities = days.firstWhere((element) => element.date == widget.widget.trip.days![_currentDayIndex]).cities;
-class _EditItineraryBodyState extends State<EditItineraryBody> {
+class _EditItineraryBottomNavigState extends State<EditItineraryBottomNavig> {
   final TextEditingController _cityController = TextEditingController();
   bool _isAddingCity = false;
   late List<CityDTO> hardcodedcitieslist;
@@ -65,14 +65,14 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
   final ScrollController _scrollController = ScrollController();
   late List<List<CityDTO>> _citiesPerDay = [];
   CityDTO? _selectedCity;
-  late String _id;
-  late String _name;
+late String _name;
   late String _cityOfDeparture;
   late String _cityOfArrival;
   late DateTime _startDate;
   late DateTime _endDate;
   late List<DayDTO> _days = [];
   late TripDTO _updatedTrip;
+
 
   void _onActivityAdded(ActivityDTO activity) {
     setState(() {
@@ -122,8 +122,8 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
     } else {
       _canGoForward = false;
     }
-    _citiesPerDay = List.generate(widget.widget.trip.days!.length, (_) => []);
-    _id = widget.trip.id;
+     _citiesPerDay = widget.trip.days!.map((day) => day.cities ?? []).toList();
+   
     _name = widget.widget.trip.name;
     _cityOfDeparture = widget.widget.trip.cityOfDeparture;
     _cityOfArrival = widget.trip.cityOfArrival;
@@ -142,6 +142,7 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            
             const SizedBox(height: 30),
             const Text(
               "Edit Itinerary",
@@ -151,50 +152,52 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+           
             ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith(
-                    (states) => Color.fromRGBO(53, 16, 79, 1)),
-                overlayColor: MaterialStateColor.resolveWith(
-                    (states) => Color.fromRGBO(199, 156, 230, 0.094)),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50))),
-              ),
-              onPressed: () async {
-                final data =
-                    maptoDayDto(widget.widget.trip.days!, _citiesPerDay);
+  style: ButtonStyle(
+    backgroundColor: MaterialStateProperty.resolveWith((states) => Color.fromRGBO(53, 16, 79, 1)),
+    overlayColor: MaterialStateColor.resolveWith((states) => Color.fromRGBO(199, 156, 230, 0.094)), 
+    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
+  ),
+  onPressed: () async {
+    final data = maptoDayDto(widget.widget.trip.days!, _citiesPerDay);
+    print(data);
+    print(_days);
+    print("citiesperday $_citiesPerDay");
 
-                try {
-                  final isModified = await modifyCompleteTripFromJson(
-                    widget.trip.id,
-                    _name,
-                    _startDate,
-                    _endDate,
-                    _cityOfDeparture,
-                    _cityOfArrival,
-                    _days,
-                  );
+    try {
+      final isModified = await modifyCompleteTripFromJson(
+        widget.trip.id,
+        _name,
+        _startDate,
+        _endDate,
+        _cityOfDeparture,
+        _cityOfArrival,
+        _days,
+      );
+      print("Io soy il trip modificato + $isModified");
 
-                  if (isModified) {
-                    setState(() {
-                      _days = data;
-                      _citiesPerDay = List.generate(
-                          _days.length, (index) => _days[index].cities!);
-                    });
-                  }
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()));
-                } catch (e) {}
-              },
-              child: const Text(
-                "Save",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
-              ),
-            ),
+      if (isModified) {
+        setState(() {
+          _days = data;
+          _citiesPerDay = List.generate(_days.length, (index) => _days[index].cities!);
+        });
+      }
+
+      Navigator.pop(context);
+    } catch (e) {
+      print("Errore nel salvataggio del trip: $e");
+    }
+  },
+  child: Text(
+    "Save",
+    style: TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+      fontSize: 24,
+    ),
+  ),
+),
             const SizedBox(height: 30),
             ChangeDayItinerary(
               widget: widget,
@@ -233,13 +236,9 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
             ),
             const SizedBox(height: 30),
             if (_isAddingCity || _citiesPerDay[_currentDayIndex].isNotEmpty)
-              AddedCities(
-                citiesPerDay: _citiesPerDay,
-                currentDayIndex: _currentDayIndex,
-                onActivityAdded: (act) {
-                  _onActivityAdded(act);
-                },
-              ),
+             AddedCities(citiesPerDay: _citiesPerDay, currentDayIndex: _currentDayIndex, onActivityAdded:(act) {
+                           _onActivityAdded(act);
+                          },),
             const SizedBox(height: 10),
             _buildCityCard(),
           ],
@@ -249,6 +248,7 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
   }
 
   Widget _buildAddedActivities() {
+
     return ListView.builder(
       shrinkWrap: true,
       itemCount: activities.length,
@@ -265,6 +265,7 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
       },
     );
   }
+
 
   Widget _buildCityCard() {
     return Card(
@@ -368,9 +369,9 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
                       _cityController.clear();
                       _isAddingCity = false;
                     });
-
-                    context.read<ItineraryState>().addDayAndCity(
-                        city, widget.widget.trip.days![_currentDayIndex].date);
+                    
+                      context.read<ItineraryState>().addDayAndCity(city,
+                          widget.widget.trip.days![_currentDayIndex].date);
                   }),
                 ),
                 IconButton(
