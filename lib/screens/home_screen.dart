@@ -17,7 +17,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<List<TripDTO>>? tripArray;
+  late Future<List<TripDTO>> tripArrayFuture;
+  List<TripDTO> tripArray = [];
   bool isHome = true;
   Widget _screenBody = HomeScreenBody();
   bool _isInHOme = true;
@@ -41,20 +42,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  @override
+@override
   void initState() {
     super.initState();
-    //tripArray = readJson();
-    // setState(() {
-    //   tripArray = readJson();
-    // });
-    //WidgetsBinding.instance.addPostFrameCallback((_) => tripArray = readJson());
-    // WidgetsBinding.instance.addPostFrameCallback((_) => () {
-    //       setState(() {
-    //         tripArray = readJson();
-    //       });
-    //     });
-    print("tripArray" + tripArray.toString());
+    tripArrayFuture = readJson();
+    tripArrayFuture.then((value) {
+      setState(() {
+        tripArray = value;
+      });
+    });
   }
 
   @override
