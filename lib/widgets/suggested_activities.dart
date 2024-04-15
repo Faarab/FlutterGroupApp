@@ -5,7 +5,7 @@ import 'package:triptaptoe_app/models/CityDTO.dart';
 import 'package:triptaptoe_app/services/city_service.dart';
 
 class SuggestedActivities extends StatefulWidget {
-   const SuggestedActivities({super.key, required this.onActivityTapped, this.selectedCity});
+   const SuggestedActivities({super.key, required this.onActivityTapped, required this.selectedCity});
     
 
   final Function(ActivityDTO) onActivityTapped;
@@ -20,9 +20,11 @@ class _SuggestedActivitiesState extends State<SuggestedActivities> {
   late Map<String, bool> filters;
   late List<ActivityDTO> activities;
 
+
   @override
   void initState() {
     super.initState();
+    print("${widget.selectedCity?.name} selected city");
     
     categories = CityService().getCategories().toList();
     filters = { for (var category in categories) category: false };
@@ -30,16 +32,27 @@ class _SuggestedActivitiesState extends State<SuggestedActivities> {
     activities = _getAllActivities();
   }
 
-  List<ActivityDTO> _getAllActivities() {
-    List<ActivityDTO> allActivities = [];
-    final List<CityDTO> cities = CityService().getCities().toList();
-    
+List<ActivityDTO> _getAllActivities() {
+  List<ActivityDTO> allActivities = [];
+  final List<CityDTO> cities = CityService().getCities().toList();
+  
+  if (widget.selectedCity != null) {
+    final selectedCityName = widget.selectedCity!.name;
+    for (var city in cities) {
+      if (city.name == selectedCityName) {
+        allActivities.addAll(city.activities!);
+        break; 
+      }
+    }
+  } else {
     for (var city in cities) {
       allActivities.addAll(city.activities!);
     }
-    
-    return allActivities;
   }
+  
+  return allActivities;
+}
+
 
   @override
   Widget build(BuildContext context) {

@@ -216,8 +216,9 @@ class _AddActivityModalState extends State<AddActivityModal> {
                  _openingTime = activity.openingTime;
                  _closingTime = activity.closingTime;
                 });
+              
                 
-              }, )
+              }, selectedCity: widget.selectedCity, )
             ],
           ),
         ),

@@ -82,6 +82,15 @@ flutter:
     - assets/images/camp_nou.jpg
     - assets/images/casa_batllo.jpg
     - assets/images/la_rambla.jpg
+    - assets/images/picasso.jpg
+    - assets/images/cathedral.jpg
+    - assets/images/gibralfaro.jpg
+    - assets/images/alcazaba.jpg
+    - assets/images/plaza.jpg
+    - assets/images/royal.jpg
+    - assets/images/retiro.jpg
+    - assets/images/prado.jpg
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

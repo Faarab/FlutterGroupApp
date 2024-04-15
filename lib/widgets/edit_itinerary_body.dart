@@ -25,11 +25,11 @@ List<DayDTO> maptoDayDto(List<DayDTO> days, List<List<CityDTO>> citiesPerDay) {
   return m.toList();
 }
 
-final List<Map<String, dynamic>> citiesStartingWithMa = [
+final List<Map<String, dynamic>> citiesList = [
   {"name": "Barcelona", "country": "Spain"},
-  {"name": "Seville", "country": "Spain"},
+  {"name": "Malaga", "country": "Spain"},
   {"name": "Valencia", "country": "Spain"},
-  {"name": "Bilbao", "country": "Spain"},
+  {"name": "Madrid", "country": "Spain"},
   {"name": "Granada", "country": "Spain"},
   {"name": "London", "country": "United Kingdom"},
   {"name": "Birmingham", "country": "United Kingdom"},
@@ -106,7 +106,7 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
   @override
   void initState() {
     super.initState();
-    hardcodedcitieslist = citiesStartingWithMa
+    hardcodedcitieslist = citiesList
         .map((city) => CityDTO(name: city["name"]!, country: city["country"]!))
         .toList();
 
