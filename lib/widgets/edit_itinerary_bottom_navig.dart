@@ -436,6 +436,7 @@ class _EditItineraryBottomNavigState extends State<EditItineraryBottomNavig> {
                   _onActivityAdded(act, selectedCity);
                 },
                 currentTripId: _id,
+                showDeleteBtn: true,
               ),
             const SizedBox(height: 10),
             _buildCityCard(),

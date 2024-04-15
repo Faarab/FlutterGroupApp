@@ -176,10 +176,10 @@ class _CardItineraryState extends State<CardItinerary> {
                                               color: Colors.amber,
                                               margin: const EdgeInsets.only(
                                                   bottom: 16),
-                                              child: activity.image == null ? Image.asset(
+                                              child: activity.image == null ?null :Image.asset(
                                                 "assets/images/${activity.image}",
                                                 fit: BoxFit.cover,
-                                              ) : null,
+                                              ) 
                                             ),
                                             activity.location != "" ||
                                                     activity.location != null

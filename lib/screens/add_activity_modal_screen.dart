@@ -186,7 +186,7 @@ class _AddActivityModalState extends State<AddActivityModal> {
                                 closingTime: _closingTime, 
                                 location: _location, 
                                 price: null, 
-                                image: _image, 
+                                image: _image == null? null : _image,
                                 category: _category, 
                               );
                               widget.onActivityAdded(newActivity, widget.selectedCity);
