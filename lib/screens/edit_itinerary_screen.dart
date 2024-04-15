@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
-import 'package:triptaptoe_app/screens/trip_details_screen.dart';
+import 'package:triptaptoe_app/widgets/app_bar_with_back_arrow.dart';
 import '../widgets/edit_itinerary_body.dart';
 
 class EditItineraryScreen extends StatefulWidget {
@@ -18,21 +18,16 @@ class _EditItineraryScreenState extends State<EditItineraryScreen> {
     return 
         Scaffold(
           backgroundColor: Colors.white,
-          appBar: AppBar(
-      
-            leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white,),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) => const TripDetailsScreen()));
-            },
-      ),
-      backgroundColor: const Color.fromRGBO(99, 31, 147, 1),
-      toolbarHeight: 64,
-    ),
+          appBar: const AppBarWithBackArrow(),
     
          body: EditItineraryBody(widget: widget, trip: widget.trip,), 
                       
         );                
   }    
 }
+
+
+//TODO Francesca
+//sistemare aggiunta attività "no city"
+//rivedere campi nulli  aggiunta attività immagine prezzo ecc...
+//floating btn nel edit trip

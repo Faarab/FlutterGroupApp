@@ -5,15 +5,18 @@ import 'package:triptaptoe_app/screens/add_activity_modal_screen.dart';
 import 'package:triptaptoe_app/widgets/dialog_remove_city.dart';
 
 class AddedCities extends StatefulWidget {
-  const AddedCities({super.key, required this.citiesPerDay, required this.currentDayIndex, required this.onActivityAdded});
+  const AddedCities({super.key, required this.citiesPerDay, required this.currentDayIndex, required this.onActivityAdded, this.selectedCity, required this.currentTripId});
 
   final List<List<CityDTO>> citiesPerDay;
   final int currentDayIndex;
-  final Function(ActivityDTO) onActivityAdded;
+  final Function(ActivityDTO, CityDTO?) onActivityAdded;
+  final CityDTO? selectedCity;
+  final String currentTripId;
 
   @override
   State<AddedCities> createState() => _AddedCitiesState();
 }
+
 
 class _AddedCitiesState extends State<AddedCities> {
   @override
@@ -47,12 +50,15 @@ class _AddedCitiesState extends State<AddedCities> {
   onPressed: () {
     showDialog(context: context, builder: (BuildContext context) {
       return DialogRemoveCity(
-        onCityRemoved: (index) {
+        onCityRemoved: (name) {
           setState(() {
             widget.citiesPerDay[widget.currentDayIndex].removeAt(index);
           });
         },
-        cityIndex: index,
+        currentCityName: currentCities[index].name,
+        currentTripId: widget.currentTripId,
+        currentDayInd: widget.currentDayIndex,
+        
       );
     });
   },
@@ -61,38 +67,35 @@ class _AddedCitiesState extends State<AddedCities> {
               ],
             ),
             Container(
-              height: city.activities?.isNotEmpty ?? false ? null : 0,
+              
               child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: city.activities?.length,
-                itemBuilder: (BuildContext context, int activityIndex) {
-                  final activity = city.activities?[activityIndex];
-                  return Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            city.activities != null &&
-                                    index < city.activities!.length
-                                ? city.activities![index].name
-                                : 'no city no party',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          Text(
-                            city.activities != null &&
-                                    activityIndex < city.activities!.length
-                                ? '${city.activities![activityIndex].startTime.hour}:${city.activities![activityIndex].startTime.minute}'
-                                : '',
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  itemCount: city.activities?.length ?? 0, // Usa la lunghezza delle attività
+  itemBuilder: (BuildContext context, int activityIndex) {
+    final activity = city.activities?[activityIndex];
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              activity?.name ?? 'no activity',
+              style: const TextStyle(fontSize: 16),
+            ),
+            Text(
+              activity != null
+                  ? '${activity.startTime.hour}:${activity.startTime.minute}'
+                  : '',
+            )
+          ],
+        ),
+      ),
+    );
+  },
+),
+
             ),
             Row(
               children: [
@@ -107,7 +110,9 @@ class _AddedCitiesState extends State<AddedCities> {
                         context: context,
                         isScrollControlled: true,
                         builder: (bmscontext) => AddActivityModal(
-                          onActivityAdded:  widget.onActivityAdded,
+                          onActivityAdded:  (activity,selectedCity) {
+                            widget.onActivityAdded(activity, selectedCity);
+                          },
                           
                           selectedCity: city,
                         ),

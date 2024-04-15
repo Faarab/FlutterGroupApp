@@ -18,7 +18,7 @@ import '../widgets/suggested_activities.dart';
 class AddActivityModal extends StatefulWidget {
   const AddActivityModal({super.key, required this.onActivityAdded,  this.selectedCity});
 
-  final Function(ActivityDTO) onActivityAdded;
+  final Function(ActivityDTO, CityDTO?) onActivityAdded;
   final CityDTO? selectedCity;
 
   @override
@@ -182,7 +182,7 @@ class _AddActivityModalState extends State<AddActivityModal> {
                                 image: null, 
                                 category: null, 
                               );
-                              widget.onActivityAdded(newActivity);
+                              widget.onActivityAdded(newActivity, widget.selectedCity);
                               Navigator.pop(context);
                             }
                           },

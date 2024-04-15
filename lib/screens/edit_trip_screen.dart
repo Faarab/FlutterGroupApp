@@ -152,11 +152,8 @@ class _EditTripScreenState extends State<EditTripScreen> {
                 }
               },
             )
-          : EditTripFloatingActionButton(
-              onPressed: () {
-               
-              },
-            ),
+           : 
+          null,
       body: isSaving
           ? const Center(
               child: CircularProgressIndicator(),

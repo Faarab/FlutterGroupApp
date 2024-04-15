@@ -10,7 +10,6 @@ Future<bool> modifyCompleteTripFromJson(String id, String name, DateTime startDa
   final myFile = File('$myPath/trips.json');
   final contents = await myFile.readAsString();
 
-  print("Contenuto del file JSON: $contents"); // Debug
 
   if (contents != "") {
     try {
@@ -36,7 +35,7 @@ Future<bool> modifyCompleteTripFromJson(String id, String name, DateTime startDa
 
         return true;
       } else {
-        print("non corresponding id $id"); // Debug
+        print("non corresponding id $id"); 
         return false;
       }
     } catch (e) {
@@ -45,7 +44,7 @@ Future<bool> modifyCompleteTripFromJson(String id, String name, DateTime startDa
       return false;
     }
   } else {
-    print("Il file trips.json è vuoto."); // Debug
+    print("empty file"); 
     return false;
   }
 }
