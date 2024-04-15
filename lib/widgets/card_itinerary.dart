@@ -106,9 +106,10 @@ class _CardItineraryState extends State<CardItinerary> {
                                       index == city.activities!.length - 1;
                                   final activity = city.activities![index];
                                   String? location = activity.location;
-                                  if(location != null ) {
-                                    if(location.length > 20 ) {
-                                      location = '${location.substring(0, 20)}...';
+                                  if (location != null) {
+                                    if (location.length > 20) {
+                                      location =
+                                          '${location.substring(0, 20)}...';
                                     }
                                   } else {
                                     location = '';
@@ -175,25 +176,33 @@ class _CardItineraryState extends State<CardItinerary> {
                                               color: Colors.amber,
                                               margin: const EdgeInsets.only(
                                                   bottom: 16),
+                                              child: activity.image == null ? Image.asset(
+                                                "assets/images/${activity.image}",
+                                                fit: BoxFit.cover,
+                                              ) : null,
                                             ),
-                                            activity.location != "" || activity.location != null ?
-                                            IconButton.filled(
-                                              style: ButtonStyle(
-                                                backgroundColor: MaterialStateProperty.all(
-                                                  const Color
-                                                      .fromRGBO(53, 16, 79, 1),
-                                                )
-                                              ),
-                                              onPressed: () {
-                                               
-                                                openGoogleMaps(activity.location ?? "");
-                                              },
-                                              icon: Icon(Icons.directions),
-                                              iconSize: 32,
-                                              color: Colors.white,
-                                            ) : Container(),  
+                                            activity.location != "" ||
+                                                    activity.location != null
+                                                ? IconButton.filled(
+                                                    style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(
+                                                      const Color.fromRGBO(
+                                                          53, 16, 79, 1),
+                                                    )),
+                                                    onPressed: () {
+                                                      openGoogleMaps(
+                                                          activity.location ??
+                                                              "");
+                                                    },
+                                                    icon:
+                                                        Icon(Icons.directions),
+                                                    iconSize: 32,
+                                                    color: Colors.white,
+                                                  )
+                                                : Container(),
                                           ]),
-                                      
                                       trailing: Text(
                                         activity.formatStartTime(),
                                         style: const TextStyle(

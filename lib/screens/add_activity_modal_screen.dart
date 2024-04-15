@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/ActivityDTO.dart';
 import 'package:triptaptoe_app/models/CityDTO.dart';
@@ -30,6 +32,11 @@ class _AddActivityModalState extends State<AddActivityModal> {
   String _name = "";
   String _location = "";
   DateTime? _selectedDateTime;
+  String? _image = "";
+  String? _category = "";
+  DateTime? _closingTime = DateTime.now().add(Duration(hours: 2)); 
+  DateTime? _openingTime = DateTime.now().subtract(Duration(hours: 3)); 
+
 
   late TextEditingController _nameController;
   late TextEditingController _locationController;
@@ -175,12 +182,12 @@ class _AddActivityModalState extends State<AddActivityModal> {
                               final newActivity = ActivityDTO(
                                 name: _name,
                                 startTime: _selectedDateTime!,
-                                openingTime: null, 
-                                closingTime: null, 
+                                openingTime: _openingTime, 
+                                closingTime: _closingTime, 
                                 location: _location, 
                                 price: null, 
-                                image: null, 
-                                category: null, 
+                                image: _image, 
+                                category: _category, 
                               );
                               widget.onActivityAdded(newActivity, widget.selectedCity);
                               Navigator.pop(context);
@@ -204,6 +211,10 @@ class _AddActivityModalState extends State<AddActivityModal> {
                   _location = activity.location ?? "";
                   _nameController.text = _name;
                  _locationController.text = _location;
+                 _image = activity.image;
+                 _category = activity.category;
+                 _openingTime = activity.openingTime;
+                 _closingTime = activity.closingTime;
                 });
                 
               }, )
