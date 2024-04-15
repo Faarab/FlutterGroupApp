@@ -4,6 +4,7 @@ import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:triptaptoe_app/screens/fake_screen.dart';
 import 'package:triptaptoe_app/widgets/app_bar_with_back_arrow.dart';
 import 'package:triptaptoe_app/widgets/body_itenerary.dart';
+import 'package:triptaptoe_app/widgets/body_ticket.dart';
 import 'package:triptaptoe_app/widgets/bottom_navigation_bar_trip.dart';
 
 class ItineraryScreen extends StatefulWidget {
@@ -62,9 +63,7 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
                   _body = BodyItenerary(widget: widget);
                   break;
                 case 2:
-                  _body = const Center(
-                    child: Text("Pagina Ticket"),
-                  );
+                  _body = BodyTicket();
                   break;
                 default:
                   _body = BodyItenerary(widget: widget);
