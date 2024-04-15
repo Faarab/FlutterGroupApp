@@ -68,6 +68,7 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
   late DateTime _endDate;
   late List<DayDTO> _days = [];
 
+
   void _onActivityAdded(ActivityDTO activity, CityDTO? selectedCity) {
     setState(() {
       if (selectedCity != null) {
@@ -124,6 +125,7 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
     _startDate = widget.trip.startDate;
     _endDate = widget.trip.endDate;
     _days = maptoDayDto(widget.widget.trip.days!, _citiesPerDay);
+
   }
 
   @override
@@ -233,6 +235,7 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
                 onActivityAdded: (act, selectedCity) {
                   _onActivityAdded(act, selectedCity);
                 }, currentTripId: _id,
+                showDeleteBtn: false,
                 
               ),
             const SizedBox(height: 10),

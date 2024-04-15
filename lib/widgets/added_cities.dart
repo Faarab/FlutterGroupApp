@@ -5,13 +5,14 @@ import 'package:triptaptoe_app/screens/add_activity_modal_screen.dart';
 import 'package:triptaptoe_app/widgets/dialog_remove_city.dart';
 
 class AddedCities extends StatefulWidget {
-  const AddedCities({super.key, required this.citiesPerDay, required this.currentDayIndex, required this.onActivityAdded, this.selectedCity, required this.currentTripId});
+  const AddedCities({super.key, required this.citiesPerDay, required this.currentDayIndex, required this.onActivityAdded, this.selectedCity, required this.currentTripId, this.showDeleteBtn});
 
   final List<List<CityDTO>> citiesPerDay;
   final int currentDayIndex;
   final Function(ActivityDTO, CityDTO?) onActivityAdded;
   final CityDTO? selectedCity;
   final String currentTripId;
+  final bool? showDeleteBtn;
 
   @override
   State<AddedCities> createState() => _AddedCitiesState();
@@ -44,6 +45,7 @@ class _AddedCitiesState extends State<AddedCities> {
                       fontWeight: FontWeight.bold, fontSize: 24),
                 ),
                 const SizedBox(width: 24),
+                if(widget.showDeleteBtn!)
                 IconButton(
   icon: const Icon(Icons.delete,
       color: Color.fromRGBO(53, 16, 79, 1)),
@@ -105,7 +107,7 @@ class _AddedCitiesState extends State<AddedCities> {
                     icon: const Icon(Icons.add),
                     label: const Text("Add an activity"),
                     onPressed: () {
-                      print(city);
+                      
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,

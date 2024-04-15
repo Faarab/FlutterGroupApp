@@ -26,8 +26,3 @@ class _EditItineraryScreenState extends State<EditItineraryScreen> {
   }    
 }
 
-
-//TODO Francesca
-//sistemare aggiunta attività "no city"
-//rivedere campi nulli  aggiunta attività immagine prezzo ecc...
-//floating btn nel edit trip
