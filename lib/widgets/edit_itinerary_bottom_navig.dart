@@ -8,7 +8,7 @@ import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:triptaptoe_app/models/state/itinerary_state.dart';
 import 'package:triptaptoe_app/screens/edit_trip_screen.dart';
 import 'package:triptaptoe_app/services/modifyCompleteTripFromJson.dart';
-import 'package:triptaptoe_app/widgets/added_activities.dart';
+import 'package:triptaptoe_app/widgets/activities_adder.dart';
 import 'package:triptaptoe_app/widgets/change_day_itinerary.dart';
 import 'package:intl/intl.dart';
 import 'package:triptaptoe_app/widgets/city_card.dart';
@@ -228,7 +228,7 @@ class _EditItineraryBottomNavigState extends State<EditItineraryBottomNavig> {
             ),
             const SizedBox(height: 30),
             if (_isAddingCity || _citiesPerDay[_currentDayIndex].isNotEmpty)
-              AddedActivities(
+              ActivitiesAdder(
                 citiesPerDay: _citiesPerDay,
                 currentDayIndex: _currentDayIndex,
                 onActivityAdded: (act, selectedCity) {

@@ -72,7 +72,7 @@ List<ActivityDTO> _getAllActivities() {
             padding: EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
               "Suggested activities",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, fontFamily: 'Poppins'),
             ),
           ),
           SingleChildScrollView(
@@ -106,7 +106,7 @@ List<ActivityDTO> _getAllActivities() {
             height: 10,
           ),
           SizedBox(
-            height: 380,
+            height: 370,
             child: GridView.count(
               shrinkWrap: true,
               crossAxisCount: 2,

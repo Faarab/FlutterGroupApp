@@ -9,7 +9,7 @@ import 'package:triptaptoe_app/models/state/itinerary_state.dart';
 import 'package:triptaptoe_app/screens/edit_itinerary_screen.dart';
 import 'package:triptaptoe_app/screens/home_screen.dart';
 import 'package:triptaptoe_app/services/modifyCompleteTripFromJson.dart';
-import 'package:triptaptoe_app/widgets/added_activities.dart';
+import 'package:triptaptoe_app/widgets/activities_adder.dart';
 import 'package:triptaptoe_app/widgets/change_day_itinerary.dart';
 import 'package:intl/intl.dart';
 import 'package:triptaptoe_app/widgets/city_card.dart';
@@ -146,6 +146,7 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
                     color: Color.fromRGBO(45, 45, 45, 1),
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
+                     fontFamily: 'Poppins'
                   ),
                 ),
                 ElevatedButton(
@@ -226,14 +227,14 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
             ),
             const SizedBox(height: 30),
             if (_isAddingCity || _citiesPerDay[_currentDayIndex].isNotEmpty)
-              AddedActivities(
+              ActivitiesAdder(
                 citiesPerDay: _citiesPerDay,
                 currentDayIndex: _currentDayIndex,
                 onActivityAdded: (act, selectedCity) {
                   _onActivityAdded(act, selectedCity);
                 },
                 currentTripId: _id,
-                showDeleteBtn: false,
+                showDeleteBtn: true,
               ),
             const SizedBox(height: 10),
             CityCard(

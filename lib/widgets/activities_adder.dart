@@ -4,8 +4,8 @@ import 'package:triptaptoe_app/models/CityDTO.dart';
 import 'package:triptaptoe_app/screens/add_activity_modal_screen.dart';
 import 'package:triptaptoe_app/widgets/dialog_remove_city.dart';
 
-class AddedActivities extends StatefulWidget {
-  const AddedActivities({super.key, required this.citiesPerDay, required this.currentDayIndex, required this.onActivityAdded, this.selectedCity, required this.currentTripId, this.showDeleteBtn});
+class ActivitiesAdder extends StatefulWidget {
+  const ActivitiesAdder({super.key, required this.citiesPerDay, required this.currentDayIndex, required this.onActivityAdded, this.selectedCity, required this.currentTripId, this.showDeleteBtn});
 
   final List<List<CityDTO>> citiesPerDay;
   final int currentDayIndex;
@@ -15,11 +15,11 @@ class AddedActivities extends StatefulWidget {
   final bool? showDeleteBtn;
 
   @override
-  State<AddedActivities> createState() => _AddedActivitiesState();
+  State<ActivitiesAdder> createState() => _ActivitiesAdderState();
 }
 
 
-class _AddedActivitiesState extends State<AddedActivities> {
+class _ActivitiesAdderState extends State<ActivitiesAdder> {
   @override
   Widget build(BuildContext context) {
     final currentCities = widget.citiesPerDay[widget.currentDayIndex];
@@ -42,7 +42,7 @@ class _AddedActivitiesState extends State<AddedActivities> {
                 Text(
                   currentCities[index].name,
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 24),
+                      fontWeight: FontWeight.bold, fontSize: 28),
                 ),
                 const SizedBox(width: 24),
                 if(widget.showDeleteBtn!)
@@ -73,7 +73,7 @@ class _AddedActivitiesState extends State<AddedActivities> {
               child: ListView.builder(
   shrinkWrap: true,
   physics: const NeverScrollableScrollPhysics(),
-  itemCount: city.activities?.length ?? 0, // Usa la lunghezza delle attività
+  itemCount: city.activities?.length ?? 0, 
   itemBuilder: (BuildContext context, int activityIndex) {
     final activity = city.activities?[activityIndex];
     return Card(
@@ -104,8 +104,8 @@ class _AddedActivitiesState extends State<AddedActivities> {
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0),
                   child: TextButton.icon(
-                    icon: const Icon(Icons.add),
-                    label: const Text("Add an activity"),
+                    icon: const Icon(Icons.add, color: Colors.black,),
+                    label: const Text("Add an activity", style: TextStyle( fontFamily: 'Poppins', color: Colors.black, fontSize: 16,),),
                     onPressed: () {
                       
                       showModalBottomSheet(

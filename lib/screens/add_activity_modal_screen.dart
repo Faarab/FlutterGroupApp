@@ -63,7 +63,7 @@ class _AddActivityModalState extends State<AddActivityModal> {
                 children: [
                   const Text(
                     "Add an activity",
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold,  fontFamily: 'Poppins', ),
                   ),
                   IconButton(
                     onPressed: () {
@@ -76,10 +76,10 @@ class _AddActivityModalState extends State<AddActivityModal> {
               const SizedBox(height: 16), 
                Row(
                 children: [
-                  const Icon(Icons.location_on),
+                  const Icon(Icons.location_on, size: 32, color: Color.fromRGBO(53, 16, 79, 1)),
                   const SizedBox(width: 16),
                  
-                  Text("${widget.selectedCity?.name}", style: const TextStyle(fontSize: 24),),
+                  Text("${widget.selectedCity?.name}", style: const TextStyle(fontSize: 24, fontFamily: 'Poppins'),),
 
                 ],
               ),

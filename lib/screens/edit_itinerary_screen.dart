@@ -17,7 +17,7 @@ class _EditItineraryScreenState extends State<EditItineraryScreen> {
   Widget build(BuildContext context) {
     return 
         Scaffold(
-          backgroundColor: Colors.white,
+          
           appBar: const AppBarWithBackArrow(),
     
          body: EditItineraryBody(widget: widget, trip: widget.trip,), 

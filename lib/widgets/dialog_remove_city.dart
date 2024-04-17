@@ -98,7 +98,7 @@ Future<void> deleteCity(String _cityName) async {
                               borderRadius: BorderRadius.circular(8))),
                     ),
                     onPressed: () async {
-                      await deleteCity(currentCityName); // Supponendo che tu abbia un modo per ottenere cityId
+                      await deleteCity(currentCityName); 
                       onCityRemoved(currentCityName);
                       Navigator.of(context).pop();
                     },

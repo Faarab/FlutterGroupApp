@@ -43,7 +43,7 @@ class _CityCardState extends State<CityCard> {
                       },
                       style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                              MaterialStateProperty.all(Colors.transparent),
                           minimumSize: MaterialStateProperty.all(
                               const Size(double.infinity, 50)),
                           shape: MaterialStateProperty.all(
@@ -53,7 +53,7 @@ class _CityCardState extends State<CityCard> {
                           ),
                           alignment: Alignment.centerLeft),
                       label: const Text("Add a city",
-                          style: TextStyle(color: Colors.black)),
+                          style: TextStyle(color: Colors.black, fontFamily: 'Poppins' , fontSize: 16)),
                       icon: const Icon(Icons.add, color: Colors.black),
                     ),
                   ),
@@ -87,7 +87,7 @@ class _CityCardState extends State<CityCard> {
                         ),
                         onSubmitted: (value) {
                           final selectedCity = widget.hardcodedcitieslist
-                              .firstWhere((city) => city.name == value);
+                              .firstWhere((city) => city.name == value,);
 
                           setState(() {
                             widget.citiesPerDay[widget.currentDayIndex]
@@ -110,7 +110,7 @@ class _CityCardState extends State<CityCard> {
                             return ListTile(
                               leading: const Icon(Icons.location_on),
                               title: Text(
-                                city.name,
+                                city.name, style: TextStyle(color: Colors.black, fontFamily: 'Poppins'),
                               ),
                               subtitle: Text(city.country ?? 'N/A'),
                               onTap: () {
