@@ -2,7 +2,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
-import 'package:triptaptoe_app/screens/edit_trip_screen.dart';
 import 'package:triptaptoe_app/widgets/edit_trip_form.dart';
 
 class EditTripBody extends StatefulWidget {

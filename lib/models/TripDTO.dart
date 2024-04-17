@@ -40,16 +40,30 @@ class TripDTO {
       days: days ?? this.days,
     );
   }
-factory TripDTO.fromJson(Map<String, dynamic> json) {
-  late List<DayDTO>? days;
-  final dynamic numOfDays = json['days'];
 
-  if (numOfDays != null && numOfDays is List) {
-    final listOfDays = numOfDays as List;
+  factory TripDTO.fromJson(Map<String, dynamic> json) {
+    late List<DayDTO>? days;
+    var numOfDays;
+    if (json['days'] != null) {
+      numOfDays = json['days'];
+    } else {
+      numOfDays = 0;
+    }
+if (numOfDays != 0) {
+  final listOfDays = json['days'];
+
+  
+  if (listOfDays is List<dynamic>) {
     days = listOfDays.map((day) => DayDTO.fromJson(day)).toList();
   } else {
+    
     days = <DayDTO>[];
   }
+} else {
+  days = <DayDTO>[];
+}
+
+
     return TripDTO(
       id: json["id"],
       name: json["name"],

@@ -1,16 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:triptaptoe_app/main.dart';
+
 import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:triptaptoe_app/widgets/Exchange_body.dart';
 import 'package:triptaptoe_app/services/readJson.dart';
 import 'package:triptaptoe_app/widgets/home_screen_bottom_navigation_bar.dart';
 import 'package:triptaptoe_app/widgets/trip_card.dart';
-import 'package:flutter/services.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-
 import 'trip_details_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,7 +17,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<List<TripDTO>>? tripArray;
+  late Future<List<TripDTO>> tripArrayFuture;
+  List<TripDTO> tripArray = [];
+  bool isHome = true;
   Widget _screenBody = HomeScreenBody();
   bool _isInHOme = true;
 
@@ -29,30 +27,35 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       switch (index) {
         case 0:
-          _isInHOme = false;
-          _screenBody = ExchangeBody();
+          _screenBody = const ExchangeBody();
+          isHome = false;
           break;
         case 1:
-          _isInHOme = true;
-          _screenBody = HomeScreenBody();
+          _screenBody = const HomeScreenBody();
+          isHome = true;
           break;
         default:
-          _screenBody = HomeScreenBody();
+          _screenBody = const HomeScreenBody();
+          isHome = true;
           break;
       }
     });
   }
 
-  @override
+@override
   void initState() {
     super.initState();
-    tripArray = readJson();
-    print("tripArray" + tripArray.toString());
+    tripArrayFuture = readJson();
+    tripArrayFuture.then((value) {
+      setState(() {
+        tripArray = value;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    
+    //readJson();
     return Scaffold(
         backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
         appBar: AppBar(
@@ -68,22 +71,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: _isInHOme ? FloatingActionButton(
-          onPressed: () => {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => TripDetailsScreen()),
-            )
-          },
-          hoverColor: Color.fromRGBO(99, 31, 147, 1),
-          backgroundColor: Color.fromRGBO(53, 16, 79, 1),
-          shape: CircleBorder(),
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 32,
-          ),
-        ) : null,
+        floatingActionButton: isHome
+            ? FloatingActionButton(
+                onPressed: () => {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TripDetailsScreen()),
+                  )
+                },
+                hoverColor: Color.fromRGBO(99, 31, 147, 1),
+                backgroundColor: Color.fromRGBO(53, 16, 79, 1),
+                shape: CircleBorder(),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              )
+            : null,
         bottomNavigationBar: HomeScreenBottomNavigationBar(
             onPressed: (index) => {setScreenBody(index)}),
         body: AnimatedSwitcher(
@@ -91,8 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
           switchInCurve: Curves.easeIn,
           switchOutCurve: Curves.easeOut,
           child: _screenBody,
-          )
-        );
+        ));
   }
 }
 
@@ -115,6 +120,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
             future: readJson(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                print({'sn': snapshot.data});
                 if (snapshot.data!.isNotEmpty) {
                   return Expanded(
                     child: ListView.builder(
@@ -122,7 +128,10 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                       itemBuilder: (context, index) {
                         print("snapsht data" + (snapshot.data!).toString());
                         return TripCard(
-                            trip: snapshot.data![index], index: index);
+                          trip: snapshot.data![index],
+                          index: index,
+                          onPressedDelete: () => setState(() {}),
+                        );
                       },
                     ),
                   );
@@ -134,7 +143,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                     children: [
                       Container(
                         width: 240,
-                        child: Column(
+                        child: const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
@@ -145,7 +154,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                                   fontWeight: FontWeight.bold,
                                   color: Color.fromRGBO(45, 45, 45, 1)),
                             ),
-                            const SizedBox(height: 4),
+                             SizedBox(height: 4),
                             Text(
                               "You can add a trip by clicking on the '+' button",
                               textAlign: TextAlign.center,

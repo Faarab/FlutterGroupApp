@@ -7,8 +7,10 @@ class DialogEditTrip extends StatefulWidget {
   const DialogEditTrip({
       Key? key,
       required this.onPressed,
+      required this.contentText
     });
 
+  final String contentText;
   final Function(bool) onPressed;
 
 
@@ -17,9 +19,13 @@ class DialogEditTrip extends StatefulWidget {
 }
 
 class _DialogEditTripState extends State<DialogEditTrip> {
-  final String contentText =
-      "Changing this section will permanently erase all your changes. You will lose any unsaved information.\nDo you want to proceed?";
-  
+  late String contentText;
+      
+  void initState() {
+    super.initState();
+    contentText = widget.contentText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog.adaptive(

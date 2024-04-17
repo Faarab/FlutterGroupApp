@@ -18,17 +18,21 @@ Future<bool> modifyTripFromJson(String id, String name, DateTime startDate, Date
       
       if (tripToModify != null) {
         tripToModify['name'] = name;
-        tripToModify['cityOfDeparture'] = cityOfDeparture;
-        tripToModify['cityOfArrival'] = cityOfArrival;
+        
 
         //se i giorni di inizio o fine viaggio sono diversi allora deve cambiare la lista di giorni del viaggio
         if (tripToModify['startDate'] != startDate.toIso8601String() 
-            || tripToModify['endDate'] != endDate.toIso8601String()) {
+            || tripToModify['endDate'] != endDate.toIso8601String()
+            || tripToModify['cityOfDeparture'] != cityOfDeparture
+            || tripToModify['cityOfArrival'] != cityOfArrival) {
+          tripToModify['cityOfDeparture'] = cityOfDeparture;
+          tripToModify['cityOfArrival'] = cityOfArrival;
           tripToModify['startDate'] = startDate.toIso8601String();
           tripToModify['endDate'] = endDate.toIso8601String();
           List<DayDTO> daysList = getDaysList(startDate, endDate);
           List<Map<String, dynamic>> daysJsonList = daysList.map((day) => day.toJson()).toList();
           tripToModify['days'] = daysJsonList;
+          print(daysJsonList.toString());
         }
 
         contentsJSON['trips'] = dynamicTripsList;

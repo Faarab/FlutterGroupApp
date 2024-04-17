@@ -8,6 +8,7 @@ import '../widgets/trip_details_form.dart';
 
 class TripDetailsScreen extends StatefulWidget {
   const TripDetailsScreen({super.key});
+  
 
   @override
   State<TripDetailsScreen> createState() => _TripDetailsScreenState();
@@ -23,17 +24,17 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-      appBar: AppBarWithBackArrow(screen: HomeScreen()),
+      appBar: AppBarWithBackArrow(),
       body: Padding(
-        padding: const EdgeInsets.only(left: 29, right: 29),
+        padding: EdgeInsets.only(left: 29, right: 29),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
-              const Text(
+              SizedBox(height: 16),
+              Text(
                 "Create a new trip",
                 style: TextStyle(
                     color: Color.fromRGBO(45, 45, 45, 1),
@@ -41,7 +42,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     fontWeight: FontWeight.bold),
               ),
               TripDetailsForm(),
-              const SizedBox(
+              SizedBox(
                 height: 16,
               ),
             ],

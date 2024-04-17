@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:triptaptoe_app/main.dart';
-import 'package:triptaptoe_app/models/DayDTO.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
+import 'package:triptaptoe_app/screens/edit_itinerary_screen.dart';
 import 'package:triptaptoe_app/screens/home_screen.dart';
 import 'package:triptaptoe_app/services/getDaysList.dart';
 import 'package:triptaptoe_app/widgets/custom_input_field.dart';
@@ -49,8 +49,17 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     print(tripsList);
   }
 
-  Future<void> readAndWriteJson() async {
-    // final contenutoJSON = json.decode(merda);
+  String getRandomString(int length) {
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+    final randomString = String.fromCharCodes(Iterable.generate(
+        length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+    return randomString;
+  }
+
+  Future<void> readAndWriteJson(TripDTO newTrip) async {
+    // final contenutoJSON = json.decode(fileContent);
     // contenutoJSON['trips'][0] = {"exampleKey": "exampleValue"};
     // print(contenutoJSON);
 
@@ -62,19 +71,20 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     //Read the file contents, if the file is empty initialize it otherwise add a new trip
     final contents = await myFile.readAsString();
     if (contents == "") {
-      const _id = "0";
-      final newTrip = TripDTO(
-          id: _id,
-          name: _name,
-          startDate: _startDate,
-          endDate: _endDate,
-          cityOfDeparture: _cityOfDeparture,
-          cityOfArrival: _cityOfArrival,
-          days: getDaysList(_startDate, _endDate));
+      //final _id = getRandomString(5);
+      // final newTrip = new TripDTO(
+      //     id: _id,
+      //     name: _name,
+      //     startDate: _startDate,
+      //     endDate: _endDate,
+      //     cityOfDeparture: _cityOfDeparture,
+      //     cityOfArrival: _cityOfArrival,
+      //     days: getDaysList(_startDate, _endDate));
+
       final fileStructure = {
         "trips": [newTrip]
       };
-      print("fileStructure" + fileStructure.toString());
+      // print("fileStructure" + fileStructure.toString());
       myFile.writeAsString(jsonEncode(fileStructure));
       // myFile.writeAsString("""{
       //   "trips": [$newTrip]
@@ -82,17 +92,17 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
     } else {
       final contentsJSON = jsonDecode(contents);
       final tripsList = contentsJSON['trips'];
-      final _id = (tripsList.length + 1).toString();
-      final newTrip =  TripDTO(
-          id: _id,
-          name: _name,
-          startDate: _startDate,
-          endDate: _endDate,
-          cityOfDeparture: _cityOfDeparture,
-          cityOfArrival: _cityOfArrival,
-          days: getDaysList(_startDate, _endDate));
+      // final _id = getRandomString(5);
+      // final newTrip = new TripDTO(
+      //     id: _id,
+      //     name: _name,
+      //     startDate: _startDate,
+      //     endDate: _endDate,
+      //     cityOfDeparture: _cityOfDeparture,
+      //     cityOfArrival: _cityOfArrival,
+      //     days: getDaysList(_startDate, _endDate));
       final newTripsList = [...tripsList, newTrip];
-      print("newTripsList$newTripsList");
+      // print("newTripsList" + newTripsList.toString());
       contentsJSON['trips'] = newTripsList;
       myFile.writeAsString(jsonEncode(contentsJSON));
     }
@@ -295,10 +305,8 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                             content: Text('Trip dates must be selected')),
                       );
                     } else {
-                      print(
-                          "Name: $_name + Depart: $_cityOfDeparture + Arrival: $_cityOfArrival + Start: $_startDate + End: $_endDate");
-                      var _newTrip = new TripDTO(
-                          id: "1",
+                      var _newTrip = TripDTO(
+                          id: getRandomString(5),
                           name: _name,
                           startDate: _startDate,
                           endDate: _endDate,
@@ -306,7 +314,7 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                           cityOfArrival: _cityOfArrival,
                           days: getDaysList(_startDate, _endDate)); //TODO
                       //addTripToJson(_newTrip);
-                      readAndWriteJson();
+                      readAndWriteJson(_newTrip);
                       showDialog(
                           context: context,
                           builder: (BuildContext context) => Dialog(
@@ -381,7 +389,18 @@ class _TripDetailsFormState extends State<TripDetailsForm> {
                                                       Color.fromRGBO(
                                                           255, 255, 255, 1),
                                                 ),
-                                                onPressed: () {},
+                                                onPressed: () => {
+                                                      Navigator.of(context)
+                                                          .popUntil((route) =>
+                                                              route.isFirst),
+                                                      Navigator.pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  EditItineraryScreen(
+                                                                      trip:
+                                                                          _newTrip)))
+                                                    },
                                                 child: Text("Edit trip")),
                                           )
                                         ],
