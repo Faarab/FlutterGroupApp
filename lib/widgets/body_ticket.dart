@@ -13,27 +13,9 @@ class BodyTicket extends StatefulWidget {
   State<BodyTicket> createState() => _BodyTicketState();
 }
 
-final ticket1 = TicketDTO(
-    idTicket: "id1",
-    titoloTicket: "nomeViaggio1",
-    path:
-        "/data/user/0/com.example.triptaptoe_app/cache/file_picker/1712934271593/dummy.pdf",
-    nomeFile: "nomeFile1");
-final ticket2 = TicketDTO(
-    idTicket: "id2",
-    titoloTicket: "nomeViaggio2",
-    path:
-        "/data/user/0/com.example.triptaptoe_app/cache/file_picker/1712934271593/dummy.pdf",
-    nomeFile: "nomeFile2");
-final ticket3 = TicketDTO(
-    idTicket: "id3",
-    titoloTicket: "nomeViaggio3",
-    path:
-        "/data/user/0/com.example.triptaptoe_app/cachee_picker/1712934271593/dummy.pdf",
-    nomeFile: "nomeFile3");
 
 class _BodyTicketState extends State<BodyTicket> {
-  List<TicketDTO> tickets = [ticket1, ticket2, ticket3];
+  List<TicketDTO> tickets = [];
 
   @override
   ScrollController _scrollController = ScrollController();
@@ -81,7 +63,12 @@ class _BodyTicketState extends State<BodyTicket> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AddTicket()),
+                MaterialPageRoute(builder: (context) =>  AddTicket(onTicketAdded: (newTicket) {
+                  setState(() {
+                    tickets.add(newTicket);
+                  });
+                  Navigator.pop(context);
+                },)),
               );
              
             },
@@ -166,8 +153,8 @@ class _TicketCardState extends State<TicketCard> {
 }
 
 class AddTicket extends StatefulWidget {
-  const AddTicket({super.key});
-
+  const AddTicket({super.key, required this.onTicketAdded});
+  final Function(TicketDTO) onTicketAdded;
   @override
   State<AddTicket> createState() => _AddTicketState();
 }
@@ -262,7 +249,16 @@ class _AddTicketState extends State<AddTicket> {
           String nomeViaggio = myController.text;
           print("ticket ID = $ticketId");
           print("nome viaggio = $nomeViaggio");
-          print("path file PDF = " + file.toString());
+          print("path file PDF = " + file!.path);
+
+          final newTicket = TicketDTO(
+            idTicket: ticketId,
+            nomeFile: file!.path.split("/").last,
+            path: file!.path,
+            titoloTicket: nomeViaggio,
+          );
+
+          widget.onTicketAdded(newTicket);
         },
         backgroundColor: const Color.fromRGBO(53, 16, 79, 1),
         shape: const CircleBorder(),
