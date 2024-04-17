@@ -2,7 +2,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:triptaptoe_app/screens/edit_trip_screen.dart';
 
 class EditTripFloatingActionButton extends StatefulWidget {
   final Function() onPressed;

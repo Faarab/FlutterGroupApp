@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/ActivityDTO.dart';
 import 'package:triptaptoe_app/models/CityDTO.dart';
@@ -24,12 +23,12 @@ class _SuggestedActivitiesState extends State<SuggestedActivities> {
   @override
   void initState() {
     super.initState();
-    print("${widget.selectedCity?.name} selected city");
     
-    categories = CityService().getCategories().toList();
+    activities = _getAllActivities();
+    categories = activities.map((activity) => activity.category!).toSet().toList();
     filters = { for (var category in categories) category: false };
 
-    activities = _getAllActivities();
+    
   }
 
 List<ActivityDTO> _getAllActivities() {
@@ -56,6 +55,7 @@ List<ActivityDTO> _getAllActivities() {
 
   @override
   Widget build(BuildContext context) {
+    
     final filteredActivities = activities.where((activity) {
       if (filters.values.any((selected) => selected)) {
         return filters.entries.any((filter) => filter.value && activity.category == filter.key);

@@ -9,9 +9,10 @@ import 'package:triptaptoe_app/models/state/itinerary_state.dart';
 import 'package:triptaptoe_app/screens/edit_itinerary_screen.dart';
 import 'package:triptaptoe_app/screens/home_screen.dart';
 import 'package:triptaptoe_app/services/modifyCompleteTripFromJson.dart';
-import 'package:triptaptoe_app/widgets/added_cities.dart';
+import 'package:triptaptoe_app/widgets/added_activities.dart';
 import 'package:triptaptoe_app/widgets/change_day_itinerary.dart';
 import 'package:intl/intl.dart';
+import 'package:triptaptoe_app/widgets/city_card.dart';
 
 List<DayDTO> maptoDayDto(List<DayDTO> days, List<List<CityDTO>> citiesPerDay) {
   int i = 0;
@@ -59,7 +60,7 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
   late bool _canGoForward;
   final ScrollController _scrollController = ScrollController();
   late List<List<CityDTO>> _citiesPerDay = [];
-  CityDTO? _selectedCity;
+  CityDTO? selectedCity;
   late String _id;
   late String _name;
   late String _cityOfDeparture;
@@ -67,7 +68,6 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
   late DateTime _startDate;
   late DateTime _endDate;
   late List<DayDTO> _days = [];
-
 
   void _onActivityAdded(ActivityDTO activity, CityDTO? selectedCity) {
     setState(() {
@@ -125,7 +125,6 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
     _startDate = widget.trip.startDate;
     _endDate = widget.trip.endDate;
     _days = maptoDayDto(widget.widget.trip.days!, _citiesPerDay);
-
   }
 
   @override
@@ -161,29 +160,27 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
                       final data =
                           maptoDayDto(widget.widget.trip.days!, _citiesPerDay);
 
-                      try {
-                        final isModified = await modifyCompleteTripFromJson(
-                          widget.trip.id,
-                          _name,
-                          _startDate,
-                          _endDate,
-                          _cityOfDeparture,
-                          _cityOfArrival,
-                          _days,
-                        );
+                      final isModified = await modifyCompleteTripFromJson(
+                        widget.trip.id,
+                        _name,
+                        _startDate,
+                        _endDate,
+                        _cityOfDeparture,
+                        _cityOfArrival,
+                        _days,
+                      );
 
-                        if (isModified) {
-                          setState(() {
-                            _days = data;
-                            _citiesPerDay = List.generate(
-                                _days.length, (index) => _days[index].cities!);
-                          });
-                        }
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomeScreen()));
-                      } catch (e) {}
+                      if (isModified) {
+                        setState(() {
+                          _days = data;
+                          _citiesPerDay = List.generate(
+                              _days.length, (index) => _days[index].cities!);
+                        });
+                      }
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen()));
                     },
                     child: const Icon(
                       Icons.save,
@@ -229,17 +226,31 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
             ),
             const SizedBox(height: 30),
             if (_isAddingCity || _citiesPerDay[_currentDayIndex].isNotEmpty)
-              AddedCities(
+              AddedActivities(
                 citiesPerDay: _citiesPerDay,
                 currentDayIndex: _currentDayIndex,
                 onActivityAdded: (act, selectedCity) {
                   _onActivityAdded(act, selectedCity);
-                }, currentTripId: _id,
+                },
+                currentTripId: _id,
                 showDeleteBtn: false,
-                
               ),
             const SizedBox(height: 10),
-            _buildCityCard(),
+            CityCard(
+                hardcodedcitieslist: hardcodedcitieslist,
+                citiesPerDay: _citiesPerDay,
+                currentDayIndex: _currentDayIndex,
+                isAddingCity: _isAddingCity,
+                onCitySelected: (city) {
+                  setState(() {
+                    selectedCity = city;
+                    _citiesPerDay[_currentDayIndex].add(city);
+                    _cityController.clear();
+                    _isAddingCity = false;
+
+
+                  });
+                },),
           ],
         ),
       ),
@@ -261,131 +272,6 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildCityCard() {
-    return Card(
-      elevation: 0,
-      child: SingleChildScrollView(
-        reverse: true,
-        child: Column(
-          children: [
-            if (!_isAddingCity)
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton.icon(
-                      onPressed: () {
-                        setState(() {
-                          _isAddingCity = true;
-                        });
-                      },
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          minimumSize: MaterialStateProperty.all(
-                              const Size(double.infinity, 50)),
-                          shape: MaterialStateProperty.all(
-                            const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
-                          ),
-                          alignment: Alignment.centerLeft),
-                      label: const Text("Add a city",
-                          style: TextStyle(color: Colors.black)),
-                      icon: const Icon(Icons.add, color: Colors.black),
-                    ),
-                  ),
-                ],
-              ),
-            if (_isAddingCity)
-              Row(
-                children: [
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: Autocomplete<CityDTO>(
-                        optionsBuilder: (textEditingValue) {
-                      if (textEditingValue.text.isEmpty) {
-                        return const Iterable<CityDTO>.empty();
-                      } else {
-                        return hardcodedcitieslist.where((CityDTO city) {
-                          return city.name
-                              .toLowerCase()
-                              .startsWith(textEditingValue.text.toLowerCase());
-                        });
-                      }
-                    }, fieldViewBuilder: (fbContext, textEditingController,
-                            focusNode, onFieldSubmitted) {
-                      return TextField(
-                        controller: textEditingController,
-                        focusNode: focusNode,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter a city',
-                          filled: true,
-                          fillColor: Colors.transparent,
-                        ),
-                        onSubmitted: (value) {
-                          final selectedCity = hardcodedcitieslist
-                              .firstWhereOrNull((city) => city.name == value);
-
-                          if (selectedCity != null) {
-                            setState(() {
-                              _citiesPerDay[_currentDayIndex].add(selectedCity);
-                              textEditingController.clear();
-                              _isAddingCity = false;
-                            });
-                          }
-                        },
-                      );
-                    }, optionsViewBuilder: (optcontext, onSelected, cities) {
-                      return Material(
-                        color: Colors.transparent,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                          ),
-                          itemCount: cities.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final city = cities.elementAt(index);
-                            return ListTile(
-                              leading: const Icon(Icons.location_on),
-                              title: Text(
-                                city.name,
-                              ),
-                              subtitle: Text(city.country ?? 'N/A'),
-                              onTap: () {
-                                onSelected(city);
-                              },
-                            );
-                          },
-                        ),
-                      );
-                    }, onSelected: (CityDTO city) {
-                      setState(() {
-                        _selectedCity = city;
-                        _citiesPerDay[_currentDayIndex].add(city);
-                        _cityController.clear();
-                        _isAddingCity = false;
-                      });
-
-                      context.read<ItineraryState>().addDayAndCity(city,
-                          widget.widget.trip.days![_currentDayIndex].date);
-                    }),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isAddingCity = false;
-                      });
-                    },
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-          ],
-        ),
-      ),
     );
   }
 }

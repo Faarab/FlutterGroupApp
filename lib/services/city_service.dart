@@ -23,13 +23,13 @@ class CityService {
     final List<Map<String, dynamic>> citiesJson = jsonDecode(citiesJsonString);
     List<Map<String, dynamic>> activities = [];
 
-    citiesJson.forEach((city) {
+    for (var city in citiesJson) {
       city['activities'].forEach((activity) {
         if (activity['category'] == category) {
           activities.add(activity);
         }
       });
-    });
+    }
 
     return activities;
   }
@@ -155,7 +155,7 @@ const citiesJsonString = """
         "category": "Squares"
       },
       {
-        "name": "Royal Palace of Madrid",
+        "name": "Royal Palace",
         "startTime": "2024-04-09T10:00:00.000Z",
         "openingTime": "2024-04-09T10:00:00.000Z",
         "closingTime": "2024-04-09T18:00:00.000Z",
@@ -171,7 +171,7 @@ const citiesJsonString = """
     "country": "Spain",
     "activities": [
       {
-        "name": "Alcazaba of Malaga",
+        "name": "Alcazaba",
         "startTime": "2024-04-09T09:00:00.000Z",
         "openingTime": "2024-04-09T09:00:00.000Z",
         "closingTime": "2024-04-09T20:00:00.000Z",
@@ -181,7 +181,7 @@ const citiesJsonString = """
         "category": "Historical Sites"
       },
       {
-        "name": "Gibralfaro Castle",
+        "name": "Gibralfaro",
         "startTime": "2024-04-09T09:00:00.000Z",
         "openingTime": "2024-04-09T09:00:00.000Z",
         "closingTime": "2024-04-09T18:00:00.000Z",
@@ -191,7 +191,7 @@ const citiesJsonString = """
         "category": "Historical Sites"
       },
       {
-        "name": "Malaga Cathedral",
+        "name": "Cathedral",
         "startTime": "2024-04-09T10:00:00.000Z",
         "openingTime": "2024-04-09T10:00:00.000Z",
         "closingTime": "2024-04-09T18:00:00.000Z",
@@ -201,7 +201,7 @@ const citiesJsonString = """
         "category": "Religious Sites"
       },
       {
-        "name": "Malaga Picasso Museum",
+        "name": "Picasso Museum",
         "startTime": "2024-04-09T10:00:00.000Z",
         "openingTime": "2024-04-09T10:00:00.000Z",
         "closingTime": "2024-04-09T20:00:00.000Z",

@@ -145,13 +145,30 @@ class _CardItineraryState extends State<CardItinerary> {
                                       thickness: 5,
                                     ),
                                     endChild: ListTile(
-                                      title: Text(
-                                        activity.name,
-                                        style: const TextStyle(
-                                            fontSize: 18,
-                                            color:
-                                                Color.fromRGBO(45, 45, 45, 1)),
-                                      ),
+                                      title: Row(children: [
+                                        Text(
+                                          activity.name,
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Color.fromRGBO(
+                                                  45, 45, 45, 1)),
+                                        ),
+                                        activity.location != "" ||
+                                                activity.location != null
+                                            ? IconButton(
+                                                onPressed: () {
+                                                  openGoogleMaps(
+                                                      activity.location ?? "");
+                                                },
+                                                icon: const Icon(Icons.directions,
+                                                    color: Color.fromRGBO(
+                                                        53, 16, 79, 1),
+                                                    size: 24),
+                                                iconSize: 32,
+                                                color: Colors.white,
+                                              )
+                                            : Container(),
+                                      ]),
                                       subtitle: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -170,38 +187,20 @@ class _CardItineraryState extends State<CardItinerary> {
                                             const SizedBox(
                                               height: 8,
                                             ),
-                                            Container(
-                                              width: 160,
-                                              height: 80,
-                                              color: Colors.amber,
-                                              margin: const EdgeInsets.only(
-                                                  bottom: 16),
-                                              child: activity.image == null ?null :Image.asset(
-                                                "assets/images/${activity.image}",
-                                                fit: BoxFit.cover,
-                                              ) 
-                                            ),
-                                            activity.location != "" ||
-                                                    activity.location != null
-                                                ? IconButton.filled(
-                                                    style: ButtonStyle(
-                                                        backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all(
-                                                      const Color.fromRGBO(
-                                                          53, 16, 79, 1),
-                                                    )),
-                                                    onPressed: () {
-                                                      openGoogleMaps(
-                                                          activity.location ??
-                                                              "");
-                                                    },
-                                                    icon:
-                                                        Icon(Icons.directions),
-                                                    iconSize: 32,
-                                                    color: Colors.white,
-                                                  )
+                                            activity.image != null &&
+                                                    activity.image!.isNotEmpty
+                                                ? Container(
+                                                    width: 160,
+                                                    height: 80,
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            bottom: 16),
+                                                    child: Image.asset(
+                                                      "assets/images/${activity.image}",
+                                                      fit: BoxFit.cover,
+                                                    ))
                                                 : Container(),
+                                         
                                           ]),
                                       trailing: Text(
                                         activity.formatStartTime(),
@@ -211,7 +210,7 @@ class _CardItineraryState extends State<CardItinerary> {
                                                 Color.fromRGBO(45, 45, 45, 1)),
                                       ),
                                       titleAlignment:
-                                          ListTileTitleAlignment.top,
+                                          ListTileTitleAlignment.titleHeight,
                                     ),
                                   );
                                 },

@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:triptaptoe_app/main.dart';
-
 import '../screens/itinerary_screen.dart';
 import 'card_itinerary.dart';
 import 'change_day_itinerary.dart';

@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:triptaptoe_app/services/Api.dart';
 import 'black_line_with_opacity.dart';
 import 'display_currencies.dart';

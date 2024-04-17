@@ -4,8 +4,8 @@ import 'package:triptaptoe_app/models/CityDTO.dart';
 import 'package:triptaptoe_app/screens/add_activity_modal_screen.dart';
 import 'package:triptaptoe_app/widgets/dialog_remove_city.dart';
 
-class AddedCities extends StatefulWidget {
-  const AddedCities({super.key, required this.citiesPerDay, required this.currentDayIndex, required this.onActivityAdded, this.selectedCity, required this.currentTripId, this.showDeleteBtn});
+class AddedActivities extends StatefulWidget {
+  const AddedActivities({super.key, required this.citiesPerDay, required this.currentDayIndex, required this.onActivityAdded, this.selectedCity, required this.currentTripId, this.showDeleteBtn});
 
   final List<List<CityDTO>> citiesPerDay;
   final int currentDayIndex;
@@ -15,11 +15,11 @@ class AddedCities extends StatefulWidget {
   final bool? showDeleteBtn;
 
   @override
-  State<AddedCities> createState() => _AddedCitiesState();
+  State<AddedActivities> createState() => _AddedActivitiesState();
 }
 
 
-class _AddedCitiesState extends State<AddedCities> {
+class _AddedActivitiesState extends State<AddedActivities> {
   @override
   Widget build(BuildContext context) {
     final currentCities = widget.citiesPerDay[widget.currentDayIndex];
