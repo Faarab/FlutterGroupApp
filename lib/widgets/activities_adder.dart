@@ -88,7 +88,7 @@ class _ActivitiesAdderState extends State<ActivitiesAdder> {
             ),
             Text(
               activity != null
-                  ? '${activity.startTime.hour}:${activity.startTime.minute}'
+                  ? '${activity.startTime.hour.toString().padLeft(2, '0')}:${activity.startTime.minute.toString().padLeft(2, '0')}'
                   : '',
             )
           ],

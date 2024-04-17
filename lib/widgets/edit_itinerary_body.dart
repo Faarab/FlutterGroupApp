@@ -95,6 +95,7 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
             _citiesPerDay[_currentDayIndex][cityIndex]
                 .activities!
                 .insert(insertIndex, activity);
+                print(activity);
           } else {
             _citiesPerDay[_currentDayIndex][cityIndex].activities = [activity];
           }
@@ -234,7 +235,7 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
                   _onActivityAdded(act, selectedCity);
                 },
                 currentTripId: _id,
-                showDeleteBtn: true,
+                showDeleteBtn: false,
               ),
             const SizedBox(height: 10),
             CityCard(
