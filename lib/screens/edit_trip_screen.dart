@@ -8,6 +8,7 @@ import 'package:triptaptoe_app/services/modifyTripFromJson.dart';
 import 'package:triptaptoe_app/services/navigation.dart';
 import 'package:triptaptoe_app/widgets/app_bar_with_back_arrow.dart';
 import 'package:triptaptoe_app/widgets/custom_input_field.dart';
+import 'package:triptaptoe_app/widgets/edit_itinerary_bottom_navig.dart';
 
 import '../widgets/dialog_edit_trip.dart';
 import '../widgets/edit_trip_body.dart';
@@ -67,9 +68,7 @@ class _EditTripScreenState extends State<EditTripScreen> {
           _cityOfArrival = widget.trip.cityOfArrival;
           _startDate = widget.trip.startDate;
           _endDate = widget.trip.endDate;
-          _body = const Center(
-            child: Text("Pagina modifica itinerary"),
-          );
+          _body = EditItineraryBottomNavig(widget: widget, trip: widget.trip);
         });
 
         break;
@@ -153,11 +152,8 @@ class _EditTripScreenState extends State<EditTripScreen> {
                 }
               },
             )
-          : EditTripFloatingActionButton(
-              onPressed: () {
-                //TODO logica per salvataggio di itinerary
-              },
-            ),
+           : 
+          null,
       body: isSaving
           ? const Center(
               child: CircularProgressIndicator(),

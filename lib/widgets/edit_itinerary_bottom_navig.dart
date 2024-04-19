@@ -6,8 +6,7 @@ import 'package:triptaptoe_app/models/CityDTO.dart';
 import 'package:triptaptoe_app/models/DayDTO.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
 import 'package:triptaptoe_app/models/state/itinerary_state.dart';
-import 'package:triptaptoe_app/screens/edit_itinerary_screen.dart';
-import 'package:triptaptoe_app/screens/home_screen.dart';
+import 'package:triptaptoe_app/screens/edit_trip_screen.dart';
 import 'package:triptaptoe_app/services/modifyCompleteTripFromJson.dart';
 import 'package:triptaptoe_app/widgets/activities_adder.dart';
 import 'package:triptaptoe_app/widgets/change_day_itinerary.dart';
@@ -26,6 +25,8 @@ List<DayDTO> maptoDayDto(List<DayDTO> days, List<List<CityDTO>> citiesPerDay) {
   return m.toList();
 }
 
+//TODO ricordarsi di sistemare il fatto che se cancello una città quando la ricreo l'attività rimane
+
 final List<Map<String, dynamic>> citiesList = [
   {"name": "Barcelona", "country": "Spain"},
   {"name": "Malaga", "country": "Spain"},
@@ -39,18 +40,19 @@ final List<Map<String, dynamic>> citiesList = [
   {"name": "Edinburgh", "country": "United Kingdom"}
 ];
 
-class EditItineraryBody extends StatefulWidget {
-  const EditItineraryBody(
+class EditItineraryBottomNavig extends StatefulWidget {
+  const EditItineraryBottomNavig(
       {super.key, required this.widget, required this.trip});
 
-  final EditItineraryScreen widget;
+  final EditTripScreen widget;
   final TripDTO trip;
 
   @override
-  State<EditItineraryBody> createState() => _EditItineraryBodyState();
+  State<EditItineraryBottomNavig> createState() =>
+      _EditItineraryBottomNavigState();
 }
 
-class _EditItineraryBodyState extends State<EditItineraryBody> {
+class _EditItineraryBottomNavigState extends State<EditItineraryBottomNavig> {
   final TextEditingController _cityController = TextEditingController();
   bool _isAddingCity = false;
   late List<CityDTO> hardcodedcitieslist;
@@ -117,8 +119,9 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
     } else {
       _canGoForward = false;
     }
-    _citiesPerDay = List.generate(widget.widget.trip.days!.length, (_) => []);
-    _id = widget.trip.id;
+    _citiesPerDay = widget.trip.days!.map((day) => day.cities ?? []).toList();
+
+    _id = widget.widget.trip.id;
     _name = widget.widget.trip.name;
     _cityOfDeparture = widget.widget.trip.cityOfDeparture;
     _cityOfArrival = widget.trip.cityOfArrival;
@@ -146,7 +149,6 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
                     color: Color.fromRGBO(45, 45, 45, 1),
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
-                     fontFamily: 'Poppins'
                   ),
                 ),
                 ElevatedButton(
@@ -155,33 +157,32 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
                             (states) => const Color.fromRGBO(53, 16, 79, 1)),
                         overlayColor: MaterialStateColor.resolveWith((states) =>
                             const Color.fromRGBO(199, 156, 230, 0.094)),
-                        shape: MaterialStateProperty.all(CircleBorder()),
-                        minimumSize: MaterialStateProperty.all(Size(50, 50))),
+                        shape: MaterialStateProperty.all(const CircleBorder()),
+                        minimumSize: MaterialStateProperty.all(const Size(50, 50))),
                     onPressed: () async {
                       final data =
                           maptoDayDto(widget.widget.trip.days!, _citiesPerDay);
 
-                      final isModified = await modifyCompleteTripFromJson(
-                        widget.trip.id,
-                        _name,
-                        _startDate,
-                        _endDate,
-                        _cityOfDeparture,
-                        _cityOfArrival,
-                        _days,
-                      );
+                      
+                        final isModified = await modifyCompleteTripFromJson(
+                          widget.trip.id,
+                          _name,
+                          _startDate,
+                          _endDate,
+                          _cityOfDeparture,
+                          _cityOfArrival,
+                          _days,
+                        );
+                        print("Updated $isModified");
 
-                      if (isModified) {
-                        setState(() {
-                          _days = data;
-                          _citiesPerDay = List.generate(
-                              _days.length, (index) => _days[index].cities!);
-                        });
-                      }
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen()));
+                        if (isModified) {
+                          setState(() {
+                            _days = data;
+                            _citiesPerDay = List.generate(
+                                _days.length, (index) => _days[index].cities!);
+                          });
+                        }
+                        Navigator.pop(context);        
                     },
                     child: const Icon(
                       Icons.save,
@@ -238,20 +239,19 @@ class _EditItineraryBodyState extends State<EditItineraryBody> {
               ),
             const SizedBox(height: 10),
             CityCard(
-                hardcodedcitieslist: hardcodedcitieslist,
-                citiesPerDay: _citiesPerDay,
-                currentDayIndex: _currentDayIndex,
-                isAddingCity: _isAddingCity,
-                onCitySelected: (city) {
-                  setState(() {
-                    selectedCity = city;
-                    _citiesPerDay[_currentDayIndex].add(city);
-                    _cityController.clear();
-                    _isAddingCity = false;
-
-
-                  });
-                },),
+              hardcodedcitieslist: hardcodedcitieslist,
+              citiesPerDay: _citiesPerDay,
+              currentDayIndex: _currentDayIndex,
+              isAddingCity: _isAddingCity,
+              onCitySelected: (city) {
+                setState(() {
+                  selectedCity = city;
+                  _citiesPerDay[_currentDayIndex].add(city);
+                  _cityController.clear();
+                  _isAddingCity = false;
+                });
+              },
+            ),
           ],
         ),
       ),

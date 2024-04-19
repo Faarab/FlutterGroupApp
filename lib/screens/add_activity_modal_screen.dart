@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/ActivityDTO.dart';
 import 'package:triptaptoe_app/models/CityDTO.dart';
@@ -18,7 +20,7 @@ import '../widgets/suggested_activities.dart';
 class AddActivityModal extends StatefulWidget {
   const AddActivityModal({super.key, required this.onActivityAdded,  this.selectedCity});
 
-  final Function(ActivityDTO) onActivityAdded;
+  final Function(ActivityDTO, CityDTO?) onActivityAdded;
   final CityDTO? selectedCity;
 
   @override
@@ -30,6 +32,11 @@ class _AddActivityModalState extends State<AddActivityModal> {
   String _name = "";
   String _location = "";
   DateTime? _selectedDateTime;
+  String? _image = "";
+  String? _category = "";
+  DateTime? _closingTime = DateTime.now().add(Duration(hours: 2)); 
+  DateTime? _openingTime = DateTime.now().subtract(Duration(hours: 3)); 
+
 
   late TextEditingController _nameController;
   late TextEditingController _locationController;
@@ -56,7 +63,7 @@ class _AddActivityModalState extends State<AddActivityModal> {
                 children: [
                   const Text(
                     "Add an activity",
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold,  fontFamily: 'Poppins', ),
                   ),
                   IconButton(
                     onPressed: () {
@@ -69,10 +76,10 @@ class _AddActivityModalState extends State<AddActivityModal> {
               const SizedBox(height: 16), 
                Row(
                 children: [
-                  const Icon(Icons.location_on),
+                  const Icon(Icons.location_on, size: 32, color: Color.fromRGBO(53, 16, 79, 1)),
                   const SizedBox(width: 16),
                  
-                  Text("${widget.selectedCity?.name}", style: const TextStyle(fontSize: 24),),
+                  Text("${widget.selectedCity?.name}", style: const TextStyle(fontSize: 24, fontFamily: 'Poppins'),),
 
                 ],
               ),
@@ -175,14 +182,14 @@ class _AddActivityModalState extends State<AddActivityModal> {
                               final newActivity = ActivityDTO(
                                 name: _name,
                                 startTime: _selectedDateTime!,
-                                openingTime: null, 
-                                closingTime: null, 
+                                openingTime: _openingTime, 
+                                closingTime: _closingTime, 
                                 location: _location, 
                                 price: null, 
-                                image: null, 
-                                category: null, 
+                                image: _image == null? null : _image,
+                                category: _category, 
                               );
-                              widget.onActivityAdded(newActivity);
+                              widget.onActivityAdded(newActivity, widget.selectedCity);
                               Navigator.pop(context);
                             }
                           },
@@ -204,9 +211,14 @@ class _AddActivityModalState extends State<AddActivityModal> {
                   _location = activity.location ?? "";
                   _nameController.text = _name;
                  _locationController.text = _location;
+                 _image = activity.image;
+                 _category = activity.category;
+                 _openingTime = activity.openingTime;
+                 _closingTime = activity.closingTime;
                 });
+              
                 
-              }, )
+              }, selectedCity: widget.selectedCity, )
             ],
           ),
         ),

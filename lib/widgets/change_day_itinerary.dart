@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/DayDTO.dart';
-import 'package:triptaptoe_app/widgets/body_itenerary.dart';
 
 class ChangeDayItinerary extends StatefulWidget {
   const ChangeDayItinerary({

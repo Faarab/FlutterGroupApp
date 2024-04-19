@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/ActivityDTO.dart';
 import 'package:triptaptoe_app/models/CityDTO.dart';
 import 'package:triptaptoe_app/services/city_service.dart';
 
 class SuggestedActivities extends StatefulWidget {
-   const SuggestedActivities({super.key, required this.onActivityTapped, this.selectedCity});
+   const SuggestedActivities({super.key, required this.onActivityTapped, required this.selectedCity});
     
 
   final Function(ActivityDTO) onActivityTapped;
@@ -20,29 +19,43 @@ class _SuggestedActivitiesState extends State<SuggestedActivities> {
   late Map<String, bool> filters;
   late List<ActivityDTO> activities;
 
+
   @override
   void initState() {
     super.initState();
     
-    categories = CityService().getCategories().toList();
+    activities = _getAllActivities();
+    categories = activities.map((activity) => activity.category!).toSet().toList();
     filters = { for (var category in categories) category: false };
 
-    activities = _getAllActivities();
+    
   }
 
-  List<ActivityDTO> _getAllActivities() {
-    List<ActivityDTO> allActivities = [];
-    final List<CityDTO> cities = CityService().getCities().toList();
-    
+List<ActivityDTO> _getAllActivities() {
+  List<ActivityDTO> allActivities = [];
+  final List<CityDTO> cities = CityService().getCities().toList();
+  
+  if (widget.selectedCity != null) {
+    final selectedCityName = widget.selectedCity!.name;
+    for (var city in cities) {
+      if (city.name == selectedCityName) {
+        allActivities.addAll(city.activities!);
+        break; 
+      }
+    }
+  } else {
     for (var city in cities) {
       allActivities.addAll(city.activities!);
     }
-    
-    return allActivities;
   }
+  
+  return allActivities;
+}
+
 
   @override
   Widget build(BuildContext context) {
+    
     final filteredActivities = activities.where((activity) {
       if (filters.values.any((selected) => selected)) {
         return filters.entries.any((filter) => filter.value && activity.category == filter.key);
@@ -59,7 +72,7 @@ class _SuggestedActivitiesState extends State<SuggestedActivities> {
             padding: EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
               "Suggested activities",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, fontFamily: 'Poppins'),
             ),
           ),
           SingleChildScrollView(
@@ -93,7 +106,7 @@ class _SuggestedActivitiesState extends State<SuggestedActivities> {
             height: 10,
           ),
           SizedBox(
-            height: 380,
+            height: 370,
             child: GridView.count(
               shrinkWrap: true,
               crossAxisCount: 2,

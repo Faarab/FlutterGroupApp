@@ -1,12 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:triptaptoe_app/models/TripDTO.dart';
-import 'package:triptaptoe_app/screens/add_activity_modal_screen.dart';
-import 'package:triptaptoe_app/screens/edit_itinerary_screen.dart';
 import 'package:triptaptoe_app/screens/edit_trip_screen.dart';
-import 'package:triptaptoe_app/screens/home_screen.dart';
 import 'package:triptaptoe_app/screens/itinerary_screen.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -236,7 +232,7 @@ class TripCard extends StatelessWidget {
                               color: Color.fromRGBO(255, 255, 255, 1),
                             )),
                       ),
-                      IconButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => EditItineraryScreen(trip: trip,)));}, icon: Icon(Icons.ac_unit_rounded))
+                      
                     ],
                   ),
                 ),

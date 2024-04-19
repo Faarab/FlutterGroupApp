@@ -42,13 +42,16 @@ dependencies:
   http: ^1.2.1
   dropdown_search: ^5.0.6
   intl: ^0.17.0
+  provider: ^6.1.2
   url_launcher: ^6.2.6
   maps_launcher: ^2.2.1
+  file_picker: ^8.0.0+1
+  flutter_pdfview: ^1.2.7
+  path_provider: ^2.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -80,6 +83,14 @@ flutter:
     - assets/images/casa_batllo.jpg
     - assets/images/la_rambla.jpg
     - assets/images/profile_picture.jpeg
+    - assets/images/picasso.jpg
+    - assets/images/cathedral.jpg
+    - assets/images/gibralfaro.jpg
+    - assets/images/alcazaba.jpg
+    - assets/images/plaza.jpg
+    - assets/images/royal.jpg
+    - assets/images/retiro.jpg
+    - assets/images/prado.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

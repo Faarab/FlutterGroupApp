@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:triptaptoe_app/main.dart';
 import 'package:triptaptoe_app/services/navigation.dart';
 
 class AppBarWithBackArrow extends StatefulWidget
