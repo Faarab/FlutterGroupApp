@@ -12,17 +12,14 @@ class EditItineraryScreen extends StatefulWidget {
 }
 
 class _EditItineraryScreenState extends State<EditItineraryScreen> {
-
   @override
   Widget build(BuildContext context) {
-    return 
-        Scaffold(
-          
-          appBar: const AppBarWithBackArrow(),
-    
-         body: EditItineraryBody(widget: widget, trip: widget.trip,), 
-                      
-        );                
-  }    
+    return Scaffold(
+      appBar: const AppBarWithBackArrow(),
+      body: EditItineraryBody(
+        widget: widget,
+        trip: widget.trip,
+      ),
+    );
+  }
 }
-

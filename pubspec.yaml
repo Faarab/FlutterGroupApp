@@ -45,13 +45,9 @@ dependencies:
   provider: ^6.1.2
   url_launcher: ^6.2.6
   maps_launcher: ^2.2.1
-  file_picker: ^8.0.0+1  
+  file_picker: ^8.0.0+1
   flutter_pdfview: ^1.2.7
   path_provider: ^2.0.6
- 
- 
- 
- 
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +82,7 @@ flutter:
     - assets/images/camp_nou.jpg
     - assets/images/casa_batllo.jpg
     - assets/images/la_rambla.jpg
+    - assets/images/profile_picture.jpeg
     - assets/images/picasso.jpg
     - assets/images/cathedral.jpg
     - assets/images/gibralfaro.jpg
@@ -94,7 +91,6 @@ flutter:
     - assets/images/royal.jpg
     - assets/images/retiro.jpg
     - assets/images/prado.jpg
-    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

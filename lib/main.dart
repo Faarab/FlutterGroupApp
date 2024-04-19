@@ -13,8 +13,9 @@ Future<void> main() async {
   runApp(ChangeNotifierProvider(
     create: (context) => ItineraryState(),
     child: MaterialApp(
-        theme:
-            ThemeData.light().copyWith(textTheme: GoogleFonts.poppinsTextTheme()),
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.light()
+            .copyWith(textTheme: GoogleFonts.poppinsTextTheme()),
         home: SafeArea(child: HomeScreen())),
   ));
 }
