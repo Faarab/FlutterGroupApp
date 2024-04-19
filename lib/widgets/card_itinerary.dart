@@ -45,7 +45,7 @@ class _CardItineraryState extends State<CardItinerary> {
                     child: Column(children: [
                       SizedBox(height: 32),
                       Text(
-                        'This day it\'s empty, you need to add some cities and activities',
+                        'This day is empty, you need to add some cities and activities',
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
@@ -60,6 +60,11 @@ class _CardItineraryState extends State<CardItinerary> {
                     widget.day.cities == null ? 0 : widget.day.cities!.length,
                 itemBuilder: (BuildContext context, int index) {
                   final city = widget.day.cities![index];
+                  String cityName = city.name;
+                  if(cityName.length > 25) {
+                    cityName.substring(0,14);
+                    cityName+="...";
+                  } 
                   return Padding(
                     padding:
                         const EdgeInsets.only(left: 8.0, right: 8.0, top: 10.0),
@@ -68,7 +73,8 @@ class _CardItineraryState extends State<CardItinerary> {
                       children: [
                         Row(children: [
                           Text(
-                            city.name,
+                            cityName,
+
                             style: const TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
@@ -106,6 +112,7 @@ class _CardItineraryState extends State<CardItinerary> {
                                       index == city.activities!.length - 1;
                                   final activity = city.activities![index];
                                   String? location = activity.location;
+                                  String? activityName = activity.name;
                                   if (location != null) {
                                     if (location.length > 20) {
                                       location =
@@ -114,6 +121,13 @@ class _CardItineraryState extends State<CardItinerary> {
                                   } else {
                                     location = '';
                                   }
+
+                                  
+                                    if (activityName.length > 16) {
+                                      activityName =
+                                          '${activityName.substring(0, 14)}...';
+                                    }
+                                   
                                   return TimelineTile(
                                     isFirst: isFirstActivity,
                                     isLast: isLastActivity,
@@ -147,7 +161,7 @@ class _CardItineraryState extends State<CardItinerary> {
                                     endChild: ListTile(
                                       title: Row(children: [
                                         Text(
-                                          activity.name,
+                                          activityName,
                                           style: const TextStyle(
                                               fontSize: 18,
                                               color: Color.fromRGBO(
